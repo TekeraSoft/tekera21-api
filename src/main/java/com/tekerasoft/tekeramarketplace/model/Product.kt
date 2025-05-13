@@ -25,7 +25,11 @@ import java.util.UUID
 open class Product(
 
     open var name: String,
+    open var slug: String,
     open var code: String,
+    open var brandName: String,
+
+    @Column(columnDefinition = "TEXT")
     open var description: String,
 
     @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
@@ -33,11 +37,9 @@ open class Product(
     open var category: Category,
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "product_subcategories",
+    @JoinTable(name = "product_subcategories",
         joinColumns = [JoinColumn(name = "product_id")],
-        inverseJoinColumns = [JoinColumn(name = "subcategory_id")]
-    )
+        inverseJoinColumns = [JoinColumn(name = "subcategory_id")])
     open var subCategories: MutableSet<SubCategory> = mutableSetOf(),
 
     @OneToMany(mappedBy="product",fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -46,9 +48,9 @@ open class Product(
     @Enumerated(EnumType.STRING)
     open var currencyType: CurrencyType,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    open var company: Company,
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "company_id")
+//    open var company: Company,
 
     @ElementCollection
     @CollectionTable(name= "product_tags", joinColumns = [JoinColumn(name = "product_id")])

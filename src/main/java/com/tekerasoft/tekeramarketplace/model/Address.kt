@@ -1,9 +1,14 @@
 package com.tekerasoft.tekeramarketplace.model
 
 import jakarta.persistence.Entity
-import java.util.UUID
 
 @Entity
-data class Address(
-    var id: UUID? = null,
-)
+open class Address (
+    open var city: String,
+    open var street: String,
+    open var postalCode: String,
+    open var buildNo: String,
+    open var doorNumber: String,
+    open var detailAddress: String,
+    open var country: String,
+): BaseEntity()

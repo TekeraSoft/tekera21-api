@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: tekera-marketplace
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    #url: jdbc:postgresql://arzuamber-db:5432/arzuamber-db
+    url: jdbc:postgresql://localhost:5435/tekera-db
+    username: tekera_user
+    password: tekera_pass
+  jpa:
+    hibernate:
+      ddl-auto: update   # Doğru yer burası!
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  minio:
+    url: http://localhost:9000
+    user: tekera_user
+    password: tekera_pass
+    bucket-name: tekera-bucket

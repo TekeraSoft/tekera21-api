@@ -1,0 +1,53 @@
+services:
+  # PostgreSQL Database
+  tekera-db:
+    image: postgres:latest
+    container_name: tekera-db
+    ports:
+      - "5435:5432"  # Host portu ile container portunu eşliyoruz
+    environment:
+      - POSTGRES_USER=tekera_user
+      - POSTGRES_PASSWORD=tekera_pass
+      - POSTGRES_DB=tekera-db
+    networks:
+      - my-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Veritabanı verilerini hostta sakla
+    restart: unless-stopped  # Sistem yeniden başlarsa veri kaybolmaz
+
+  # MinIO (Blob Storage)
+  minio:
+    image: 'bitnami/minio:latest'
+    container_name: tekera-blob-storage
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=tekera_user
+      - MINIO_ROOT_PASSWORD=tekera_pass
+    volumes:
+      - minio_data:/data  # MinIO verilerini hostta sakla
+    networks:
+      - my-network
+    restart: unless-stopped
+
+#  arzuamber-api:
+#    build:
+#      context: .
+#    container_name: arzuamber-api
+#    depends_on:
+#      - arzuamber-db
+#      - minio
+#    ports:
+#      - "9090:8080"
+#    networks:
+#      - my-network
+#    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  minio_data:
+
+networks:
+  my-network:
+    driver: bridge  # Aynı ağda çalışan servisler birbirine erişebilsin
