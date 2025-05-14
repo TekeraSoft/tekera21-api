@@ -16,8 +16,8 @@ open class Variation(
     open var modelCode: String,
     open var price: BigDecimal,
     open var stock: Int = 0,
-    open var sku: String? = null,
-    open var barcode: String? = null,
+    open var sku: String,
+    open var barcode: String,
 
     @ElementCollection
     @CollectionTable(name = "variation_attributes",

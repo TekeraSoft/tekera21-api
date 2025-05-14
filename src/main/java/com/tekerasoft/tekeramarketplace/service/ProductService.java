@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.service;
 
+import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateProductRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.VariationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
@@ -7,14 +8,11 @@ import com.tekerasoft.tekeramarketplace.model.*;
 import com.tekerasoft.tekeramarketplace.repository.CategoryRepository;
 import com.tekerasoft.tekeramarketplace.repository.ProductRepository;
 import com.tekerasoft.tekeramarketplace.repository.SubCategoryRepository;
-import io.minio.errors.*;
+import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,8 +38,9 @@ public class ProductService {
         try {
             Product product = new Product();
             product.setName(req.getName());
-            product.setSlug(req.getSlug());
+            product.setSlug(SlugGenerator.generateSlug(req.getName()));
             product.setCode(req.getCode());
+            product.setBrandName(req.getBrandName());
             product.setDescription(req.getDescription());
             product.setCurrencyType(req.getCurrencyType());
             product.setProductType(req.getProductType());
@@ -60,8 +59,6 @@ public class ProductService {
                     .collect(Collectors.toSet());
             product.setSubCategories(subCategories);
 
-            Map<String, Map<String, List<String>>> imageMap = groupImagesByModelAndColor(images);
-
             // Variations
             List<Variation> variations = new ArrayList<>();
             for (VariationRequest varReq : req.getVariants()) {
@@ -75,54 +72,58 @@ public class ProductService {
                 var.setAttributes(varReq.getAttributes());
                 var.setProduct(product);
 
-                // Renk bilgisini attribute'lardan çek
-                String color = varReq.getAttributes().stream()
-                        .filter(attr -> attr.getName().equalsIgnoreCase("color"))
-                        .map(Attribute::getValue)
-                        .findFirst()
-                        .orElse(null);
+                List<String> imgUrls = new ArrayList<>();
+                // İlgili görseli bul
+                for (MultipartFile image : images) {
+                    Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
+                    if (parsed == null) continue;
 
-                List<String> matchedImages = Optional.ofNullable(
-                        imageMap.getOrDefault(slugify(varReq.getModelName()), new HashMap<>())
-                                .getOrDefault(slugify(color), new ArrayList<>())
-                ).orElse(new ArrayList<>());
-
-                var.setImages(matchedImages);
+                    String imageModelCode = parsed.get("modelCode");
+                    String imageColor = parsed.get("color");
+                    String variantColor = getColorFromAttributes(varReq.getAttributes());
+                    if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
+                            && variantColor.equalsIgnoreCase(imageColor)) {
+                        // Örneğin image'i burada bir yere kaydedip URL'sini set edebilirsin
+                        String imageUrl = fileService.productFileUpload(image, SlugGenerator.generateSlug(req.getName()));
+                        imgUrls.add(imageUrl);
+                        break;
+                    }
+                }
+                var.setImages(imgUrls);
                 variations.add(var);
             }
+            product.setVariations(variations);
             productRepository.save(product);
             return new ApiResponse<>("Product Created", null, true);
-        } catch (RuntimeException | ServerException | InsufficientDataException | ErrorResponseException | IOException |
-                 NoSuchAlgorithmException | InvalidKeyException | InvalidResponseException | XmlParserException |
-                 InternalException e) {
+        } catch (RuntimeException e) {
             throw new RuntimeException("Error creating product", e);
         }
     }
 
-    private Map<String, Map<String, List<String>>> groupImagesByModelAndColor(List<MultipartFile> images) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        Map<String, Map<String, List<String>>> imageMap = new HashMap<>();
-        for (MultipartFile image : images) {
-            String fileName = image.getOriginalFilename();
-            if (fileName == null || !fileName.contains("-") || !fileName.contains("_")) continue;
-
-            String[] nameParts = fileName.split("_")[0].split("-");
-            if (nameParts.length != 2) continue;
-
-            String model = nameParts[0];
-            String color = nameParts[1];
-
-            String uploadedName = fileService.productFileUpload(image, model + "-" + color);
-
-            imageMap
-                    .computeIfAbsent(model, k -> new HashMap<>())
-                    .computeIfAbsent(color, k -> new ArrayList<>())
-                    .add(uploadedName);
-        }
-        return imageMap;
+    public List<ProductDto> findAll() {
+        return productRepository.findAll().stream().map(ProductDto::toDto).toList();
     }
 
-    private String slugify(String text) {
-        return text == null ? "" : text.toLowerCase().replace(" ", "").replaceAll("[^a-z0-9]", "");
+
+    private static String getColorFromAttributes(List<Attribute> attributes) {
+        for (Attribute attr : attributes) {
+            String key = attr.getKey().toLowerCase();
+            if (key.contains("color") || key.contains("renk")) {
+                return attr.getValue();
+            }
+        }
+        return "";
+    }
+
+    private static Map<String, String> parseImageFileName(String filename) {
+        String name = filename.contains(".") ? filename.substring(0, filename.lastIndexOf('.')) : filename;
+        String[] parts = name.split("_");
+        if (parts.length != 2) return null;
+
+        Map<String, String> result = new HashMap<>();
+        result.put("modelCode", parts[0]);
+        result.put("color", parts[1]);
+        return result;
     }
 
 }

@@ -19,6 +19,4 @@ data class VariationRequest(
     val barcode: String,
     @JsonProperty("attributes")
     val attributes: List<Attribute>,
-    @JsonProperty("images")
-    val images: List<String>
 )
