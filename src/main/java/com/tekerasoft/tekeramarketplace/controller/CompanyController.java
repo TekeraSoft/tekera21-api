@@ -23,7 +23,7 @@ public class CompanyController {
 
     @PostMapping("/create-product")
     public ResponseEntity<ApiResponse<?>> create(@RequestPart("data") CreateProductRequest req,
-                                                 @RequestPart(value = "images", required = false) List<MultipartFile> images)
+                                                 @RequestPart(value = "images") List<MultipartFile> images)
     {
         return ResponseEntity.ok(productService.create(req,images));
     }

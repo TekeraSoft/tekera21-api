@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -38,8 +36,7 @@ public class FileService {
             if (originalFilename.contains(".")) {
                 fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
             }
-            String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-            String fileName = slug + "-" + timestamp + fileExtension;
+            String fileName = slug + "-" + fileExtension;
             InputStream inputStream = file.getInputStream();
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                     .bucket(bucketName)

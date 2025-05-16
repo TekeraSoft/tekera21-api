@@ -16,7 +16,7 @@ spring:
     password: tekera_pass
   jpa:
     hibernate:
-      ddl-auto: update   # Doğru yer burası!
+      ddl-auto: create-drop   # Doğru yer burası!
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

@@ -17,11 +17,13 @@ import jakarta.persistence.ManyToMany
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
+import jakarta.persistence.Table
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity
+@Table(name = "products")
 open class Product(
 
     open var name: String,
@@ -33,12 +35,12 @@ open class Product(
     open var description: String,
 
     @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "category_id")
     open var category: Category,
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "product_subcategories",
-        joinColumns = [JoinColumn(name = "product_id")],
+        joinColumns = [JoinColumn(name = "product_fk")],
         inverseJoinColumns = [JoinColumn(name = "subcategory_id")])
     open var subCategories: MutableSet<SubCategory> = mutableSetOf(),
 
@@ -53,7 +55,7 @@ open class Product(
 //    open var company: Company,
 
     @ElementCollection
-    @CollectionTable(name= "product_tags", joinColumns = [JoinColumn(name = "product_id")])
+    @CollectionTable(name= "product_tags", joinColumns = [JoinColumn(name = "product_fk")])
     open var tags: List<String>,
 
     @Enumerated(EnumType.STRING)
@@ -61,6 +63,8 @@ open class Product(
 
     @ElementCollection
     @CollectionTable(name = "product_attributes", joinColumns = [JoinColumn(name = "product_id")])
-    open var attributes: List<Attribute> = listOf()
+    open var attributes: List<Attribute> = listOf(),
+
+
 
 ): BaseEntity()

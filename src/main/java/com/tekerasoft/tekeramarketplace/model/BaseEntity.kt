@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.MappedSuperclass
+import org.hibernate.annotations.GenericGenerator
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -12,8 +13,7 @@ import java.util.UUID
 abstract class BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "uuid")
+    @GeneratedValue(generator = "uuid")
     open var id: UUID? = null
 
     open var createdAt: LocalDateTime = LocalDateTime.now()

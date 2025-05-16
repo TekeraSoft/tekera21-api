@@ -25,6 +25,10 @@ open class Variation(
     open var attributes: List<Attribute> = listOf(),
 
     @ElementCollection
+    @CollectionTable(
+        name = "variation_images",
+        joinColumns = [JoinColumn(name = "variation_id")]
+    )
     open var images: List<String>,
 
     @ManyToOne(fetch = FetchType.LAZY)

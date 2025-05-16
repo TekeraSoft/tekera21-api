@@ -82,11 +82,10 @@ public class ProductService {
                     String imageColor = parsed.get("color");
                     String variantColor = getColorFromAttributes(varReq.getAttributes());
                     if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
-                            && variantColor.equalsIgnoreCase(imageColor)) {
+                            && variantColor.trim().equalsIgnoreCase(imageColor.trim())) {
                         // Örneğin image'i burada bir yere kaydedip URL'sini set edebilirsin
                         String imageUrl = fileService.productFileUpload(image, SlugGenerator.generateSlug(req.getName()));
                         imgUrls.add(imageUrl);
-                        break;
                     }
                 }
                 var.setImages(imgUrls);
@@ -103,7 +102,6 @@ public class ProductService {
     public List<ProductDto> findAll() {
         return productRepository.findAll().stream().map(ProductDto::toDto).toList();
     }
-
 
     private static String getColorFromAttributes(List<Attribute> attributes) {
         for (Attribute attr : attributes) {
