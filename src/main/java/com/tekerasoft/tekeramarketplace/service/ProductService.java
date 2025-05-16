@@ -6,10 +6,16 @@ import com.tekerasoft.tekeramarketplace.dto.request.VariationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.model.*;
 import com.tekerasoft.tekeramarketplace.repository.CategoryRepository;
+import com.tekerasoft.tekeramarketplace.repository.CompanyRepository;
 import com.tekerasoft.tekeramarketplace.repository.ProductRepository;
 import com.tekerasoft.tekeramarketplace.repository.SubCategoryRepository;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,15 +28,20 @@ public class ProductService {
     private final FileService fileService;
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
+    private final CompanyRepository companyRepository;
+
+    private final PagedResourcesAssembler<ProductDto> pagedResourcesAssembler;
 
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
-                          SubCategoryRepository subCategoryRepository) {
+                          SubCategoryRepository subCategoryRepository, CompanyRepository companyRepository, PagedResourcesAssembler<ProductDto> pagedResourcesAssembler) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
+        this.companyRepository = companyRepository;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
     @Transactional
@@ -46,6 +57,10 @@ public class ProductService {
             product.setProductType(req.getProductType());
             product.setTags(req.getTags());
             product.setAttributes(req.getAttributes());
+
+            // Company
+            Company company = companyRepository.findById(UUID.fromString(req.getCompanyId())).orElseThrow();
+            product.setCompany(company);
 
             // Category
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
@@ -99,8 +114,9 @@ public class ProductService {
         }
     }
 
-    public List<ProductDto> findAll() {
-        return productRepository.findAll().stream().map(ProductDto::toDto).toList();
+    public PagedModel<EntityModel<ProductDto>> findAll(Pageable pageable) {
+        return pagedResourcesAssembler.toModel(productRepository.findAll(pageable)
+                .map(ProductDto::toDto));
     }
 
     private static String getColorFromAttributes(List<Attribute> attributes) {

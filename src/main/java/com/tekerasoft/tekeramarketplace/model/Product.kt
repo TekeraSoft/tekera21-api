@@ -50,9 +50,9 @@ open class Product(
     @Enumerated(EnumType.STRING)
     open var currencyType: CurrencyType,
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "company_id")
-//    open var company: Company,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    open var company: Company,
 
     @ElementCollection
     @CollectionTable(name= "product_tags", joinColumns = [JoinColumn(name = "product_fk")])
