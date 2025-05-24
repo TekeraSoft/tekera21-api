@@ -1,8 +1,7 @@
-package com.tekerasoft.tekeramarketplace.model
+package com.tekerasoft.tekeramarketplace.model.entity
 
 import jakarta.persistence.*
 import java.time.LocalDateTime
-import java.util.UUID
 
 @Entity
 @Table(name = "companies")
@@ -36,10 +35,11 @@ open class Company(
 
     @ElementCollection
     @CollectionTable(name= "company_document_paths", joinColumns = [JoinColumn(name = "company_id")])
-    open var identityDocumentPaths: List<String>,
-
+    open var identityDocumentPaths: List<CompanyDocument>,
 
     open var isVerified: Boolean = false,
-    open var verificationStatus: VerificationStatus
+
+    @Enumerated(EnumType.STRING)
+    open var verificationStatus: VerificationStatus = VerificationStatus.PENDING
 
     ): BaseEntity()

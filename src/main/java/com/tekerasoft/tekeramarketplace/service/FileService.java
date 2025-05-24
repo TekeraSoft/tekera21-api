@@ -24,7 +24,7 @@ public class FileService {
         this.minioClient = minioClient;
     }
 
-    public String productFileUpload(MultipartFile file,String slug) {
+    public String productFileUpload(MultipartFile file,String companyName,String slug) {
         try {
             BucketExistsArgs args = BucketExistsArgs.builder().bucket(bucketName).build();
             if (!minioClient.bucketExists(args)) {
@@ -40,7 +40,7 @@ public class FileService {
             InputStream inputStream = file.getInputStream();
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                     .bucket(bucketName)
-                    .object("product/"+fileName)
+                    .object("/products/" + companyName + "/" + fileName)
                     .contentType(file.getContentType())
                     .stream(inputStream, file.getSize(), -1)
                     .build();
@@ -88,7 +88,7 @@ public class FileService {
                     .stream(inputStream, file.getSize(), -1)
                     .build();
             minioClient.putObject(putObjectArgs);
-            return fileName;
+            return folderName + "/" + fileName;
         }catch (ErrorResponseException e) {
         throw new RuntimeException("MinIO Error Response: " + e.getMessage(), e);
          } catch (InsufficientDataException e) {
@@ -108,6 +108,49 @@ public class FileService {
          } catch (XmlParserException e) {
              throw new RuntimeException("XML Parsing error: " + e.getMessage(), e);
          }
+    }
+
+    public String targetPicUpload(MultipartFile file) {
+        try {
+            BucketExistsArgs args = BucketExistsArgs.builder().bucket(bucketName).build();
+            if(!minioClient.bucketExists(args)) {
+                MakeBucketArgs makeBucketArgs = MakeBucketArgs.builder().bucket(bucketName).build();
+                minioClient.makeBucket(makeBucketArgs);
+            }
+            String originalFilename = file.getOriginalFilename();
+            String fileExtension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String fileName = UUID.randomUUID() + fileExtension;
+            InputStream inputStream = file.getInputStream();
+            PutObjectArgs putObjectArgs = PutObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object("/target-pics/"+fileName)
+                    .contentType(file.getContentType())
+                    .stream(inputStream, file.getSize(), -1)
+                    .build();
+            minioClient.putObject(putObjectArgs);
+            return "/target-pics/"+fileName;
+        }catch (ErrorResponseException e) {
+            throw new RuntimeException("MinIO Error Response: " + e.getMessage(), e);
+        } catch (InsufficientDataException e) {
+            throw new RuntimeException("Insufficient data during file upload: " + e.getMessage(), e);
+        } catch (InternalException e) {
+            throw new RuntimeException("Internal error during file upload: " + e.getMessage(), e);
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException("Invalid key error: " + e.getMessage(), e);
+        } catch (InvalidResponseException e) {
+            throw new RuntimeException("Invalid response from MinIO: " + e.getMessage(), e);
+        } catch (IOException e) {
+            throw new RuntimeException("IO error during file upload: " + e.getMessage(), e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Algorithm not found: " + e.getMessage(), e);
+        } catch (ServerException e) {
+            throw new RuntimeException("Server error: " + e.getMessage(), e);
+        } catch (XmlParserException e) {
+            throw new RuntimeException("XML Parsing error: " + e.getMessage(), e);
+        }
     }
 
     public void deleteFileProduct(String fileName) {

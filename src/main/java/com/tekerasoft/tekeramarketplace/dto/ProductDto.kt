@@ -1,8 +1,8 @@
 package com.tekerasoft.tekeramarketplace.dto
 
-import com.tekerasoft.tekeramarketplace.model.CurrencyType
-import com.tekerasoft.tekeramarketplace.model.Product
-import com.tekerasoft.tekeramarketplace.model.ProductType
+import com.tekerasoft.tekeramarketplace.model.entity.CurrencyType
+import com.tekerasoft.tekeramarketplace.model.entity.Product
+import com.tekerasoft.tekeramarketplace.model.entity.ProductType
 
 data class ProductDto(
     val name: String,

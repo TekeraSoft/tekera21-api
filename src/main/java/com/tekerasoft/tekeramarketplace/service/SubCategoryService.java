@@ -2,10 +2,10 @@ package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.request.CreateSubCategoryRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
-import com.tekerasoft.tekeramarketplace.model.Category;
-import com.tekerasoft.tekeramarketplace.model.SubCategory;
-import com.tekerasoft.tekeramarketplace.repository.CategoryRepository;
-import com.tekerasoft.tekeramarketplace.repository.SubCategoryRepository;
+import com.tekerasoft.tekeramarketplace.model.entity.Category;
+import com.tekerasoft.tekeramarketplace.model.entity.SubCategory;
+import com.tekerasoft.tekeramarketplace.repository.releational.CategoryRepository;
+import com.tekerasoft.tekeramarketplace.repository.releational.SubCategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

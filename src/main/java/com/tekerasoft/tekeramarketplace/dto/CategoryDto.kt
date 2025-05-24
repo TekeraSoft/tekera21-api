@@ -1,6 +1,6 @@
 package com.tekerasoft.tekeramarketplace.dto
 
-import com.tekerasoft.tekeramarketplace.model.Category
+import com.tekerasoft.tekeramarketplace.model.entity.Category
 import java.util.UUID
 
 data class CategoryDto(

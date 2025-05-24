@@ -1,6 +1,6 @@
-package com.tekerasoft.tekeramarketplace.repository;
+package com.tekerasoft.tekeramarketplace.repository.releational;
 
-import com.tekerasoft.tekeramarketplace.model.SubCategory;
+import com.tekerasoft.tekeramarketplace.model.entity.SubCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

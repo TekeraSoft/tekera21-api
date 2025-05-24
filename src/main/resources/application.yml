@@ -8,6 +8,10 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
 
+  data:
+    mongodb:
+      uri: mongodb://tekera_user:tekera_pass@localhost:27017/tekera-document-db
+
   datasource:
     driver-class-name: org.postgresql.Driver
     #url: jdbc:postgresql://arzuamber-db:5432/arzuamber-db
@@ -16,7 +20,7 @@ spring:
     password: tekera_pass
   jpa:
     hibernate:
-      ddl-auto: create-drop   # Doğru yer burası!
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

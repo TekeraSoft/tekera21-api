@@ -3,8 +3,8 @@ package com.tekerasoft.tekeramarketplace.service;
 import com.tekerasoft.tekeramarketplace.dto.CategoryDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCategoryRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
-import com.tekerasoft.tekeramarketplace.model.Category;
-import com.tekerasoft.tekeramarketplace.repository.CategoryRepository;
+import com.tekerasoft.tekeramarketplace.model.entity.Category;
+import com.tekerasoft.tekeramarketplace.repository.releational.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

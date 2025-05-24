@@ -1,4 +1,4 @@
-package com.tekerasoft.tekeramarketplace.model
+package com.tekerasoft.tekeramarketplace.model.entity
 
 import jakarta.persistence.CollectionTable
 import jakarta.persistence.ElementCollection
@@ -35,4 +35,4 @@ open class Variation(
     @JoinColumn(name = "product_id")
     open var product: Product,
 
-    ):BaseEntity()
+    ): BaseEntity()

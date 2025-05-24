@@ -1,9 +1,9 @@
 package com.tekerasoft.tekeramarketplace.dto.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.tekerasoft.tekeramarketplace.model.Attribute
-import com.tekerasoft.tekeramarketplace.model.CurrencyType
-import com.tekerasoft.tekeramarketplace.model.ProductType
+import com.tekerasoft.tekeramarketplace.model.entity.Attribute
+import com.tekerasoft.tekeramarketplace.model.entity.CurrencyType
+import com.tekerasoft.tekeramarketplace.model.entity.ProductType
 
 data class CreateProductRequest(
     @JsonProperty("name")

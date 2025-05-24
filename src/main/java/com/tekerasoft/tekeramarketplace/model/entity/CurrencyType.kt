@@ -1,4 +1,4 @@
-package com.tekerasoft.tekeramarketplace.model
+package com.tekerasoft.tekeramarketplace.model.entity
 
 enum class CurrencyType() {
     USD,

@@ -4,14 +4,13 @@ import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateProductRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.VariationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
-import com.tekerasoft.tekeramarketplace.model.*;
-import com.tekerasoft.tekeramarketplace.repository.CategoryRepository;
-import com.tekerasoft.tekeramarketplace.repository.CompanyRepository;
-import com.tekerasoft.tekeramarketplace.repository.ProductRepository;
-import com.tekerasoft.tekeramarketplace.repository.SubCategoryRepository;
+import com.tekerasoft.tekeramarketplace.model.entity.*;
+import com.tekerasoft.tekeramarketplace.repository.releational.CategoryRepository;
+import com.tekerasoft.tekeramarketplace.repository.releational.CompanyRepository;
+import com.tekerasoft.tekeramarketplace.repository.releational.ProductRepository;
+import com.tekerasoft.tekeramarketplace.repository.releational.SubCategoryRepository;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -35,7 +34,9 @@ public class ProductService {
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
-                          SubCategoryRepository subCategoryRepository, CompanyRepository companyRepository, PagedResourcesAssembler<ProductDto> pagedResourcesAssembler) {
+                          SubCategoryRepository subCategoryRepository,
+                          CompanyRepository companyRepository,
+                          PagedResourcesAssembler<ProductDto> pagedResourcesAssembler) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
@@ -98,8 +99,8 @@ public class ProductService {
                     String variantColor = getColorFromAttributes(varReq.getAttributes());
                     if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
                             && variantColor.trim().equalsIgnoreCase(imageColor.trim())) {
-                        // Örneğin image'i burada bir yere kaydedip URL'sini set edebilirsin
-                        String imageUrl = fileService.productFileUpload(image, SlugGenerator.generateSlug(req.getName()));
+                        // image'i burada bir yere kaydedip URL'si set ediliyor
+                        String imageUrl = fileService.productFileUpload(image, company.getName(), SlugGenerator.generateSlug(req.getName()));
                         imgUrls.add(imageUrl);
                     }
                 }
@@ -130,7 +131,8 @@ public class ProductService {
     }
 
     private static Map<String, String> parseImageFileName(String filename) {
-        String name = filename.contains(".") ? filename.substring(0, filename.lastIndexOf('.')) : filename;
+        String name = filename.contains(".") ? filename.substring(0, filename.lastIndexOf('.'))
+                : filename;
         String[] parts = name.split("_");
         if (parts.length != 2) return null;
 

@@ -1,7 +1,7 @@
 package com.tekerasoft.tekeramarketplace.dto.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.tekerasoft.tekeramarketplace.model.Attribute
+import com.tekerasoft.tekeramarketplace.model.entity.Attribute
 import java.math.BigDecimal
 
 data class VariationRequest(

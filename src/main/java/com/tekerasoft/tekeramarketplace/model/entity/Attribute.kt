@@ -1,4 +1,4 @@
-package com.tekerasoft.tekeramarketplace.model
+package com.tekerasoft.tekeramarketplace.model.entity
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.persistence.Embeddable
