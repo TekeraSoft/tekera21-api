@@ -11,10 +11,8 @@ import com.tekerasoft.tekeramarketplace.repository.releational.ProductRepository
 import com.tekerasoft.tekeramarketplace.repository.releational.SubCategoryRepository;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.PagedModel;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,20 +27,16 @@ public class ProductService {
     private final SubCategoryRepository subCategoryRepository;
     private final CompanyRepository companyRepository;
 
-    private final PagedResourcesAssembler<ProductDto> pagedResourcesAssembler;
-
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
                           SubCategoryRepository subCategoryRepository,
-                          CompanyRepository companyRepository,
-                          PagedResourcesAssembler<ProductDto> pagedResourcesAssembler) {
+                          CompanyRepository companyRepository) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.companyRepository = companyRepository;
-        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
     @Transactional
@@ -100,7 +94,8 @@ public class ProductService {
                     if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
                             && variantColor.trim().equalsIgnoreCase(imageColor.trim())) {
                         // image'i burada bir yere kaydedip URL'si set ediliyor
-                        String imageUrl = fileService.productFileUpload(image, company.getName(), SlugGenerator.generateSlug(req.getName()));
+                        String imageUrl = fileService.productFileUpload(image, company.getName(),
+                                SlugGenerator.generateSlug(req.getName()));
                         imgUrls.add(imageUrl);
                     }
                 }
@@ -115,9 +110,8 @@ public class ProductService {
         }
     }
 
-    public PagedModel<EntityModel<ProductDto>> findAll(Pageable pageable) {
-        return pagedResourcesAssembler.toModel(productRepository.findAll(pageable)
-                .map(ProductDto::toDto));
+    public Page<ProductDto> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable).map(ProductDto::toDto);
     }
 
     private static String getColorFromAttributes(List<Attribute> attributes) {
