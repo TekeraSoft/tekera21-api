@@ -17,10 +17,10 @@ open class Order(
     @JoinColumn(name = "guest_id")
     open var guest: Guest? = null,
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    open var company: Company? = null,
+
     open var paymentType: PaymentType? = null,
-
-    open var shippingAddress: Address,
-
-    open var billingAddress: Address
 
 ): BaseEntity()

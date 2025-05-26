@@ -40,7 +40,7 @@ data class ProductDto(
                         it.sku,
                         it.barcode,
                         it.attributes.map { AttributeDto(it.key,it.value)},
-                        it.images.toList()
+                        it.images?.toList()
                     )
                 },
                 from.currencyType,

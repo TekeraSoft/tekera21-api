@@ -59,7 +59,7 @@ open class Product(
     @CollectionTable(name = "product_attributes", joinColumns = [JoinColumn(name = "product_id")])
     open var attributes: List<Attribute> = listOf(),
 
-    open var rate: Double,
+    open var rate: Double = 0.0,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var comments: MutableList<Comment> = mutableListOf()

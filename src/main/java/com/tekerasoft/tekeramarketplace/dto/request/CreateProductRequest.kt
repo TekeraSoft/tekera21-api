@@ -16,7 +16,7 @@ data class CreateProductRequest(
     val description: String,
     @JsonProperty("categoryId")
     val categoryId: String,
-    @JsonProperty("categoryId")
+    @JsonProperty("companyId")
     val companyId: String,
     @JsonProperty("subCategories")
     val subCategories: List<String>,

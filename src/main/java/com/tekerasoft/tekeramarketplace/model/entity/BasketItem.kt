@@ -5,13 +5,11 @@ import java.math.BigDecimal
 
 @Entity
 open class BasketItem(
-
     open var name: String,
     open var slug: String,
     open var code: String,
     open var brandName: String,
     open var quantity: Int,
-
     open var modelName: String,
     open var modelCode: String,
     open var price: BigDecimal,
@@ -19,9 +17,5 @@ open class BasketItem(
     open var barcode: String,
     open var attribute: Attribute,
     open var image: String,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    open var company: Company
-
+    open var companyId: String
 ): BaseEntity()

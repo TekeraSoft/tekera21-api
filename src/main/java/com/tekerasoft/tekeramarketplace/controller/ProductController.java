@@ -20,4 +20,5 @@ public class ProductController {
     public ResponseEntity<Page<ProductDto>> getAllProduct(Pageable pageable) {
         return ResponseEntity.ok(productService.findAll(pageable));
     }
+
 }

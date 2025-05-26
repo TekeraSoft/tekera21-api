@@ -40,6 +40,9 @@ open class Company(
         joinColumns = [JoinColumn(name = "company_id")])
     open var identityDocumentPaths: List<CompanyDocument>,
 
+    @OneToMany(fetch = FetchType.LAZY)
+    open var orders: MutableList<Order> = mutableListOf(),
+
     open var rate: Double,
 
     open var isVerified: Boolean = false,

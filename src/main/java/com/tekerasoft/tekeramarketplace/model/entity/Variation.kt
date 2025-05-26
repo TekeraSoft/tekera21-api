@@ -14,8 +14,8 @@ import java.math.BigDecimal
 open class Variation(
     open var modelName: String,
     open var modelCode: String,
-    open var price: BigDecimal,
-    open var stock: Int = 0,
+    open var price: BigDecimal = BigDecimal.ZERO,
+    open var stock: Int,
     open var sku: String,
     open var barcode: String,
 
@@ -29,7 +29,7 @@ open class Variation(
         name = "variation_images",
         joinColumns = [JoinColumn(name = "variation_id")]
     )
-    open var images: List<String>,
+    open var images: List<String> = listOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
