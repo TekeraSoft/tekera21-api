@@ -5,9 +5,16 @@ import jakarta.persistence.*
 @Entity
 open class BasketItem(
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    open var orderProducts: MutableList<OrderProduct>,
+    open var name: String,
+    open var slug: String,
+    open var code: String,
+    open var brandName: String,
 
-    open var productCount: Int,
+    @Embedded
+    open var variation: OrderVariation,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    open var company: Company
 
 ): BaseEntity()

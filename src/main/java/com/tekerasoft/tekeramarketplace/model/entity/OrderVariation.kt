@@ -12,4 +12,5 @@ open class OrderVariation(
     open var barcode: String,
     open var attribute: Attribute,
     open var image: String,
+
 )

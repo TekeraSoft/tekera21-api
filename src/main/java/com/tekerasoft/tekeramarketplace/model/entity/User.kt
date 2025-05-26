@@ -30,6 +30,9 @@ open class User (
     @OneToOne(fetch = FetchType.LAZY)
     open var company: Company? = null,
 
+    @OneToMany(fetch = FetchType.LAZY)
+    open var orders: MutableList<Order>,
+
     open var phoneNumber: String,
     open var address: String,
 

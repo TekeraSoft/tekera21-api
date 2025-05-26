@@ -5,8 +5,10 @@ import jakarta.persistence.Entity
 
 @Entity
 open class Comment(
+
     open var userName: String,
     open var rate: Double,
     @Column(columnDefinition = "TEXT")
     open var message: String,
+
 ): BaseEntity()
