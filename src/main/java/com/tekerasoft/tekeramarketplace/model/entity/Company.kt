@@ -26,16 +26,21 @@ open class Company(
     open var products: MutableList<Product> = mutableListOf(),
 
     @ElementCollection
-    @CollectionTable(name = "company_address", joinColumns = [JoinColumn(name = "company_id")])
+    @CollectionTable(name = "company_address",
+        joinColumns = [JoinColumn(name = "company_id")])
     open var address: MutableList<Address> = mutableListOf(),
 
     @ElementCollection
-    @CollectionTable(name = "company_bank_accounts", joinColumns = [JoinColumn(name = "company_id")])
+    @CollectionTable(name = "company_bank_accounts",
+        joinColumns = [JoinColumn(name = "company_id")])
     open var bankAccounts: MutableList<BankAccount> = mutableListOf(),
 
     @ElementCollection
-    @CollectionTable(name= "company_document_paths", joinColumns = [JoinColumn(name = "company_id")])
+    @CollectionTable(name= "company_document_paths",
+        joinColumns = [JoinColumn(name = "company_id")])
     open var identityDocumentPaths: List<CompanyDocument>,
+
+    open var rate: Double,
 
     open var isVerified: Boolean = false,
 

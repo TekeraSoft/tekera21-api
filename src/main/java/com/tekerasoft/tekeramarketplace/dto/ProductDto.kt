@@ -17,6 +17,8 @@ data class ProductDto(
     val tags: List<String>,
     val productType: ProductType,
     val attributes: List<AttributeDto>,
+    val rate: Double,
+    val comments: List<CommentDto>
 ) {
     companion object {
         @JvmStatic
@@ -44,7 +46,9 @@ data class ProductDto(
                 from.currencyType,
                 from.tags.toList(),
                 from.productType,
-                from.attributes.map { AttributeDto(it.key, it.value) }
+                from.attributes.map { AttributeDto(it.key, it.value) },
+                from.rate,
+                from.comments.map { CommentDto(it.id,it.userName,it.rate,it.message) }
             )
         }
     }
