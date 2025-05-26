@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
 import jakarta.persistence.*
+import java.math.BigDecimal
 
 @Entity
 open class BasketItem(
@@ -9,9 +10,15 @@ open class BasketItem(
     open var slug: String,
     open var code: String,
     open var brandName: String,
+    open var quantity: Int,
 
-    @Embedded
-    open var variation: OrderVariation,
+    open var modelName: String,
+    open var modelCode: String,
+    open var price: BigDecimal,
+    open var sku: String,
+    open var barcode: String,
+    open var attribute: Attribute,
+    open var image: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
