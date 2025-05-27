@@ -6,6 +6,7 @@ import com.tekerasoft.tekeramarketplace.model.entity.Category;
 import com.tekerasoft.tekeramarketplace.model.entity.SubCategory;
 import com.tekerasoft.tekeramarketplace.repository.releational.CategoryRepository;
 import com.tekerasoft.tekeramarketplace.repository.releational.SubCategoryRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -23,7 +24,7 @@ public class SubCategoryService {
         this.fileService = fileService;
     }
 
-    public ApiResponse<?> createSubCategory(CreateSubCategoryRequest req) {
+    public ApiResponse createSubCategory(CreateSubCategoryRequest req) {
         try {
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
                     .orElseThrow();
@@ -33,7 +34,7 @@ public class SubCategoryService {
             subCategory.setName(req.getName());
             subCategory.setImage(imagePath);
             subCategoryRepository.save(subCategory);
-            return new ApiResponse<>("Sub Categories Created",null, true);
+            return new ApiResponse("Sub Categories Created", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }

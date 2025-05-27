@@ -3,11 +3,14 @@ package com.tekerasoft.tekeramarketplace.service;
 import com.tekerasoft.tekeramarketplace.dto.CategoryDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCategoryRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.exception.CategoryException;
 import com.tekerasoft.tekeramarketplace.model.entity.Category;
 import com.tekerasoft.tekeramarketplace.repository.releational.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,22 +23,19 @@ public class CategoryService {
         this.fileService = fileService;
     }
 
-    public ApiResponse<?> save(CreateCategoryRequest req)
-    {
-        try {
-            Category category = new Category();
-            String imagePath = fileService.folderFileUpload(req.getFile(),"category");
-            category.setName(req.getName());
-            category.setImage(imagePath);
-            category.setSubCategories(new ArrayList<>());
-            categoryRepository.save(category);
-            return new ApiResponse<>("Category Created", null, true);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Error saving category", e);
+    public ApiResponse<?> save(CreateCategoryRequest req) {
+        if (categoryRepository.existsByName(req.getName())) {
+            throw new CategoryException("Category name already exists");
         }
+        String imagePath = fileService.folderFileUpload(req.getFile(), "category");
+        Category category = new Category();
+        category.setName(req.getName());
+        category.setImage(imagePath);
+        categoryRepository.save(category);
+        return new ApiResponse<>("Category created", HttpStatus.CREATED.value());
     }
 
-    public List<CategoryDto> getAllCategory() {
-        return categoryRepository.findAll().stream().map(CategoryDto::toDto).toList();
+    public Page<CategoryDto> getAllCategory(Pageable pageable) {
+        return categoryRepository.findAll(pageable).map(CategoryDto::toDto);
     }
 }

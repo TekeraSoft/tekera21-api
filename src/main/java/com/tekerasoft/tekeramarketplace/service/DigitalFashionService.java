@@ -7,6 +7,7 @@ import com.tekerasoft.tekeramarketplace.model.document.TargetPicture;
 import com.tekerasoft.tekeramarketplace.repository.nosql.DigitalFashionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,7 +29,7 @@ public class DigitalFashionService {
             TargetPicture targetPicture = new TargetPicture();
             targetPicture.setTargetPic(filePath);
             targetPicture.setMindPath(mindPath);
-            return new ApiResponse<>("File Saved", null, true);
+            return new ApiResponse<>("File Saved", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -41,7 +42,7 @@ public class DigitalFashionService {
     public ApiResponse<?> deleteTargetPicture(String id) {
         try {
             digitalFashionRepository.deleteById(id);
-            return new ApiResponse<>("TargetPicture deleted", null, true);
+            return new ApiResponse<>("TargetPicture deleted", HttpStatus.OK.value());
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }

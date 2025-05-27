@@ -13,6 +13,7 @@ import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -104,7 +105,7 @@ public class ProductService {
             }
             product.setVariations(variations);
             productRepository.save(product);
-            return new ApiResponse<>("Product Created", null, true);
+            return new ApiResponse<>("Product Created", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
             throw new RuntimeException("Error creating product", e);
         }

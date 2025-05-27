@@ -23,11 +23,11 @@ public class AccountController {
     }
 
     @PostMapping("/create-company")
-    public ResponseEntity<ApiResponse<?>> createCompany(@RequestPart("data") CreateCompanyRequest req,
+    public ApiResponse createCompany(@RequestPart("data") CreateCompanyRequest req,
                                                         @RequestPart("files") List<MultipartFile> files,
                                                         @RequestPart("logo") MultipartFile logo)
     {
-        return ResponseEntity.ok(companyService.createCompany(req,files,logo));
+        return companyService.createCompany(req,files,logo);
     }
 
 
