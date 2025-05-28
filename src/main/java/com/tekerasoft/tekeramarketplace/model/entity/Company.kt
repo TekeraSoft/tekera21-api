@@ -7,7 +7,6 @@ import java.time.LocalDateTime
 @Table(name = "companies")
 open class Company(
     open var name: String,
-    open var category: String,
     open var logo: String,
     open var email: String,
     open var gsmNumber: String,
@@ -22,8 +21,18 @@ open class Company(
     open var contactPersonNumber: String,
     open var contactPersonTitle: String,
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "company_categories",
+        joinColumns = [JoinColumn(name = "company_id")],
+        inverseJoinColumns = [JoinColumn(name = "category_id")])
+    open var categories: MutableSet<Category> = mutableSetOf(),
+
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
     open var products: MutableList<Product> = mutableListOf(),
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [(CascadeType.ALL)])
+    open var users: MutableSet<User> = mutableSetOf(),
 
     @ElementCollection
     @CollectionTable(name = "company_address",

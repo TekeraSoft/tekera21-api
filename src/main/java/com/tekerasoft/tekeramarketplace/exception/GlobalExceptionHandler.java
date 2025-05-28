@@ -37,7 +37,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CategoryException.class)
-    public ResponseEntity<Object> handleProductException(CategoryException ex) {
+    public ResponseEntity<Object> handleCategoryException(CategoryException ex) {
+        logger.error("CategoryException occurred: {}", ex.getMessage(), ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @ExceptionHandler(SubCategoryException.class)
+    public ResponseEntity<Object> handleSubCategoryException(SubCategoryException ex) {
         logger.error("CategoryException occurred: {}", ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

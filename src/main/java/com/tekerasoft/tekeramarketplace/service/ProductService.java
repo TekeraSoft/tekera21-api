@@ -84,7 +84,7 @@ public class ProductService {
                 var.setProduct(product);
 
                 List<String> imgUrls = new ArrayList<>();
-                // İlgili görseli bul
+
                 for (MultipartFile image : images) {
                     Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
                     if (parsed == null) continue;
@@ -94,7 +94,7 @@ public class ProductService {
                     String variantColor = getColorFromAttributes(varReq.getAttributes());
                     if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
                             && variantColor.trim().equalsIgnoreCase(imageColor.trim())) {
-                        // image'i burada bir yere kaydedip URL'si set ediliyor
+
                         String imageUrl = fileService.productFileUpload(image, company.getName(),
                                 SlugGenerator.generateSlug(req.getName()));
                         imgUrls.add(imageUrl);

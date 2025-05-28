@@ -9,8 +9,8 @@ data class CreateCompanyRequest(
     @JsonProperty("name")
     val name: String,
 
-    @JsonProperty("categoryName")
-    val categoryName: String,
+    @JsonProperty("categoryId")
+    val categoryId: List<String>,
 
     @JsonProperty("email")
     val email: String,
