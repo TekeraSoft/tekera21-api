@@ -1,6 +1,5 @@
 package com.tekerasoft.tekeramarketplace.dto.request
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import org.springframework.web.multipart.MultipartFile

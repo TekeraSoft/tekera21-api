@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile
 data class CreateSubCategoryRequest(
 
     @field:NotBlank(message = "Sub category name cannot be blank")
+    @field:NotNull
     @JsonProperty("name")
     val name: String,
 
@@ -15,7 +16,8 @@ data class CreateSubCategoryRequest(
     @JsonProperty("image")
     val image: MultipartFile,
 
-    @field:NotNull(message = "Category id must be provided")
+    @field:NotBlank(message = "Category id must be provided")
+    @field:NotNull
     @JsonProperty("categoryId")
     val categoryId: String
 )
