@@ -30,3 +30,6 @@ spring:
     user: tekera_user
     password: tekera_pass
     bucket-name: tekera-bucket
+
+  mind-creator:
+    api: http://localhost:3000/generate
