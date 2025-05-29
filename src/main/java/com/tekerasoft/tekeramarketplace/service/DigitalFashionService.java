@@ -37,8 +37,8 @@ public class DigitalFashionService {
 
     public ApiResponse<?> createTargetPicture(CreateTargetPictureRequest req) {
         try {
-            String filePath = fileService.targetPicUpload(req.getPicture());
-            String mindPath = processAndStoreMindMap(req.getPicture());
+            String filePath = fileService.targetPicUpload(req.getImage());
+            String mindPath = processAndStoreMindMap(req.getImage());
             TargetPicture targetPicture = new TargetPicture();
             targetPicture.setTargetPic(filePath);
             targetPicture.setMindPath(mindPath);

@@ -23,5 +23,4 @@ public class DigitalFashionAdminController {
     public ApiResponse<?> createTargetPicture(@Valid @ModelAttribute CreateTargetPictureRequest req) {
         return digitalFashionService.createTargetPicture(req);
     }
-
 }

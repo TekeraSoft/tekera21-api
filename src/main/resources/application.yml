@@ -10,7 +10,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://tekera_user:tekera_pass@localhost:27017/tekera-document-db
+      uri: mongodb://tekera_user:tekera_pass@localhost:27017/tekera-document-db?authSource=admin
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -31,5 +31,10 @@ spring:
     password: tekera_pass
     bucket-name: tekera-bucket
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: tekera-group
+
   mind-creator:
-    api: http://localhost:3000/generate
+    api: http://host.docker.internal:3009/generate
