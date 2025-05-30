@@ -46,25 +46,9 @@ public class FileService {
                     .build();
             minioClient.putObject(putObjectArgs);
             return fileName;
-        }catch (ErrorResponseException e) {
-            throw new RuntimeException("MinIO Error Response: " + e.getMessage(), e);
-         } catch (InsufficientDataException e) {
-             throw new RuntimeException("Insufficient data during file upload: " + e.getMessage(), e);
-         } catch (InternalException e) {
-             throw new RuntimeException("Internal error during file upload: " + e.getMessage(), e);
-         } catch (InvalidKeyException e) {
-             throw new RuntimeException("Invalid key error: " + e.getMessage(), e);
-         } catch (InvalidResponseException e) {
-             throw new RuntimeException("Invalid response from MinIO: " + e.getMessage(), e);
-         } catch (IOException e) {
-             throw new RuntimeException("IO error during file upload: " + e.getMessage(), e);
-         } catch (NoSuchAlgorithmException e) {
-             throw new RuntimeException("Algorithm not found: " + e.getMessage(), e);
-         } catch (ServerException e) {
-             throw new RuntimeException("Server error: " + e.getMessage(), e);
-         } catch (XmlParserException e) {
-             throw new RuntimeException("XML Parsing error: " + e.getMessage(), e);
-         }
+        } catch (Exception e) {
+            throw new RuntimeException("MinIO upload error: " + e.getMessage(), e);
+        }
     }
 
     public String folderFileUpload(MultipartFile file,String folderName){
@@ -89,25 +73,9 @@ public class FileService {
                     .build();
             minioClient.putObject(putObjectArgs);
             return folderName + "/" + fileName;
-        }catch (ErrorResponseException e) {
-        throw new RuntimeException("MinIO Error Response: " + e.getMessage(), e);
-         } catch (InsufficientDataException e) {
-             throw new RuntimeException("Insufficient data during file upload: " + e.getMessage(), e);
-         } catch (InternalException e) {
-             throw new RuntimeException("Internal error during file upload: " + e.getMessage(), e);
-         } catch (InvalidKeyException e) {
-             throw new RuntimeException("Invalid key error: " + e.getMessage(), e);
-         } catch (InvalidResponseException e) {
-             throw new RuntimeException("Invalid response from MinIO: " + e.getMessage(), e);
-         } catch (IOException e) {
-             throw new RuntimeException("IO error during file upload: " + e.getMessage(), e);
-         } catch (NoSuchAlgorithmException e) {
-             throw new RuntimeException("Algorithm not found: " + e.getMessage(), e);
-         } catch (ServerException e) {
-             throw new RuntimeException("Server error: " + e.getMessage(), e);
-         } catch (XmlParserException e) {
-             throw new RuntimeException("XML Parsing error: " + e.getMessage(), e);
-         }
+        } catch (Exception e) {
+            throw new RuntimeException("MinIO upload error: " + e.getMessage(), e);
+        }
     }
 
     public String targetPicUpload(MultipartFile file) {
@@ -132,24 +100,8 @@ public class FileService {
                     .build();
             minioClient.putObject(putObjectArgs);
             return "/target-pics/"+fileName;
-        }catch (ErrorResponseException e) {
-            throw new RuntimeException("MinIO Error Response: " + e.getMessage(), e);
-        } catch (InsufficientDataException e) {
-            throw new RuntimeException("Insufficient data during file upload: " + e.getMessage(), e);
-        } catch (InternalException e) {
-            throw new RuntimeException("Internal error during file upload: " + e.getMessage(), e);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException("Invalid key error: " + e.getMessage(), e);
-        } catch (InvalidResponseException e) {
-            throw new RuntimeException("Invalid response from MinIO: " + e.getMessage(), e);
-        } catch (IOException e) {
-            throw new RuntimeException("IO error during file upload: " + e.getMessage(), e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Algorithm not found: " + e.getMessage(), e);
-        } catch (ServerException e) {
-            throw new RuntimeException("Server error: " + e.getMessage(), e);
-        } catch (XmlParserException e) {
-            throw new RuntimeException("XML Parsing error: " + e.getMessage(), e);
+        }catch (Exception e) {
+            throw new RuntimeException("MinIO upload error: " + e.getMessage(), e);
         }
     }
 
