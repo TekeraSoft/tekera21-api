@@ -4,10 +4,7 @@ import com.tekerasoft.tekeramarketplace.dto.request.CreateTargetPictureRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.service.DigitalFashionService;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/api/digital-fashion-admin")
@@ -22,5 +19,10 @@ public class DigitalFashionAdminController {
     @PostMapping("/create-target-pic")
     public ApiResponse<?> createTargetPicture(@Valid @ModelAttribute CreateTargetPictureRequest req) {
         return digitalFashionService.createTargetPicture(req);
+    }
+
+    @DeleteMapping("/delete-target-pic")
+    public ApiResponse<?> deleteTargetPicture(String id) {
+        return digitalFashionService.deleteTargetPicture(id);
     }
 }

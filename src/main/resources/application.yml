@@ -50,4 +50,4 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
   mind-creator:
-    api: http://host.docker.internal:3009/generate
+    api: http://localhost:3009/generate

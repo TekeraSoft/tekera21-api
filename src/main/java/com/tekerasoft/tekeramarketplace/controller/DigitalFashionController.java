@@ -1,9 +1,10 @@
 package com.tekerasoft.tekeramarketplace.controller;
 
-import com.tekerasoft.tekeramarketplace.dto.request.CreateTargetPictureRequest;
-import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.dto.document.TargetPictureDto;
 import com.tekerasoft.tekeramarketplace.service.DigitalFashionService;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +17,8 @@ public class DigitalFashionController {
         this.digitalFashionService = digitalFashionService;
     }
 
-    public ApiResponse<?> createTargetPicture(@ModelAttribute CreateTargetPictureRequest req) {
-        return digitalFashionService.createTargetPicture(req);
+    @GetMapping("/get-all-target-pic")
+    public Page<TargetPictureDto> getAllTargetPictures(Pageable pageable) {
+        return digitalFashionService.getAllTargetPictures(pageable);
     }
 }

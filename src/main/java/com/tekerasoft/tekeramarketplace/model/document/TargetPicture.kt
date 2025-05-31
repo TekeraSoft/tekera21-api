@@ -11,6 +11,6 @@ open class TargetPicture(
     @Id
     open var id: String? = null,
     open var targetPic: String = "",
-    open var mindPath: String = "",
+    open var mindPath: String? = null,
     open var createdAt: LocalDateTime = LocalDateTime.now(),
 )

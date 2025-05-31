@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 data class TargetPictureDto(
     val id: String?,
     val targetPic: String,
-    val mindPath: String,
+    val mindPath: String?,
     val createdAt: LocalDateTime?,
 ) {
     companion object {
