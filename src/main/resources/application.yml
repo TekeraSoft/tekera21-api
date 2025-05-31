@@ -38,7 +38,7 @@ spring:
         spring:
           json:
             trusted:
-              packages: *
+              packages: "*"
       group-id: tekeraGroup
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer

@@ -23,15 +23,16 @@ import java.nio.file.Path;
 
 @Service
 public class DigitalFashionService {
+
     @Value("${spring.mind-creator.api}")
     private String nodeApiUrl;
+
     private final TargetPictureRepository targetPictureRepository;
     private final FileService fileService;
 
     public DigitalFashionService(TargetPictureRepository targetPictureRepository,
-                                 TargetPictureRepository digitalFashionRepository,
                                  FileService fileService) {
-        this.targetPictureRepository = digitalFashionRepository;
+        this.targetPictureRepository = targetPictureRepository;
         this.fileService = fileService;
     }
 
