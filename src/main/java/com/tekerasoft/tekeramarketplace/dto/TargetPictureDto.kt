@@ -1,10 +1,11 @@
-package com.tekerasoft.tekeramarketplace.dto.document
+package com.tekerasoft.tekeramarketplace.dto
 
-import com.tekerasoft.tekeramarketplace.model.document.TargetPicture
+import com.tekerasoft.tekeramarketplace.model.entity.TargetPicture
 import java.time.LocalDateTime
+import java.util.UUID
 
 data class TargetPictureDto(
-    val id: String?,
+    val id: UUID?,
     val targetPic: String,
     val mindPath: String?,
     val createdAt: LocalDateTime?,

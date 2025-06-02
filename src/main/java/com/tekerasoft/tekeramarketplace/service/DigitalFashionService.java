@@ -1,24 +1,24 @@
 package com.tekerasoft.tekeramarketplace.service;
 
-import com.tekerasoft.tekeramarketplace.dto.document.TargetPictureDto;
+import com.tekerasoft.tekeramarketplace.dto.TargetPictureDto;
 import com.tekerasoft.tekeramarketplace.dto.payload.MindMapMessage;
+import com.tekerasoft.tekeramarketplace.dto.request.CreateFabricRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateTargetPictureRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
-import com.tekerasoft.tekeramarketplace.model.document.TargetPicture;
-import com.tekerasoft.tekeramarketplace.repository.nosql.TargetPictureRepository;
-import jakarta.transaction.Transactional;
+import com.tekerasoft.tekeramarketplace.model.entity.Fabric;
+import com.tekerasoft.tekeramarketplace.model.entity.TargetPicture;
+import com.tekerasoft.tekeramarketplace.repository.releational.FabricRepository;
+import com.tekerasoft.tekeramarketplace.repository.releational.TargetPictureRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -36,12 +35,14 @@ public class DigitalFashionService {
     private String nodeApiUrl;
 
     private final TargetPictureRepository targetPictureRepository;
+    private final FabricRepository fabricRepository;
     private final FileService fileService;
     private final KafkaTemplate<String, MindMapMessage> kafkaTemplate;
 
-    public DigitalFashionService(TargetPictureRepository targetPictureRepository,
+    public DigitalFashionService(TargetPictureRepository targetPictureRepository, FabricRepository fabricRepository,
                                  FileService fileService, KafkaTemplate<String, MindMapMessage> kafkaTemplate) {
         this.targetPictureRepository = targetPictureRepository;
+        this.fabricRepository = fabricRepository;
         this.fileService = fileService;
         this.kafkaTemplate = kafkaTemplate;
     }
@@ -113,7 +114,7 @@ public class DigitalFashionService {
 
     public ApiResponse<?> deleteTargetPicture(String id) {
         try {
-            targetPictureRepository.deleteById(id);
+            targetPictureRepository.deleteById(UUID.fromString(id));
             return new ApiResponse<>("TargetPicture deleted", HttpStatus.OK.value());
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());

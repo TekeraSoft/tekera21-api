@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -46,5 +47,10 @@ public class SuperAdminController {
     @GetMapping("/get-all-company")
     public Page<CompanyDto> getAllCompany(Pageable pageable) {
         return companyService.getAllCompanies(pageable);
+    }
+
+    @DeleteMapping("/delete-category")
+    public ResponseEntity<ApiResponse<?>> deleteCategory(@RequestParam("categoryId") String categoryId) {
+           return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
     }
 }

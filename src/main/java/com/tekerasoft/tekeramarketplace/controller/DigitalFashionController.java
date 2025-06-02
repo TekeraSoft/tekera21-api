@@ -1,6 +1,6 @@
 package com.tekerasoft.tekeramarketplace.controller;
 
-import com.tekerasoft.tekeramarketplace.dto.document.TargetPictureDto;
+import com.tekerasoft.tekeramarketplace.dto.TargetPictureDto;
 import com.tekerasoft.tekeramarketplace.service.DigitalFashionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

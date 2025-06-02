@@ -3,9 +3,10 @@ package com.tekerasoft.tekeramarketplace.dto.payload
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
 import java.io.Serializable
+import java.util.UUID
 
 data class MindMapMessage(
-    val id: String,
+    val id: UUID,
     val imageFile: ByteArray
 ): Serializable {
     override fun equals(other: Any?): Boolean {

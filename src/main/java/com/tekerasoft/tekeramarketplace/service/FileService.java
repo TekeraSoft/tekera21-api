@@ -143,11 +143,11 @@ public class FileService {
         }
     }
 
-    public void deleteInFolderFile(String fileName,String folderName) {
+    public void deleteInFolderFile(String path) {
        try {
            RemoveObjectArgs removeObjectArgs = RemoveObjectArgs.builder()
                    .bucket(bucketName)
-                   .object(folderName+"/"+fileName)
+                   .object(path)
                    .build();
            minioClient.removeObject(removeObjectArgs);
        } catch (Exception e) {

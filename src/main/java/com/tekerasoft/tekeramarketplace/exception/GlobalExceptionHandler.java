@@ -36,6 +36,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ApiResponse<>("Validation failed" ,HttpStatus.BAD_REQUEST.value(), errors));
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
+        logger.error("CategoryException occurred: {}", ex.getMessage(), ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+
     @ExceptionHandler(CategoryException.class)
     public ResponseEntity<Object> handleCategoryException(CategoryException ex) {
         logger.error("CategoryException occurred: {}", ex.getMessage(), ex);
@@ -62,6 +70,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUnexpectedException(Exception ex) {
+        logger.error("Unhandled exception occurred", ex);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiResponse<>("Unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+    }
+
+    @ExceptionHandler(DigitalFashionCategoryException.class)
+    public ResponseEntity<Object> handleDigitalFashionCategoryException(DigitalFashionCategoryException ex) {
+        logger.error("Unhandled exception occurred", ex);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiResponse<>("Unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+    }
+
+    @ExceptionHandler(DigitalFashionSubCategoryException.class)
+    public ResponseEntity<Object> handleDigitalFashionCategoryException(DigitalFashionSubCategoryException ex) {
         logger.error("Unhandled exception occurred", ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -1,8 +1,8 @@
 package com.tekerasoft.tekeramarketplace.kafka;
 
 import com.tekerasoft.tekeramarketplace.dto.payload.MindMapMessage;
-import com.tekerasoft.tekeramarketplace.model.document.TargetPicture;
-import com.tekerasoft.tekeramarketplace.repository.nosql.TargetPictureRepository;
+import com.tekerasoft.tekeramarketplace.model.entity.TargetPicture;
+import com.tekerasoft.tekeramarketplace.repository.releational.TargetPictureRepository;
 import com.tekerasoft.tekeramarketplace.service.DigitalFashionService;
 import com.tekerasoft.tekeramarketplace.service.FileService;
 import org.slf4j.Logger;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
