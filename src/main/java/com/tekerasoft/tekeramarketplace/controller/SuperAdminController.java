@@ -29,7 +29,7 @@ public class SuperAdminController {
         this.companyService = companyService;
     }
 
-    @PostMapping(value ="/create-category", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/create-category", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> createCategory(@Valid @ModelAttribute CreateCategoryRequest req) {
         return categoryService.save(req);
     }

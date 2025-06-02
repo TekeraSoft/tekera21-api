@@ -2,6 +2,7 @@ package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.request.CreateSubCategoryRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.exception.SubCategoryException;
 import com.tekerasoft.tekeramarketplace.model.entity.Category;
 import com.tekerasoft.tekeramarketplace.model.entity.SubCategory;
@@ -32,7 +33,7 @@ public class SubCategoryService {
         }
         try {
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
-                    .orElseThrow();
+                    .orElseThrow(()-> new NotFoundException("Category not found"));
             String imagePath = fileService.folderFileUpload(req.getImage(),"sub-category");
             SubCategory subCategory = new SubCategory();
             subCategory.setCategory(category);
@@ -41,7 +42,7 @@ public class SubCategoryService {
             subCategoryRepository.save(subCategory);
             return new ApiResponse<>("Sub Categories Created", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new SubCategoryException(e.getMessage());
         }
     }
 

@@ -4,6 +4,7 @@ import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateProductRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.VariationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.repository.releational.CategoryRepository;
 import com.tekerasoft.tekeramarketplace.repository.releational.CompanyRepository;
@@ -112,7 +113,19 @@ public class ProductService {
     }
 
     public Page<ProductDto> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable).map(ProductDto::toDto);
+        return productRepository.findActiveProducts(pageable).map(ProductDto::toDto);
+    }
+
+    public ApiResponse<?> changeProductActiveStatus(String productId, Boolean active) {
+        Product product = productRepository.findById(UUID.fromString(productId))
+                .orElseThrow(() -> new NotFoundException("Product not found: " + productId));
+        try {
+            product.setActive(active);
+            productRepository.save(product);
+            return new ApiResponse<>("Product Status Updated", HttpStatus.OK.value());
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Error updating product", e);
+        }
     }
 
     private static String getColorFromAttributes(List<Attribute> attributes) {

@@ -32,7 +32,7 @@ open class Product(
     @JoinColumn(name = "category_id")
     open var category: Category,
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinTable(name = "product_subcategories",
         joinColumns = [JoinColumn(name = "product_fk")],
         inverseJoinColumns = [JoinColumn(name = "subcategory_id")])
@@ -62,7 +62,8 @@ open class Product(
     open var rate: Double = 0.0,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    open var comments: MutableList<Comment> = mutableListOf()
+    open var comments: MutableList<Comment> = mutableListOf(),
 
+    open var isActive: Boolean = false
 
     ): BaseEntity()
