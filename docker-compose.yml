@@ -25,7 +25,45 @@ services:
       MONGO_INITDB_ROOT_USERNAME: tekera_user
       MONGO_INITDB_ROOT_PASSWORD: tekera_pass
 
+  # bin/elasticsearch-service-tokens create elastic/kibana kibana-token komut ile kibananın elastic e bağlanacağı tokeni oluşturur
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    networks:
+      - my-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.4
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - SERVER_SSL_ENABLED=false
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - my-network
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.13.4
+    container_name: logstash
+    ports:
+      - "5000:5000"  # TCP log için
+    volumes:
+      - ./logstash:/usr/share/logstash/pipeline
+    depends_on:
+      - elasticsearch
+    networks:
+      - my-network
+
   # MinIO (Blob Storage)
+  # mc alias set myminio http://localhost:9000 minioadmin minioadmin ile myminio alias oluştur
   # minio containerine gir mc anonymous set download myminio/tekera-bucket bu komut ile bucket i public yap
   minio1:
     image: minio/minio:latest
@@ -78,6 +116,26 @@ services:
     networks:
       - my-network
 
+  mc-once:
+    image: minio/mc
+    depends_on:
+      - minio1
+    entrypoint: >
+      sh -c "
+          echo '🕒 MinIO hazır mı kontrol ediliyor...' &&
+          until mc alias set myminio http://minio1:9000 tekera_user tekera_pass; do
+            echo '⏳ Bekleniyor...'; sleep 2;
+          done &&
+          echo '✅ mc alias tamam.' &&
+
+          mc mb myminio/tekera-bucket || true &&
+          mc anonymous set download myminio/tekera-bucket &&
+          echo '✅ Bucket public yapıldı.'
+        "
+    networks:
+      - my-network
+    restart: "no"
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -88,6 +146,7 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:latest
+    container_name: apache-kafka
     depends_on:
       - zookeeper
     ports:
@@ -104,6 +163,7 @@ services:
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
     ports:
       - "8180:8080"
     environment:
@@ -122,13 +182,13 @@ services:
     networks:
       - my-network
 
-#  arzuamber-api:
+#  tekera-api:
 #    build:
 #      context: .
 #    container_name: arzuamber-api
 #    depends_on:
-#      - arzuamber-db
-#      - minio
+#      - tekera-db
+#      - minio1
 #    ports:
 #      - "9090:8080"
 #    networks:

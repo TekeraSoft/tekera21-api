@@ -2,13 +2,11 @@ package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.TargetPictureDto;
 import com.tekerasoft.tekeramarketplace.dto.payload.MindMapMessage;
-import com.tekerasoft.tekeramarketplace.dto.request.CreateFabricRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateTargetPictureRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
-import com.tekerasoft.tekeramarketplace.model.entity.Fabric;
 import com.tekerasoft.tekeramarketplace.model.entity.TargetPicture;
-import com.tekerasoft.tekeramarketplace.repository.releational.FabricRepository;
-import com.tekerasoft.tekeramarketplace.repository.releational.TargetPictureRepository;
+import com.tekerasoft.tekeramarketplace.repository.FabricRepository;
+import com.tekerasoft.tekeramarketplace.repository.TargetPictureRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;

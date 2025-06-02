@@ -1,4 +1,4 @@
-package com.tekerasoft.tekeramarketplace.repository.releational;
+package com.tekerasoft.tekeramarketplace.repository;
 
 import com.tekerasoft.tekeramarketplace.model.entity.TargetPicture;
 import org.springframework.data.jpa.repository.JpaRepository;

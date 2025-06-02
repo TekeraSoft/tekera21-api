@@ -3,12 +3,13 @@ package com.tekerasoft.tekeramarketplace.service;
 import com.tekerasoft.tekeramarketplace.dto.CompanyDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCompanyRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.Category;
 import com.tekerasoft.tekeramarketplace.model.entity.Company;
 import com.tekerasoft.tekeramarketplace.model.entity.CompanyDocument;
 import com.tekerasoft.tekeramarketplace.model.entity.VerificationStatus;
-import com.tekerasoft.tekeramarketplace.repository.releational.CategoryRepository;
-import com.tekerasoft.tekeramarketplace.repository.releational.CompanyRepository;
+import com.tekerasoft.tekeramarketplace.repository.CategoryRepository;
+import com.tekerasoft.tekeramarketplace.repository.CompanyRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -100,7 +101,19 @@ public class CompanyService {
         }
     }
 
+    public ApiResponse<?> changeCompanyActiveStatus(String companyId, Boolean active) {
+        Company company = companyRepository.findById(UUID.fromString(companyId))
+                .orElseThrow(() -> new NotFoundException("Company not found: " + companyId));
+        try {
+            company.setActive(active);
+            companyRepository.save(company);
+            return new ApiResponse<>("Company Status Updated", HttpStatus.OK.value());
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Error updating company", e);
+        }
+    }
+
     public Page<CompanyDto> getAllCompanies(Pageable pageable) {
-        return companyRepository.findAll(pageable).map(CompanyDto::toDto);
+        return companyRepository.findActiveCompanies(pageable).map(CompanyDto::toDto);
     }
 }

@@ -56,6 +56,8 @@ open class Company(
 
     open var isVerified: Boolean = false,
 
+    open var isActive: Boolean = false,
+
     @Enumerated(EnumType.STRING)
     open var verificationStatus: VerificationStatus = VerificationStatus.PENDING
 

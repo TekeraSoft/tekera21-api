@@ -1,7 +1,7 @@
 package com.tekerasoft.tekeramarketplace.service;
 
-import com.tekerasoft.tekeramarketplace.repository.releational.DigitalFashionCategoryRepository;
-import com.tekerasoft.tekeramarketplace.repository.releational.DigitalFashionSubCategoryRepository;
+import com.tekerasoft.tekeramarketplace.repository.DigitalFashionCategoryRepository;
+import com.tekerasoft.tekeramarketplace.repository.DigitalFashionSubCategoryRepository;
 import org.springframework.stereotype.Service;
 
 @Service

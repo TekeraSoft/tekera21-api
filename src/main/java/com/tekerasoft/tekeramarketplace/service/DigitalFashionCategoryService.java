@@ -1,11 +1,10 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.request.CreateDigitalFashionCategoryRequest;
-import com.tekerasoft.tekeramarketplace.dto.request.CreateDigitalFashionSubCategoryRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.DigitalFashionCategoryException;
 import com.tekerasoft.tekeramarketplace.model.entity.DigitalFashionCategory;
-import com.tekerasoft.tekeramarketplace.repository.releational.DigitalFashionCategoryRepository;
+import com.tekerasoft.tekeramarketplace.repository.DigitalFashionCategoryRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
