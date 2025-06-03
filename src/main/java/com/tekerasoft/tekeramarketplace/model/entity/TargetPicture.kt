@@ -7,5 +7,7 @@ import jakarta.persistence.Table
 @Table(name = "target_pictures")
 open class TargetPicture(
     open var targetPic: String = "",
-    open var mindPath: String? = null
+    open var mindPath: String? = null,
+    open var defaultContent: String? = null,
+    open var specialContent: String? = null
 ): BaseEntity()

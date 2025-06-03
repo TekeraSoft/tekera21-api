@@ -4,4 +4,6 @@ import org.springframework.web.multipart.MultipartFile
 
 data class CreateTargetPictureRequest(
     val image: MultipartFile,
+    val defaultContent: MultipartFile,
+    val specialContent: MultipartFile,
 )

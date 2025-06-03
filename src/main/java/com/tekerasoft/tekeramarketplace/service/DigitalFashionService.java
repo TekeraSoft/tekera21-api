@@ -52,13 +52,11 @@ public class DigitalFashionService {
             targetPicture.setTargetPic(filePath);
             TargetPicture tp = targetPictureRepository.save(targetPicture);
 
-            kafkaTemplate.send("mindmap-processing-topic", new MindMapMessage(tp.getId(),req.getImage().getBytes()));
+            kafkaTemplate.send("mindmap-processing-topic", new MindMapMessage(tp.getId(),filePath));
 
             return new ApiResponse<>("File queued for processing", HttpStatus.ACCEPTED.value());
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

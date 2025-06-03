@@ -112,6 +112,12 @@ public class ProductService {
         }
     }
 
+    public ProductDto findBySlug(String slug)  {
+        return productRepository.findBySlug(slug)
+                .map(ProductDto::toDto)
+                .orElseThrow(()-> new NotFoundException("Product not found"));
+    }
+
     public Page<ProductDto> findAll(Pageable pageable) {
         return productRepository.findActiveProducts(pageable).map(ProductDto::toDto);
     }

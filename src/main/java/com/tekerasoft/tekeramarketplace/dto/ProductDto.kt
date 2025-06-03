@@ -3,15 +3,16 @@ package com.tekerasoft.tekeramarketplace.dto
 import com.tekerasoft.tekeramarketplace.model.entity.CurrencyType
 import com.tekerasoft.tekeramarketplace.model.entity.Product
 import com.tekerasoft.tekeramarketplace.model.entity.ProductType
+import java.util.UUID
 
 data class ProductDto(
+    val id: UUID?,
     val name: String,
     val slug: String,
     val code: String,
     val brandName: String,
     val description: String,
     val category: CategoryDto,
-    val subCategories: List<SubCategoryDto>,
     val variations: List<VariationDto>,
     val currencyType: CurrencyType,
     val tags: List<String>,
@@ -24,13 +25,13 @@ data class ProductDto(
         @JvmStatic
         fun toDto(from: Product): ProductDto {
             return ProductDto(
+                from.id,
                 from.name,
                 from.slug,
                 from.code,
                 from.brandName,
                 from.description,
                 from.category.let { CategoryDto.toDto(it) },
-                from.subCategories.map { SubCategoryDto(it.id, it.name,it.image) },
                 from.variations.map {
                     VariationDto(
                         it.modelName,
@@ -40,7 +41,7 @@ data class ProductDto(
                         it.sku,
                         it.barcode,
                         it.attributes.map { AttributeDto(it.key,it.value)},
-                        it.images?.toList()
+                        it.images
                     )
                 },
                 from.currencyType,

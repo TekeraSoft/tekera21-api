@@ -3,6 +3,7 @@ package com.tekerasoft.tekeramarketplace.service;
 import com.tekerasoft.tekeramarketplace.dto.CompanyDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCompanyRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.exception.CompanyException;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.Category;
 import com.tekerasoft.tekeramarketplace.model.entity.Company;
@@ -38,6 +39,10 @@ public class CompanyService {
 
     @Transactional
     public ApiResponse<?> createCompany(CreateCompanyRequest req, List<MultipartFile> files, MultipartFile logo) {
+
+        if(companyRepository.existsByNameAndTaxNumber(req.getName(),req.getTaxNumber())) {
+            throw new CompanyException("Company already exists");
+        }
         try {
             Company company = new Company();
             company.setName(req.getName());
@@ -72,6 +77,7 @@ public class CompanyService {
                 String originalFilename = file.getOriginalFilename();
 
                 // Dosya adından uzantıyı çıkar: imzasurkusu.pdf -> imzasurkusu
+                assert originalFilename != null;
                 String documentTitle = originalFilename.contains(".")
                         ? originalFilename.substring(0, originalFilename.lastIndexOf('.'))
                         : originalFilename;

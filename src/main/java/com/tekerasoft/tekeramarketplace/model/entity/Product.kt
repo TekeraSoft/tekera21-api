@@ -28,7 +28,7 @@ open class Product(
     @Column(columnDefinition = "TEXT")
     open var description: String,
 
-    @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     open var category: Category,
 
@@ -64,6 +64,6 @@ open class Product(
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var comments: MutableList<Comment> = mutableListOf(),
 
-    open var isActive: Boolean = false
+    open var isActive: Boolean? = true
 
     ): BaseEntity()

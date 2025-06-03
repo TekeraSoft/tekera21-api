@@ -34,7 +34,7 @@ public class SuperAdminController {
         return categoryService.save(req);
     }
 
-    @PostMapping(value = "/create-sub-category")
+    @PostMapping(value = "/create-sub-category", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> createSubCategory(@Valid @ModelAttribute CreateSubCategoryRequest req) {
         return subCategoryService.createSubCategory(req);
     }

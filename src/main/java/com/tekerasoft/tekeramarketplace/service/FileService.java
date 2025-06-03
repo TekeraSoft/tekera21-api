@@ -37,15 +37,16 @@ public class FileService {
                 fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
             }
             String fileName = slug + "-" + fileExtension;
+            String companyNameConvert = companyName.toLowerCase().replaceAll("\\s+", "_");
             InputStream inputStream = file.getInputStream();
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                     .bucket(bucketName)
-                    .object("/products/" + companyName + "/" + fileName)
+                    .object("/products/" + companyNameConvert + "/" + fileName)
                     .contentType(file.getContentType())
                     .stream(inputStream, file.getSize(), -1)
                     .build();
             minioClient.putObject(putObjectArgs);
-            return fileName;
+            return "/products/"+companyNameConvert+"/"+fileName;
         } catch (Exception e) {
             throw new RuntimeException("MinIO upload error: " + e.getMessage(), e);
         }

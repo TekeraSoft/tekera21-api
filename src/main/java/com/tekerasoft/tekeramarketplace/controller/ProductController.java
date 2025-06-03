@@ -21,4 +21,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAll(pageable));
     }
 
+    @GetMapping("/get-product-by-slug")
+    public ResponseEntity<ProductDto> getProductBySlug(@RequestParam String slug) {
+        return ResponseEntity.ok(productService.findBySlug(slug));
+    }
+
 }

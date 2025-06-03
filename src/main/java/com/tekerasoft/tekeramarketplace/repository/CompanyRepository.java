@@ -13,4 +13,5 @@ public interface CompanyRepository extends JpaRepository<Company, UUID> {
     @Query("SELECT p FROM Company p WHERE p.isActive = true")
     Page<Company> findActiveCompanies(Pageable pageable);
 
+    boolean existsByNameAndTaxNumber(String name, String taxNumber);
 }

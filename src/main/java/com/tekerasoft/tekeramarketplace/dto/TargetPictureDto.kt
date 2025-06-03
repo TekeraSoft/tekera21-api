@@ -8,6 +8,8 @@ data class TargetPictureDto(
     val id: UUID?,
     val targetPic: String,
     val mindPath: String?,
+    val defaultContent: String?,
+    val specialContent: String?,
     val createdAt: LocalDateTime?,
 ) {
     companion object {
@@ -17,6 +19,8 @@ data class TargetPictureDto(
                 from.id,
                 from.targetPic,
                 from.mindPath,
+                from.defaultContent,
+                from.specialContent,
                 from.createdAt
             )
         }

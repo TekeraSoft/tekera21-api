@@ -38,7 +38,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
-        logger.error("CategoryException occurred: {}", ex.getMessage(), ex);
+        logger.error("CategoryException occurred: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @ExceptionHandler(CompanyException.class)
+    public ResponseEntity<Object> handleCompanyException(CompanyException ex) {
+        logger.error("CompanyException occurred: {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
@@ -46,7 +54,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CategoryException.class)
     public ResponseEntity<Object> handleCategoryException(CategoryException ex) {
-        logger.error("CategoryException occurred: {}", ex.getMessage(), ex);
+        logger.error("CategoryException occurred: {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
@@ -54,7 +62,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SubCategoryException.class)
     public ResponseEntity<Object> handleSubCategoryException(SubCategoryException ex) {
-        logger.error("SubCategoryException occurred: {}", ex.getMessage(), ex);
+        logger.error("SubCategoryException occurred: {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
@@ -62,7 +70,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(FileStorageException.class)
     public ResponseEntity<Object> handleFileStorageException(FileStorageException ex) {
-        logger.error("FileStorageException occurred: {}", ex.getMessage(), ex);
+        logger.error("FileStorageException occurred: {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
@@ -73,7 +81,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error("Unhandled exception occurred", ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiResponse<>("Unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+                .body(new ApiResponse<>("Unexpected error occurred: "+ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
     }
 
     @ExceptionHandler(DigitalFashionCategoryException.class)
