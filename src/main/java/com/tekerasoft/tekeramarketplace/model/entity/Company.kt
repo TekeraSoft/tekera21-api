@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 @Table(name = "companies")
 open class Company(
     open var name: String,
+    open var slug: String,
     open var logo: String,
     open var email: String,
     open var gsmNumber: String,

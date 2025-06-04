@@ -1,7 +1,7 @@
 package com.tekerasoft.tekeramarketplace.controller;
 
 import com.tekerasoft.tekeramarketplace.dto.CategoryDto;
-import com.tekerasoft.tekeramarketplace.dto.CompanyDto;
+import com.tekerasoft.tekeramarketplace.dto.CompanyAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCategoryRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateSubCategoryRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
@@ -45,7 +45,7 @@ public class SuperAdminController {
     }
 
     @GetMapping("/get-all-company")
-    public Page<CompanyDto> getAllCompany(Pageable pageable) {
+    public Page<CompanyAdminDto> getAllCompany(Pageable pageable) {
         return companyService.getAllCompanies(pageable);
     }
 

@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.controller;
 
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
+import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +18,8 @@ public class ProductController {
     }
 
     @GetMapping("/get-all-product")
-    public ResponseEntity<Page<ProductDto>> getAllProduct(Pageable pageable) {
-        return ResponseEntity.ok(productService.findAll(pageable));
+    public ResponseEntity<Page<ProductListDto>> getAllProduct(Pageable pageable) {
+        return ResponseEntity.ok(productService.findAllListProduct(pageable));
     }
 
     @GetMapping("/get-product-by-slug")

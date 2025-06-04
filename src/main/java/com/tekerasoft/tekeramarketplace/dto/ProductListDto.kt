@@ -5,13 +5,12 @@ import com.tekerasoft.tekeramarketplace.model.entity.Product
 import com.tekerasoft.tekeramarketplace.model.entity.ProductType
 import java.util.UUID
 
-data class ProductDto(
+data class ProductListDto(
     val id: UUID?,
     val name: String,
     val slug: String,
     val code: String,
     val brandName: String,
-    val company: ProductCompanyDto,
     val description: String,
     val variations: List<VariationDto>,
     val currencyType: CurrencyType,
@@ -19,19 +18,16 @@ data class ProductDto(
     val productType: ProductType,
     val attributes: List<AttributeDto>,
     val rate: Double,
-    val comments: List<CommentDto>
-) {
+){
     companion object {
         @JvmStatic
-        fun toDto(from: Product): ProductDto {
-            return ProductDto(
+        fun toDto(from: Product): ProductListDto {
+            return ProductListDto(
                 from.id,
                 from.name,
                 from.slug,
                 from.code,
                 from.brandName,
-                from.company.let {
-                    ProductCompanyDto(it.name,it.logo, it.rate ) },
                 from.description,
                 from.variations.map {
                     VariationDto(
@@ -46,11 +42,10 @@ data class ProductDto(
                     )
                 },
                 from.currencyType,
-                from.tags.toList(),
+                from.tags,
                 from.productType,
                 from.attributes.map { AttributeDto(it.key, it.value) },
                 from.rate,
-                from.comments.map { CommentDto(it.id,it.userName,it.rate,it.message) }
             )
         }
     }

@@ -26,6 +26,7 @@ public class KafkaConsumer {
     private final TargetPictureRepository targetPictureRepository;
     private final DigitalFashionService digitalFashionService;
     private final MinioClient minioClient;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
 
     public KafkaConsumer(TargetPictureRepository targetPictureRepository,
@@ -40,7 +41,7 @@ public class KafkaConsumer {
         try (InputStream imageStream = minioClient.getObject(
                 GetObjectArgs.builder()
                         .bucket(bucketName)
-                        .object(message.getFilePath()) // sadece object key
+                        .object(message.getFilePath())
                         .build())) {
 
             String mindFilePath = digitalFashionService.processAndStoreMindMap(imageStream);
@@ -51,6 +52,7 @@ public class KafkaConsumer {
             });
 
         } catch (Exception e) {
+            LOGGER.error("processMindMap: {}", e.getMessage(), e);
             throw new RuntimeException("Mind map işleme hatası: " + e.getMessage(), e);
         }
     }

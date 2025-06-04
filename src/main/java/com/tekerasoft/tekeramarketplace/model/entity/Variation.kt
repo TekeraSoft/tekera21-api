@@ -15,6 +15,7 @@ open class Variation(
     open var modelName: String,
     open var modelCode: String,
     open var price: BigDecimal = BigDecimal.ZERO,
+    open var discountPrice: BigDecimal = BigDecimal.ZERO,
     open var stock: Int,
     open var sku: String,
     open var barcode: String,

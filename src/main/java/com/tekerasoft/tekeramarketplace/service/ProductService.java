@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
+import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateProductRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.VariationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
@@ -10,10 +11,12 @@ import com.tekerasoft.tekeramarketplace.repository.CategoryRepository;
 import com.tekerasoft.tekeramarketplace.repository.CompanyRepository;
 import com.tekerasoft.tekeramarketplace.repository.ProductRepository;
 import com.tekerasoft.tekeramarketplace.repository.SubCategoryRepository;
+import com.tekerasoft.tekeramarketplace.specification.ProductSpecification;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -118,8 +121,13 @@ public class ProductService {
                 .orElseThrow(()-> new NotFoundException("Product not found"));
     }
 
-    public Page<ProductDto> findAll(Pageable pageable) {
-        return productRepository.findActiveProducts(pageable).map(ProductDto::toDto);
+    public Page<ProductListDto> findAllListProduct(Pageable pageable) {
+        return productRepository.findActiveProducts(pageable).map(ProductListDto::toDto);
+    }
+
+    public Page<ProductListDto> filterProducts(String modelName, Map<String, String> attributes, Pageable pageable) {
+        Specification<Product> spec = ProductSpecification.hasVariationAttributesWithOptionalModelName(modelName, attributes);
+        return productRepository.findAll(spec, pageable).map(ProductListDto::toDto);
     }
 
     public ApiResponse<?> changeProductActiveStatus(String productId, Boolean active) {

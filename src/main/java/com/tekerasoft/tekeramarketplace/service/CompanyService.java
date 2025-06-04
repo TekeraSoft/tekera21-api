@@ -1,6 +1,6 @@
 package com.tekerasoft.tekeramarketplace.service;
 
-import com.tekerasoft.tekeramarketplace.dto.CompanyDto;
+import com.tekerasoft.tekeramarketplace.dto.CompanyAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCompanyRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.CompanyException;
@@ -11,6 +11,7 @@ import com.tekerasoft.tekeramarketplace.model.entity.CompanyDocument;
 import com.tekerasoft.tekeramarketplace.model.entity.VerificationStatus;
 import com.tekerasoft.tekeramarketplace.repository.CategoryRepository;
 import com.tekerasoft.tekeramarketplace.repository.CompanyRepository;
+import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +47,7 @@ public class CompanyService {
         try {
             Company company = new Company();
             company.setName(req.getName());
+            company.setSlug(SlugGenerator.generateSlug(company.getName()));
             company.setEmail(req.getEmail());
             company.setGsmNumber(req.getGsmNumber());
             company.setAlternativePhoneNumber(req.getAlternativePhoneNumber());
@@ -66,10 +68,14 @@ public class CompanyService {
                             .orElseThrow()).collect(Collectors.toSet());
             company.setCategories(categoryList);
 
-            String companyReplaceName = company.getName().replaceAll("\\s+", "-");
+            String companyReplaceName = company.getName().toLowerCase().replaceAll("\\s+", "_");
 
             String logoPath = fileService.folderFileUpload(logo, String.format("/company/logo/%s", companyReplaceName));
-            company.setLogo(logoPath);
+            if(logoPath != null) {
+                company.setLogo(logoPath);
+            } else {
+                throw new CompanyException("Logo could not be loaded");
+            }
 
             List<CompanyDocument> companyDocuments = new ArrayList<>();
 
@@ -119,7 +125,7 @@ public class CompanyService {
         }
     }
 
-    public Page<CompanyDto> getAllCompanies(Pageable pageable) {
-        return companyRepository.findActiveCompanies(pageable).map(CompanyDto::toDto);
+    public Page<CompanyAdminDto> getAllCompanies(Pageable pageable) {
+        return companyRepository.findActiveCompanies(pageable).map(CompanyAdminDto::toDto);
     }
 }

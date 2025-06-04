@@ -7,6 +7,8 @@ import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.model.entity.TargetPicture;
 import com.tekerasoft.tekeramarketplace.repository.FabricRepository;
 import com.tekerasoft.tekeramarketplace.repository.TargetPictureRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,8 @@ public class DigitalFashionService {
     @Value("${spring.mind-creator.api}")
     private String nodeApiUrl;
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(DigitalFashionService.class);
+
     private final TargetPictureRepository targetPictureRepository;
     private final FabricRepository fabricRepository;
     private final FileService fileService;
@@ -48,8 +52,12 @@ public class DigitalFashionService {
     public ApiResponse<?> createTargetPicture(CreateTargetPictureRequest req) {
         try {
             String filePath = fileService.targetPicUpload(req.getImage());
+            String defaultContentPath = fileService.targetPicUpload(req.getDefaultContent());
             TargetPicture targetPicture = new TargetPicture();
             targetPicture.setTargetPic(filePath);
+            targetPicture.setProductId(req.getProductId());
+            targetPicture.setDefaultContent(defaultContentPath);
+
             TargetPicture tp = targetPictureRepository.save(targetPicture);
 
             kafkaTemplate.send("mindmap-processing-topic", new MindMapMessage(tp.getId(),filePath));
@@ -100,12 +108,17 @@ public class DigitalFashionService {
                 return uploadedPath;
             }
         } catch (Exception e) {
+            LOGGER.error("Mind map işleme hatası: {}", e.getMessage());
             throw new RuntimeException("Mind map işleme hatası: " + e.getMessage(), e);
         }
     }
 
     public Page<TargetPictureDto> getAllTargetPictures(Pageable pageable) {
         return targetPictureRepository.findAll(pageable).map(TargetPictureDto::toDto);
+    }
+
+    public TargetPictureDto getTargetPictureAndContent(String productId, String targetId) {
+        return targetPictureRepository.findByIdAndProductId(UUID.fromString(targetId),productId).map(TargetPictureDto::toDto).orElse(null);
     }
 
     public ApiResponse<?> deleteTargetPicture(String id) {
@@ -116,5 +129,6 @@ public class DigitalFashionService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
 
 }

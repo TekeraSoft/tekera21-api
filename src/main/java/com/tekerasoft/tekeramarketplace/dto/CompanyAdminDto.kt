@@ -7,9 +7,10 @@ import com.tekerasoft.tekeramarketplace.model.entity.CompanyDocument
 import java.time.LocalDateTime
 import java.util.UUID
 
-data class CompanyDto(
+data class CompanyAdminDto(
     val id: UUID?,
     val name: String,
+    val slug: String,
     val categories: List<CategoryDto>,
     val logo: String,
     val email: String,
@@ -22,7 +23,6 @@ data class CompanyDto(
     val registrationDate: LocalDateTime,
     val contactPersonNumber: String,
     val contactPersonTitle: String,
-//    val products: Page<ProductDto>,
     val address: List<Address>,
     val bankAccounts: List<BankAccount>,
     val identityDocumentPaths: List<CompanyDocument>,
@@ -30,10 +30,11 @@ data class CompanyDto(
 ) {
     companion object {
         @JvmStatic
-        fun toDto(from:Company): CompanyDto {
-            return CompanyDto(
+        fun toDto(from:Company): CompanyAdminDto {
+            return CompanyAdminDto(
                 from.id,
                 from.name,
+                from.slug,
                 from.categories.map { CategoryDto.toDto(it) },
                 from.logo,
                 from.email,
@@ -46,7 +47,6 @@ data class CompanyDto(
                 from.registrationDate,
                 from.contactPersonNumber,
                 from.contactPersonTitle,
-//                PageImpl(from.products.map {ProductDto.toDto(it) }),
                 from.address,
                 from.bankAccounts,
                 from.identityDocumentPaths,
