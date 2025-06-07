@@ -1,8 +1,7 @@
 package com.tekerasoft.tekeramarketplace.kafka;
 
 import com.tekerasoft.tekeramarketplace.dto.payload.MindMapMessage;
-import com.tekerasoft.tekeramarketplace.model.entity.TargetPicture;
-import com.tekerasoft.tekeramarketplace.repository.TargetPictureRepository;
+import com.tekerasoft.tekeramarketplace.repository.jparepository.TargetPictureRepository;
 import com.tekerasoft.tekeramarketplace.service.DigitalFashionService;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
@@ -12,9 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Optional;
 
 
 @Service

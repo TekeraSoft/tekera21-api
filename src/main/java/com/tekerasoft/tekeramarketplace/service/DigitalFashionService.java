@@ -5,8 +5,8 @@ import com.tekerasoft.tekeramarketplace.dto.payload.MindMapMessage;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateTargetPictureRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.model.entity.TargetPicture;
-import com.tekerasoft.tekeramarketplace.repository.FabricRepository;
-import com.tekerasoft.tekeramarketplace.repository.TargetPictureRepository;
+import com.tekerasoft.tekeramarketplace.repository.jparepository.FabricRepository;
+import com.tekerasoft.tekeramarketplace.repository.jparepository.TargetPictureRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;

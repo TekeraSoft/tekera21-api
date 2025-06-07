@@ -1,4 +1,4 @@
-package com.tekerasoft.tekeramarketplace.repository;
+package com.tekerasoft.tekeramarketplace.repository.jparepository;
 
 import com.tekerasoft.tekeramarketplace.model.entity.Company;
 import org.springframework.data.domain.Page;

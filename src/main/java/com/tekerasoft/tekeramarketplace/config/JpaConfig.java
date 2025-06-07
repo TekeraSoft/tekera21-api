@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.tekerasoft.tekeramarketplace.repository")
+@EnableJpaRepositories(basePackages = "com.tekerasoft.tekeramarketplace.repository.jparepository")
 @EntityScan(basePackages = "com.tekerasoft.tekeramarketplace.model.entity")
 public class JpaConfig {
 }
