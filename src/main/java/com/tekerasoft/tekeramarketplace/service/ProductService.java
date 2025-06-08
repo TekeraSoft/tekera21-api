@@ -7,6 +7,8 @@ import com.tekerasoft.tekeramarketplace.dto.request.VariationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
+import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
+import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.CategoryRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.CompanyRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.ProductRepository;
@@ -31,17 +33,19 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final CompanyRepository companyRepository;
+    private final SearchItemService searchItemService;
 
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
                           SubCategoryRepository subCategoryRepository,
-                          CompanyRepository companyRepository) {
+                          CompanyRepository companyRepository, SearchItemService searchItemService) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.companyRepository = companyRepository;
+        this.searchItemService = searchItemService;
     }
 
     @Transactional
@@ -108,10 +112,30 @@ public class ProductService {
                 variations.add(var);
             }
             product.setVariations(variations);
-            productRepository.save(product);
+            Product p = productRepository.save(product);
+
+            SearchItem searchItem = new SearchItem();
+            searchItem.setId(p.getId().toString());
+            searchItem.setName(req.getName());
+            searchItem.setItemType(SearchItemType.PRODUCT);
+            searchItemService.createIndex(searchItem);
+
             return new ApiResponse<>("Product Created", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
             throw new RuntimeException("Error creating product", e);
+        }
+    }
+
+    public ApiResponse<?> deleteProduct(String id) {
+        Product product = productRepository.findById(UUID.fromString(id)).orElseThrow(
+                () -> new NotFoundException("Product not found: " + id)
+        );
+        try {
+            searchItemService.deleteItem(product.getId().toString());
+            productRepository.delete(product);
+            return new ApiResponse<>("Product Deleted", HttpStatus.OK.value());
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Error deleting product", e);
         }
     }
 

@@ -13,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -92,5 +94,25 @@ public class ItemService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Set<String> findSuggestedItemNames(String name) {
+        Query query = EsUtil.buildAutoSuggestQuery(name);
+        try {
+            return elasticsearchClient.search(q -> q.index("items_index").query(query), Item.class)
+                    .hits()
+                    .hits()
+                    .stream()
+                    .map(Hit::source)
+                    .map(Item::getName)
+                    .collect(Collectors.toSet());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<String> autoSuggestItemsByNameWithQuery(String name) {
+        List<Item> itemList = itemRepository.customAutoSuggest(name);
+        return itemList.stream().map(Item::getName).collect(Collectors.toList());
     }
 }

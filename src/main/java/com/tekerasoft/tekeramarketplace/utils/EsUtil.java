@@ -58,4 +58,12 @@ public class EsUtil {
         ));
     }
 
+    public static Query buildAutoSuggestQuery(String name) {
+        return Query.of(q -> q.match(new MatchQuery.Builder()
+                .field("name")
+                .query(name)
+                        .analyzer("custom_index")
+                .build()
+        ));
+    }
 }

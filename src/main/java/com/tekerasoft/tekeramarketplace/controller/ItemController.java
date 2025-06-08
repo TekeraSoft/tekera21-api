@@ -1,6 +1,5 @@
 package com.tekerasoft.tekeramarketplace.controller;
 
-import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.tekerasoft.tekeramarketplace.dto.request.EsSearchRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.model.esdocument.Item;
@@ -8,6 +7,7 @@ import com.tekerasoft.tekeramarketplace.service.ItemService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/v1/api/items")
@@ -51,6 +51,16 @@ public class ItemController {
     @GetMapping("/boolQuery")
     public List<Item> boolQuery(@RequestBody EsSearchRequest req) {
         return itemService.boolQuery(req);
+    }
+
+    @GetMapping("/autoSuggest")
+    public Set<String> autoSuggestItemsByName(@RequestParam String name) {
+        return itemService.findSuggestedItemNames(name);
+    }
+
+    @GetMapping("/suggestionsQuery")
+    public List<String> autoSuggestItemsByNameWithQuery(@RequestParam String name) {
+        return itemService.autoSuggestItemsByNameWithQuery(name);
     }
 
 }

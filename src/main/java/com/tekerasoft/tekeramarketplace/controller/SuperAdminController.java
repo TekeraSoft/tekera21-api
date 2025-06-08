@@ -7,6 +7,7 @@ import com.tekerasoft.tekeramarketplace.dto.request.CreateSubCategoryRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.service.CategoryService;
 import com.tekerasoft.tekeramarketplace.service.CompanyService;
+import com.tekerasoft.tekeramarketplace.service.ProductService;
 import com.tekerasoft.tekeramarketplace.service.SubCategoryService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -21,12 +22,14 @@ public class SuperAdminController {
     private final CategoryService categoryService;
     private final SubCategoryService subCategoryService;
     private final CompanyService companyService;
+    private final ProductService productService;
 
     public SuperAdminController(CategoryService categoryService, SubCategoryService subCategoryService,
-                                CompanyService companyService) {
+                                CompanyService companyService, ProductService productService) {
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
         this.companyService = companyService;
+        this.productService = productService;
     }
 
     @PostMapping(value = "/create-category", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -52,5 +55,10 @@ public class SuperAdminController {
     @DeleteMapping("/delete-category")
     public ResponseEntity<ApiResponse<?>> deleteCategory(@RequestParam("categoryId") String categoryId) {
            return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
+    }
+
+    @DeleteMapping("/delete-product")
+    public ResponseEntity<ApiResponse<?>> deleteProduct(@RequestParam("productId") String productId) {
+        return ResponseEntity.ok(productService.deleteProduct(productId));
     }
 }

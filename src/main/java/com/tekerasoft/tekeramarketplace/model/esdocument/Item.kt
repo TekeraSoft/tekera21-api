@@ -15,13 +15,13 @@ open class Item(
     @Id
     open var id: String = "",
 
-    @Field("name", type = FieldType.Text)
+    @Field("name", type = FieldType.Text, analyzer = "custom_index", searchAnalyzer = "custom_search")
     open var name: String = "",
 
     @Field("price", type = FieldType.Double)
     open var price: Double = 0.0,
 
-    @Field("brand", type = FieldType.Text)
+    @Field("brand", type = FieldType.Text, analyzer = "custom_index", searchAnalyzer = "custom_search")
     open var brand: String = "",
 
     @Field("category", type = FieldType.Keyword)
