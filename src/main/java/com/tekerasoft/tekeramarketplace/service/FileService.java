@@ -36,7 +36,7 @@ public class FileService {
             if (originalFilename.contains(".")) {
                 fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
             }
-            String fileName = slug + "-" + fileExtension;
+            String fileName = slug + fileExtension;
             String companyNameConvert = companyName.toLowerCase().replaceAll("\\s+", "_");
             InputStream inputStream = file.getInputStream();
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()

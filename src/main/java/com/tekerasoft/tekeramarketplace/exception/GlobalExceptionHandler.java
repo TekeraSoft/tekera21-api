@@ -38,7 +38,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
-        logger.error("CategoryException occurred: {}", ex.getMessage());
+        logger.error("NotFoundException occurred: {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));

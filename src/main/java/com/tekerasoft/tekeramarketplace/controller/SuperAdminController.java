@@ -61,4 +61,9 @@ public class SuperAdminController {
     public ResponseEntity<ApiResponse<?>> deleteProduct(@RequestParam("productId") String productId) {
         return ResponseEntity.ok(productService.deleteProduct(productId));
     }
+
+    @DeleteMapping("/delete-company")
+    public ResponseEntity<ApiResponse<?>> deleteCompany(@RequestParam("companyId") String companyId) {
+        return ResponseEntity.ok(companyService.deleteCompany(companyId));
+    }
 }

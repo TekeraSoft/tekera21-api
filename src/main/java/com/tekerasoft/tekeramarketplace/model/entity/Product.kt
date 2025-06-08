@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
+import com.tekerasoft.tekeramarketplace.config.NoArg
 import jakarta.persistence.CascadeType
 import jakarta.persistence.CollectionTable
 import jakarta.persistence.Column
@@ -18,6 +19,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "products")
+@NoArg
 open class Product(
 
     open var name: String,
@@ -32,7 +34,7 @@ open class Product(
     @JoinColumn(name = "category_id")
     open var category: Category,
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "product_subcategories",
         joinColumns = [JoinColumn(name = "product_fk")],
         inverseJoinColumns = [JoinColumn(name = "subcategory_id")])
@@ -64,6 +66,6 @@ open class Product(
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var comments: MutableList<Comment> = mutableListOf(),
 
-    open var isActive: Boolean? = true
+    open var isActive: Boolean = true
 
     ): BaseEntity()

@@ -131,6 +131,9 @@ public class ProductService {
                 () -> new NotFoundException("Product not found: " + id)
         );
         try {
+            for (Variation var : product.getVariations()) {
+                var.getImages().forEach(fileService::deleteFileProduct);
+            }
             searchItemService.deleteItem(product.getId().toString());
             productRepository.delete(product);
             return new ApiResponse<>("Product Deleted", HttpStatus.OK.value());

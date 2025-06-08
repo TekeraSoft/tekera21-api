@@ -9,6 +9,8 @@ import com.tekerasoft.tekeramarketplace.model.entity.Category;
 import com.tekerasoft.tekeramarketplace.model.entity.Company;
 import com.tekerasoft.tekeramarketplace.model.entity.CompanyDocument;
 import com.tekerasoft.tekeramarketplace.model.entity.VerificationStatus;
+import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
+import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.CategoryRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.CompanyRepository;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
@@ -30,12 +32,14 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
     private final CategoryRepository categoryRepository;
     private final FileService fileService;
+    private final SearchItemService searchItemService;
 
     public CompanyService(CompanyRepository companyRepository, CategoryRepository categoryRepository,
-                          FileService fileService) {
+                          FileService fileService, SearchItemService searchItemService) {
         this.companyRepository = companyRepository;
         this.categoryRepository = categoryRepository;
         this.fileService = fileService;
+        this.searchItemService = searchItemService;
     }
 
     @Transactional
@@ -105,11 +109,36 @@ public class CompanyService {
             company.setIdentityDocumentPaths(companyDocuments);
             company.setVerificationStatus(VerificationStatus.PENDING);
             // Company kaydını veritabanına kaydet
-            companyRepository.save(company);
+            Company comp = companyRepository.save(company);
+
+            SearchItem searchItem = new SearchItem();
+            searchItem.setId(comp.getId().toString());
+            searchItem.setName(company.getName());
+            searchItem.setImageUrl(company.getLogo());
+            searchItem.setItemType(SearchItemType.COMPANY);
+
+            searchItemService.createIndex(searchItem);
 
             return new ApiResponse<>("Create Company", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public ApiResponse<?> deleteCompany(String id) {
+        Company company = companyRepository.findById(UUID.fromString(id)).orElseThrow(
+                () -> new NotFoundException("Company not found")
+        );
+        try {
+            company.getIdentityDocumentPaths().forEach(path -> {
+                fileService.deleteFileProduct(path.getDocumentPath());
+            });
+            fileService.deleteFileProduct(company.getLogo());
+            searchItemService.deleteItem(company.getId().toString());
+            companyRepository.delete(company);
+            return new ApiResponse<>("Delete Company", HttpStatus.OK.value());
+        } catch (RuntimeException e) {
+            throw new CompanyException(e.getMessage());
         }
     }
 

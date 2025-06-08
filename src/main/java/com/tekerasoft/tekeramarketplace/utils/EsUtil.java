@@ -2,12 +2,9 @@ package com.tekerasoft.tekeramarketplace.utils;
 
 
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
-import co.elastic.clients.util.ObjectBuilder;
 import com.tekerasoft.tekeramarketplace.dto.request.EsSearchRequest;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class EsUtil {
