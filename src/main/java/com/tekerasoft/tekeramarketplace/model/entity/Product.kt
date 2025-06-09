@@ -66,6 +66,7 @@ open class Product(
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var comments: MutableList<Comment> = mutableListOf(),
 
+    @Column(nullable = false)
     open var isActive: Boolean = true
 
     ): BaseEntity()

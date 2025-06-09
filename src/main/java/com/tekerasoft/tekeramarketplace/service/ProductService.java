@@ -3,6 +3,7 @@ package com.tekerasoft.tekeramarketplace.service;
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateProductRequest;
+import com.tekerasoft.tekeramarketplace.dto.request.FilterProductRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.VariationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
@@ -61,6 +62,7 @@ public class ProductService {
             product.setProductType(req.getProductType());
             product.setTags(req.getTags());
             product.setAttributes(req.getAttributes());
+            product.setActive(true);
 
             // Company
             Company company = companyRepository.findById(UUID.fromString(req.getCompanyId())).orElseThrow();
@@ -112,13 +114,7 @@ public class ProductService {
                 variations.add(var);
             }
             product.setVariations(variations);
-            Product p = productRepository.save(product);
-
-            SearchItem searchItem = new SearchItem();
-            searchItem.setId(p.getId().toString());
-            searchItem.setName(req.getName());
-            searchItem.setItemType(SearchItemType.PRODUCT);
-            searchItemService.createIndex(searchItem);
+            productRepository.save(product);
 
             return new ApiResponse<>("Product Created", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
@@ -152,8 +148,9 @@ public class ProductService {
         return productRepository.findActiveProducts(pageable).map(ProductListDto::toDto);
     }
 
-    public Page<ProductListDto> filterProducts(String modelName, Map<String, String> attributes, Pageable pageable) {
-        Specification<Product> spec = ProductSpecification.hasVariationAttributesWithOptionalModelName(modelName, attributes);
+    public Page<ProductListDto> filterProducts(FilterProductRequest req, Pageable pageable) {
+        Specification<Product> spec = ProductSpecification
+                .hasVariationAttributesWithOptionalModelName(req.getModelName(), req.getAttributes());
         return productRepository.findAll(spec, pageable).map(ProductListDto::toDto);
     }
 
@@ -162,7 +159,18 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("Product not found: " + productId));
         try {
             product.setActive(active);
-            productRepository.save(product);
+            Product saveProduct = productRepository.save(product);
+
+            if(active) {
+                SearchItem searchItem = new SearchItem();
+                searchItem.setId(saveProduct.getId().toString());
+                searchItem.setName(saveProduct.getName());
+                searchItem.setItemType(SearchItemType.PRODUCT);
+                searchItemService.createIndex(searchItem);
+            } else {
+                searchItemService.deleteItem(saveProduct.getId().toString());
+            }
+
             return new ApiResponse<>("Product Status Updated", HttpStatus.OK.value());
         } catch (RuntimeException e) {
             throw new RuntimeException("Error updating product", e);

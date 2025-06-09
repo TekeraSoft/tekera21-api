@@ -32,38 +32,51 @@ public class SuperAdminController {
         this.productService = productService;
     }
 
-    @PostMapping(value = "/create-category", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/createCategory", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> createCategory(@Valid @ModelAttribute CreateCategoryRequest req) {
         return categoryService.save(req);
     }
 
-    @PostMapping(value = "/create-sub-category", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/createSubCategory", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> createSubCategory(@Valid @ModelAttribute CreateSubCategoryRequest req) {
         return subCategoryService.createSubCategory(req);
     }
 
-    @GetMapping("/get-all-category")
+    @GetMapping("/getAllCategory")
     public Page<CategoryDto> getAllCategory(Pageable pageable) {
         return categoryService.getAllCategory(pageable);
     }
 
-    @GetMapping("/get-all-company")
+    @GetMapping("/getAllCompany")
     public Page<CompanyAdminDto> getAllCompany(Pageable pageable) {
         return companyService.getAllCompanies(pageable);
     }
 
-    @DeleteMapping("/delete-category")
+    @DeleteMapping("/deleteCategory")
     public ResponseEntity<ApiResponse<?>> deleteCategory(@RequestParam("categoryId") String categoryId) {
            return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
     }
 
-    @DeleteMapping("/delete-product")
+    @DeleteMapping("/deleteProduct")
     public ResponseEntity<ApiResponse<?>> deleteProduct(@RequestParam("productId") String productId) {
         return ResponseEntity.ok(productService.deleteProduct(productId));
     }
 
-    @DeleteMapping("/delete-company")
+    @DeleteMapping("/deleteCompany")
     public ResponseEntity<ApiResponse<?>> deleteCompany(@RequestParam("companyId") String companyId) {
         return ResponseEntity.ok(companyService.deleteCompany(companyId));
     }
+
+    @PutMapping("/changeCompanyStatusCode")
+    public ResponseEntity<ApiResponse<?>> changeCompanyActiveStatus(@RequestParam("companyId") String companyId,
+                                                                    @RequestParam("status") Boolean status) {
+        return ResponseEntity.ok(companyService.changeCompanyActiveStatus(companyId,status));
+    }
+
+    @PutMapping("/changeProductActiveStatus")
+    public ResponseEntity<ApiResponse<?>> changeProductActiveStatus(@RequestParam("productId") String productId,
+                                                                    @RequestParam("status") Boolean status) {
+        return ResponseEntity.ok(productService.changeProductActiveStatus(productId,status));
+    }
+
 }

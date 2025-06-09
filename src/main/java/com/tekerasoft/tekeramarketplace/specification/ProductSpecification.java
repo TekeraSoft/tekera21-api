@@ -19,8 +19,6 @@ public class ProductSpecification {
             query.distinct(true);
 
             Join<Object, Object> variationJoin = root.join("variations", JoinType.INNER);
-            Join<Object, Object> attrJoin = variationJoin.join("attributes", JoinType.INNER);
-
             List<Predicate> predicates = new ArrayList<>();
 
             // modelName null veya boş değilse filtrele
@@ -28,11 +26,15 @@ public class ProductSpecification {
                 predicates.add(cb.equal(variationJoin.get("modelName"), modelName));
             }
 
-            // attribute filtreleri
-            for (Map.Entry<String, String> entry : attributeMap.entrySet()) {
-                Predicate keyPredicate = cb.equal(attrJoin.get("key"), entry.getKey());
-                Predicate valuePredicate = cb.equal(attrJoin.get("value"), entry.getValue());
-                predicates.add(cb.and(keyPredicate, valuePredicate));
+            // attributeMap boş değilse işle
+            if (attributeMap != null && !attributeMap.isEmpty()) {
+                Join<Object, Object> attrJoin = variationJoin.join("attributes", JoinType.INNER);
+
+                for (Map.Entry<String, String> entry : attributeMap.entrySet()) {
+                    Predicate keyPredicate = cb.equal(attrJoin.get("key"), entry.getKey());
+                    Predicate valuePredicate = cb.equal(attrJoin.get("value"), entry.getValue());
+                    predicates.add(cb.and(keyPredicate, valuePredicate));
+                }
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));

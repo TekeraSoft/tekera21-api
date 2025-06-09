@@ -64,6 +64,7 @@ public class CompanyService {
             company.setContactPersonTitle(req.getContactPersonTitle());
             company.setAddress(req.getAddress());
             company.setBankAccounts(req.getBankAccount());
+            company.setActive(true);
 
             // Category
             Set<Category> categoryList = req.getCategoryId()
@@ -109,15 +110,7 @@ public class CompanyService {
             company.setIdentityDocumentPaths(companyDocuments);
             company.setVerificationStatus(VerificationStatus.PENDING);
             // Company kaydını veritabanına kaydet
-            Company comp = companyRepository.save(company);
-
-            SearchItem searchItem = new SearchItem();
-            searchItem.setId(comp.getId().toString());
-            searchItem.setName(company.getName());
-            searchItem.setImageUrl(company.getLogo());
-            searchItem.setItemType(SearchItemType.COMPANY);
-
-            searchItemService.createIndex(searchItem);
+            companyRepository.save(company);
 
             return new ApiResponse<>("Create Company", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
@@ -147,7 +140,18 @@ public class CompanyService {
                 .orElseThrow(() -> new NotFoundException("Company not found: " + companyId));
         try {
             company.setActive(active);
-            companyRepository.save(company);
+            Company comp = companyRepository.save(company);
+            if(active) {
+                SearchItem searchItem = new SearchItem();
+                searchItem.setId(comp.getId().toString());
+                searchItem.setName(company.getName());
+                searchItem.setImageUrl(company.getLogo());
+                searchItem.setItemType(SearchItemType.COMPANY);
+                searchItemService.createIndex(searchItem);
+            } else {
+                searchItemService.deleteItem(comp.getId().toString());
+            }
+
             return new ApiResponse<>("Company Status Updated", HttpStatus.OK.value());
         } catch (RuntimeException e) {
             throw new RuntimeException("Error updating company", e);
