@@ -35,6 +35,7 @@ data class ProductDto(
                 from.description,
                 from.variations.map {
                     VariationDto(
+                        it.id,
                         it.modelName,
                         it.modelCode,
                         it.price,

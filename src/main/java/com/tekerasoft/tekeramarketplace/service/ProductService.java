@@ -144,6 +144,11 @@ public class ProductService {
                 .orElseThrow(()-> new NotFoundException("Product not found"));
     }
 
+    public Page<ProductListDto> findCompanyReturnProducts(String companyId, Pageable pageable) {
+        return productRepository.findActiveProductsByCompanyId(UUID.fromString(companyId), pageable)
+                .map(ProductListDto::toDto);
+    }
+
     public Page<ProductListDto> findAllListProduct(Pageable pageable) {
         return productRepository.findActiveProducts(pageable).map(ProductListDto::toDto);
     }

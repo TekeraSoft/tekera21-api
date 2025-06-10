@@ -22,7 +22,7 @@ public class AccountController {
         this.companyService = companyService;
     }
 
-    @PostMapping("/create-company")
+    @PostMapping("/createCompany")
     public ApiResponse<?> createCompany(@RequestPart("data") CreateCompanyRequest req,
                                                         @RequestPart("files") List<MultipartFile> files,
                                                         @RequestPart("logo") MultipartFile logo)

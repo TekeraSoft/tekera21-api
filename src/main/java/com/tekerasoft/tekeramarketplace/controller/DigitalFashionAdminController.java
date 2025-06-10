@@ -18,18 +18,18 @@ public class DigitalFashionAdminController {
         this.digitalFashionService = digitalFashionService;
     }
 
-    @PostMapping("/create-target-pic")
+    @PostMapping("/createTargetPic")
     public ApiResponse<?> createTargetPicture(@Valid @ModelAttribute CreateTargetPictureRequest req) {
         return digitalFashionService.createTargetPicture(req);
     }
 
-    @GetMapping("/get-target-pic")
+    @GetMapping("/getTargetPic")
     public ResponseEntity<TargetPictureDto> getTargetPicture(@RequestParam("productId") String productId,
                                                              @RequestParam("targetId") String targetId) {
         return ResponseEntity.ok(digitalFashionService.getTargetPictureAndContent(productId, targetId));
     }
 
-    @DeleteMapping("/delete-target-pic")
+    @DeleteMapping("/deleteTargetPic")
     public ApiResponse<?> deleteTargetPicture(String id) {
         return digitalFashionService.deleteTargetPicture(id);
     }

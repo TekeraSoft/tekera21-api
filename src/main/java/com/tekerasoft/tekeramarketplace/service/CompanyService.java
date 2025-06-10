@@ -1,14 +1,12 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.CompanyAdminDto;
+import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCompanyRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.CompanyException;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
-import com.tekerasoft.tekeramarketplace.model.entity.Category;
-import com.tekerasoft.tekeramarketplace.model.entity.Company;
-import com.tekerasoft.tekeramarketplace.model.entity.CompanyDocument;
-import com.tekerasoft.tekeramarketplace.model.entity.VerificationStatus;
+import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.CategoryRepository;
