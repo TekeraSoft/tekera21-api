@@ -149,6 +149,10 @@ public class ProductService {
                 .map(ProductListDto::toDto);
     }
 
+    public ProductDto findCompanyReturnProduct(String companyId, String slug) {
+        return ProductDto.Companion.toDto(productRepository.findActiveProductByCompanyIdAndSlug(UUID.fromString(companyId), slug));
+    }
+
     public Page<ProductListDto> findAllListProduct(Pageable pageable) {
         return productRepository.findActiveProducts(pageable).map(ProductListDto::toDto);
     }

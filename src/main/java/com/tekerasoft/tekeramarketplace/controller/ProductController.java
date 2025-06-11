@@ -35,6 +35,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.findCompanyReturnProducts(companyId,pageable));
     }
 
+    @GetMapping("/findCompanyReturnProduct/{companyId}/{slug}")
+    public ResponseEntity<ProductDto> findCompanyReturnProduct(@PathVariable String companyId, @PathVariable String slug) {
+        return ResponseEntity.ok(productService.findCompanyReturnProduct(companyId, slug));
+    }
+
     @GetMapping("/filterProduct")
     public ResponseEntity<Page<ProductListDto>> filterProduct(@RequestBody FilterProductRequest req, Pageable pageable)
     {
