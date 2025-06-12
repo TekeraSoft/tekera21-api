@@ -4,6 +4,8 @@ import com.tekerasoft.tekeramarketplace.dto.TargetPictureDto;
 import com.tekerasoft.tekeramarketplace.dto.payload.MindMapMessage;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateTargetPictureRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.exception.DigitalFashionException;
+import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.TargetPicture;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.FabricRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.TargetPictureRepository;
@@ -25,6 +27,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -50,18 +53,27 @@ public class DigitalFashionService {
 
     public ApiResponse<?> createTargetPicture(CreateTargetPictureRequest req) {
         try {
-            String filePath = fileService.targetPicUpload(req.getImage());
-            String defaultContentPath = fileService.targetPicUpload(req.getDefaultContent());
-            TargetPicture targetPicture = new TargetPicture();
-            targetPicture.setTargetPic(filePath);
-            targetPicture.setProductId(req.getProductId());
-            targetPicture.setDefaultContent(defaultContentPath);
+            if(req.getProductId().isBlank()) {
+                throw new DigitalFashionException("Product Id is required");
+            }
 
-            TargetPicture tp = targetPictureRepository.save(targetPicture);
+            Optional<TargetPicture> existingTp = targetPictureRepository.findByProductId(req.getProductId());
+            if (existingTp.isPresent()) {
+                throw new DigitalFashionException("Product Id already exists");
+            }
 
-            kafkaTemplate.send("mindmap-processing-topic", new MindMapMessage(tp.getId(),filePath));
+                String filePath = fileService.targetPicUpload(req.getImage());
+                String defaultContentPath = fileService.targetPicUpload(req.getDefaultContent());
+                TargetPicture targetPicture = new TargetPicture();
+                targetPicture.setTargetPic(filePath);
+                targetPicture.setProductId(req.getProductId());
+                targetPicture.setDefaultContent(defaultContentPath);
 
-            return new ApiResponse<>("File queued for processing", HttpStatus.ACCEPTED.value());
+                TargetPicture tp = targetPictureRepository.save(targetPicture);
+
+                kafkaTemplate.send("mindmap-processing-topic", new MindMapMessage(tp.getId(),filePath));
+
+                return new ApiResponse<>("File queued for processing", HttpStatus.ACCEPTED.value());
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -117,7 +129,20 @@ public class DigitalFashionService {
     }
 
     public TargetPictureDto getTargetPictureAndContent(String productId, String targetId) {
-        return targetPictureRepository.findByIdAndProductId(UUID.fromString(targetId),productId).map(TargetPictureDto::toDto).orElse(null);
+        return targetPictureRepository.findByIdAndProductId(UUID.fromString(targetId),productId)
+                .map(TargetPictureDto::toDto).orElse(null);
+    }
+
+    public TargetPictureDto getTargetPictureByProductId(String productId) {
+        return targetPictureRepository.findByProductId(productId).map(TargetPictureDto::toDto).orElseThrow(
+                () -> new NotFoundException("Target picture not found for productId: " + productId)
+        );
+    }
+
+    public TargetPictureDto getTargetPictureById(String targetId) {
+        return targetPictureRepository.findById(UUID.fromString(targetId)).map(TargetPictureDto::toDto).orElseThrow(
+                () -> new NotFoundException("Target picture not found for id: " + targetId)
+        );
     }
 
     public ApiResponse<?> deleteTargetPicture(String id) {

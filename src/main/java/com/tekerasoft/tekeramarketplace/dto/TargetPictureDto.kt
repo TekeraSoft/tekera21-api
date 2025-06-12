@@ -6,6 +6,7 @@ import java.util.UUID
 
 data class TargetPictureDto(
     val id: UUID?,
+    val productId: String?,
     val targetPic: String,
     val mindPath: String?,
     val defaultContent: String?,
@@ -17,6 +18,7 @@ data class TargetPictureDto(
         fun toDto(from: TargetPicture): TargetPictureDto {
             return TargetPictureDto(
                 from.id,
+                from.productId,
                 from.targetPic,
                 from.mindPath,
                 from.defaultContent,

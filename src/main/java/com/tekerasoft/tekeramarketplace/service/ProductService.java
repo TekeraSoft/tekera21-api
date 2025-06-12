@@ -150,7 +150,10 @@ public class ProductService {
     }
 
     public ProductDto findCompanyReturnProduct(String companyId, String slug) {
-        return ProductDto.Companion.toDto(productRepository.findActiveProductByCompanyIdAndSlug(UUID.fromString(companyId), slug));
+        return ProductDto.Companion.toDto(
+                productRepository.findActiveProductByCompanyIdAndSlug(UUID.fromString(companyId), slug)
+                        .orElseThrow(() -> new NotFoundException("Product not found: " + slug))
+        );
     }
 
     public Page<ProductListDto> findAllListProduct(Pageable pageable) {

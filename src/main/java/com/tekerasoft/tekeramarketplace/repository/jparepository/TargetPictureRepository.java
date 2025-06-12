@@ -10,4 +10,6 @@ public interface TargetPictureRepository extends JpaRepository<TargetPicture, UU
 
     Optional<TargetPicture> findByIdAndProductId(UUID targetId, String productId);
 
+    Optional<TargetPicture> findByProductId(String productId);
+
 }

@@ -23,8 +23,14 @@ public class DigitalFashionController {
         return digitalFashionService.getAllTargetPictures(pageable);
     }
 
-//    @PostMapping("/add-content-to-target-pic")
-//    public ResponseEntity<ApiResponse<?>> addItemToTargetPicture(@ModelAttribute CreateTargetPictureRequest req) {
-//
-//    }
+    @GetMapping("/getTargetImageByProductId")
+    public ResponseEntity<TargetPictureDto> getTargetPictureByProductId(@RequestParam String productId) {
+        return ResponseEntity.ok(digitalFashionService.getTargetPictureByProductId(productId));
+    }
+
+    @GetMapping("/getByTargetId")
+    public ResponseEntity<TargetPictureDto> getTargetPictureByTargetId(@RequestParam String targetId) {
+        return ResponseEntity.ok(digitalFashionService.getTargetPictureById(targetId));
+    }
+
 }
