@@ -9,48 +9,51 @@ spring:
       max-request-size: 20MB
 
   data:
-    mongodb:
-      uri: mongodb://tekera_user:tekera_pass@localhost:27017/tekera-document-db?authSource=admin
+    #    mongodb:
+    #      uri: mongodb://tekera_user:tekera_pass@localhost:27017/tekera-document-db?authSource=admin
     elasticsearch:
-      uris: localhost:9200
+      #uris: localhost:9200
+      uris: elasticsearch:9200
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    #url: jdbc:postgresql://arzuamber-db:5432/arzuamber-db
-    url: jdbc:postgresql://localhost:5435/tekera-db
+    url: jdbc:postgresql://tekera-db:5432/tekera-db
+    #url: jdbc:postgresql://localhost:5430/tekera-db
     username: tekera_user
     password: tekera_pass
+
   jpa:
     hibernate:
       ddl-auto: none
+
   flyway:
     enabled: true
     baseline-on-migrate: true
     locations: classpath:db/migration
 
   minio:
-    url: http://localhost:9000
+    url: http://minio1:9000
+    #url: http://localhost:9000
     user: tekera_user
     password: tekera_pass
     bucket-name: tekera-bucket
 
   kafka:
-    bootstrap-servers: localhost:29092
+    bootstrap-servers: kafka:9092
     consumer:
+      group-id: tekeraGroup
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring:
           json:
             trusted:
               packages: "*"
-      group-id: tekeraGroup
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
     producer:
-#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
   mind-creator:
-    api: http://localhost:3009/generate
+    #api: http://localhost:3009/generate
+    api: http://mind-generator/generate

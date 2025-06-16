@@ -144,7 +144,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>${flyway.version}</version>
                 <configuration>
-                    <url>jdbc:postgresql://localhost:5435/tekera-db</url>
+                    <url>jdbc:postgresql://tekera-db:5432/tekera-db</url>
                     <user>tekera_user</user>
                     <password>tekera_pass</password>
                 </configuration>
