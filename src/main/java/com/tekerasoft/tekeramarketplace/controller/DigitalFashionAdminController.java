@@ -30,7 +30,7 @@ public class DigitalFashionAdminController {
     }
 
     @DeleteMapping("/deleteTargetPic")
-    public ApiResponse<?> deleteTargetPicture(String id) {
+    public ApiResponse<?> deleteTargetPicture(@RequestParam String id) {
         return digitalFashionService.deleteTargetPicture(id);
     }
 }

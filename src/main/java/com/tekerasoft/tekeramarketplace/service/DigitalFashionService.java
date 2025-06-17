@@ -147,7 +147,12 @@ public class DigitalFashionService {
 
     public ApiResponse<?> deleteTargetPicture(String id) {
         try {
+            TargetPicture tp = targetPictureRepository.findById(UUID.fromString(id)).get();
             targetPictureRepository.deleteById(UUID.fromString(id));
+            fileService.deleteInFolderFile(tp.getMindPath());
+            fileService.deleteInFolderFile(tp.getTargetPic());
+            fileService.deleteInFolderFile(tp.getDefaultContent());
+            fileService.deleteInFolderFile(tp.getSpecialContent());
             return new ApiResponse<>("TargetPicture deleted", HttpStatus.OK.value());
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
