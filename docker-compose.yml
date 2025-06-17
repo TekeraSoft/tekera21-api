@@ -1,10 +1,11 @@
+version: '3.8'
+
 services:
-  # PostgreSQL Database
   tekera-db:
     image: postgres:latest
     container_name: tekera-db
     ports:
-      - "5430:5432"  # Host portu ile container portunu eşliyoruz
+      - "5430:5432"
     environment:
       - POSTGRES_USER=tekera_user
       - POSTGRES_PASSWORD=tekera_pass
@@ -12,49 +13,60 @@ services:
     networks:
       - tekera-network
     volumes:
-      - tekera_postgres_data:/var/lib/postgresql/data  # Veritabanı verilerini hostta sakla
-    restart: unless-stopped  # Sistem yeniden başlarsa veri kaybolmaz
+      - tekera_postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
-  # MongoDb Database
-#  tekera-document-db:
-#    image: mongo
-#    container_name: tekera-document-db
-#    ports:
-#      - "27017:27017"
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: tekera_user
-#      MONGO_INITDB_ROOT_PASSWORD: tekera_pass
-
-  # bin/elasticsearch-service-tokens create elastic/kibana kibana-token komut ile kibananın elastic e bağlanacağı tokeni oluşturur
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
-      - xpack.security.enabled=false
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=tekera_pass
     ports:
       - "9200:9200"
     networks:
       - tekera-network
+
+  elastic-token-generator:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    command: >
+      bash -c "
+        sleep 10 &&
+        elasticsearch-users useradd kibana_system -p kibana_pass -r kibana_system &&
+        elasticsearch-service-tokens create kibana kibana-token > /tokens/token &&
+        cat /tokens/token
+      "
+    volumes:
+      - ./tokens:/tokens
+    depends_on:
+      - elasticsearch
+    networks:
+      - tekera-network
+    restart: "no"
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.4
     container_name: kibana
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_SERVICEACCOUNT_TOKEN_FILE=/tokens/token
       - SERVER_SSL_ENABLED=false
     ports:
       - "5601:5601"
     depends_on:
       - elasticsearch
+      - elastic-token-generator  # Kibana, token generator hazır olmadan başlamasın
     networks:
       - tekera-network
+    volumes:
+      - ./tokens:/tokens
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.13.4
     container_name: logstash
     ports:
-      - "5000:5000"  # TCP log için
+      - "5000:5000"
     volumes:
       - ./logstash:/usr/share/logstash/pipeline
     depends_on:
@@ -62,9 +74,6 @@ services:
     networks:
       - tekera-network
 
-  # MinIO (Blob Storage)
-  # mc alias set myminio http://localhost:9000 minioadmin minioadmin ile myminio alias oluştur
-  # minio containerine gir mc anonymous set download myminio/tekera-bucket bu komut ile bucket i public yap
   minio1:
     image: minio/minio:latest
     container_name: minio1
@@ -77,10 +86,8 @@ services:
     volumes:
       - minio1_data:/data
     command: server --console-address ":9001" /data
-#    command: server --console-address ":9001" http://minio{1...4}/data
     networks:
       - tekera-network
-
 
   mc-once1:
     image: minio/mc
@@ -88,16 +95,15 @@ services:
       - minio1
     entrypoint: >
       sh -c "
-          echo '🕒 MinIO hazır mı kontrol ediliyor...' &&
-          until mc alias set myminio http://minio1:9000 tekera_user tekera_pass; do
-            echo '⏳ Bekleniyor...'; sleep 2;
-          done &&
-          echo '✅ mc alias tamam.' &&
-
-          mc mb myminio/tekera-bucket || true &&
-          mc anonymous set download myminio/tekera-bucket &&
-          echo '✅ Bucket public yapıldı.'
-        "
+        echo '🕒 MinIO hazır mı kontrol ediliyor...' &&
+        until mc alias set myminio http://minio1:9000 tekera_user tekera_pass; do
+          echo '⏳ Bekleniyor...'; sleep 2;
+        done &&
+        echo '✅ mc alias tamam.' &&
+        mc mb myminio/tekera-bucket || true &&
+        mc anonymous set download myminio/tekera-bucket &&
+        echo '✅ Bucket public yapıldı.'
+      "
     networks:
       - tekera-network
     restart: "no"
@@ -115,30 +121,26 @@ services:
       KAFKA_NODE_ID: 1
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
-
       KAFKA_LISTENERS: 'PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093,PLAINTEXT_HOST://0.0.0.0:29092'
       KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
-
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-
       CLUSTER_ID: "kafka-cluster-1"
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
     ports:
-      - "8280:8080"  # Kafka-UI'nin varsayılan portu 8080'dir
+      - "8280:8080"
     depends_on:
       - kafka
-    networks: # kafka-ui'nin de aynı ağda olması önemli
+    networks:
       - tekera-network
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-      # 'KAFKA_CLUSTERS_0_ZOOKEEPER' satırı kaldırıldı
 
   mind-generator:
     build:
@@ -171,4 +173,4 @@ volumes:
 
 networks:
   tekera-network:
-    driver: bridge  # Aynı ağda çalışan servisler birbirine erişebilsin
+    driver: bridge
