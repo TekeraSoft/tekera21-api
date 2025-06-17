@@ -17,7 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
 //                )
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
-                .allowedHeaders("*");
-                //.allowCredentials(true); // Bu satır kritik: Cookie/token gibi verilerin taşınmasına izin verir
+                .allowedHeaders("*")
+                .allowCredentials(true); // Bu satır kritik: Cookie/token gibi verilerin taşınmasına izin verir
     }
 }
