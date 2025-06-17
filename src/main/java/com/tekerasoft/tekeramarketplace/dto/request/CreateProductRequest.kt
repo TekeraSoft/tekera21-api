@@ -30,7 +30,7 @@ data class CreateProductRequest(
 
     @JsonProperty("subCategories")
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    val subCategories: String? = null,
+    val subCategories: List<String>? = null,
 
     @JsonProperty("variants")
     val variants: List<VariationRequest>,
