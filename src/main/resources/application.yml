@@ -9,8 +9,6 @@ spring:
       max-request-size: 20MB
 
   data:
-    #    mongodb:
-    #      uri: mongodb://tekera_user:tekera_pass@localhost:27017/tekera-document-db?authSource=admin
     elasticsearch:
       #uris: localhost:9200
       uris: elasticsearch:9200
@@ -56,4 +54,4 @@ spring:
 
   mind-creator:
     #api: http://localhost:3009/generate
-    api: http://mind-generator/generate
+    api: http://mind-generator:3009/generate
