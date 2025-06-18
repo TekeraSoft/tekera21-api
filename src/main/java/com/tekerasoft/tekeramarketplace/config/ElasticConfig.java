@@ -15,7 +15,7 @@ import java.time.Duration;
 @ComponentScan(basePackages = {"com.tekerasoft.tekeramarketplace"})
 public class ElasticConfig extends ElasticsearchConfiguration {
 
-    @Value("${spring.elasticsearch.uris}")
+    @Value("${spring.data.elasticsearch.uris}")
     private String uri;
 
 //    @Value("${spring.elasticsearch.username}")
