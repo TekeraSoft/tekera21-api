@@ -10,8 +10,8 @@ spring:
 
   elasticsearch:
     #uris: localhost:9200
-    username: elastic
-    password: tekera_pass
+#    username: elastic
+#    password: tekera_pass
     uris: elasticsearch:9200
 
   datasource:
