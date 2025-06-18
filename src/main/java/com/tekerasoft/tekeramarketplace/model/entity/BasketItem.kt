@@ -15,7 +15,12 @@ open class BasketItem(
     open var price: BigDecimal,
     open var sku: String,
     open var barcode: String,
-    open var attribute: Attribute,
+    @ElementCollection
+    @CollectionTable(
+        name = "basket_item_attributes",
+        joinColumns = [JoinColumn(name = "basket_item_id")]
+    )
+    open var attribute: List<StockAttribute>,
     open var image: String,
     open var companyId: String
 ): BaseEntity()

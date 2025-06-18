@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.dto.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.tekerasoft.tekeramarketplace.dto.AttributeDto
 import com.tekerasoft.tekeramarketplace.model.entity.Attribute
 import jakarta.validation.constraints.NotBlank
 import org.jetbrains.annotations.NotNull
@@ -26,5 +27,5 @@ data class VariationRequest(
     val barcode: String,
 
     @JsonProperty("attributes")
-    val attributes: List<Attribute>,
+    val attributes: List<CreateAttributeRequest>,
 )

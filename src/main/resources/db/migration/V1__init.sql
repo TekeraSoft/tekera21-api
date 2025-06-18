@@ -1,3 +1,20 @@
+CREATE TABLE attributes
+(
+    id           UUID    NOT NULL,
+    created_at   TIMESTAMP WITHOUT TIME ZONE,
+    updated_at   TIMESTAMP WITHOUT TIME ZONE,
+    stock        INTEGER NOT NULL,
+    variation_id UUID,
+    CONSTRAINT "pk_attrıbutes" PRIMARY KEY (id)
+);
+
+CREATE TABLE attributes_stock_attributes
+(
+    attribute_id UUID NOT NULL,
+    key          VARCHAR(255),
+    value        VARCHAR(255)
+);
+
 CREATE TABLE basket_item
 (
     id         UUID    NOT NULL,
@@ -15,9 +32,14 @@ CREATE TABLE basket_item
     barcode    VARCHAR(255),
     image      VARCHAR(255),
     company_id VARCHAR(255),
-    key        VARCHAR(255),
-    value      VARCHAR(255),
     CONSTRAINT "pk_basketıtem" PRIMARY KEY (id)
+);
+
+CREATE TABLE basket_item_attributes
+(
+    basket_item_id UUID NOT NULL,
+    key            VARCHAR(255),
+    value          VARCHAR(255)
 );
 
 CREATE TABLE category
@@ -240,7 +262,7 @@ CREATE TABLE products
     company_id    UUID,
     product_type  VARCHAR(255),
     rate          DOUBLE PRECISION NOT NULL,
-    is_active     BOOLEAN,
+    is_active     BOOLEAN          NOT NULL,
     CONSTRAINT pk_products PRIMARY KEY (id)
 );
 
@@ -317,13 +339,6 @@ CREATE TABLE users_orders
     orders_id UUID NOT NULL
 );
 
-CREATE TABLE variation_attributes
-(
-    variation_id UUID NOT NULL,
-    key          VARCHAR(255),
-    value        VARCHAR(255)
-);
-
 CREATE TABLE variation_images
 (
     variation_id UUID NOT NULL,
@@ -332,14 +347,13 @@ CREATE TABLE variation_images
 
 CREATE TABLE variations
 (
-    id             UUID    NOT NULL,
+    id             UUID NOT NULL,
     created_at     TIMESTAMP WITHOUT TIME ZONE,
     updated_at     TIMESTAMP WITHOUT TIME ZONE,
     model_name     VARCHAR(255),
     model_code     VARCHAR(255),
     price          DECIMAL,
     discount_price DECIMAL,
-    stock          INTEGER NOT NULL,
     sku            VARCHAR(255),
     barcode        VARCHAR(255),
     product_id     UUID,
@@ -370,6 +384,9 @@ ALTER TABLE products_comments
 ALTER TABLE users_orders
     ADD CONSTRAINT uc_users_orders_orders UNIQUE (orders_id);
 
+ALTER TABLE attributes
+    ADD CONSTRAINT FK_ATTRIBUTES_ON_VARIATION FOREIGN KEY (variation_id) REFERENCES variations (id);
+
 ALTER TABLE digital_fashion_sub_category
     ADD CONSTRAINT FK_DIGITALFASHIONSUBCATEGORY_ON_DIGITAL_FASHION_CATEGORY FOREIGN KEY (digital_fashion_category_id) REFERENCES digital_fashion_category (id);
 
@@ -396,6 +413,12 @@ ALTER TABLE users
 
 ALTER TABLE variations
     ADD CONSTRAINT FK_VARIATIONS_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);
+
+ALTER TABLE attributes_stock_attributes
+    ADD CONSTRAINT "fk_attrıbutes_stockattrıbutes_on_attrıbute" FOREIGN KEY (attribute_id) REFERENCES attributes (id);
+
+ALTER TABLE basket_item_attributes
+    ADD CONSTRAINT "fk_basket_ıtem_attrıbutes_on_basket_ıtem" FOREIGN KEY (basket_item_id) REFERENCES basket_item (id);
 
 ALTER TABLE company_categories
     ADD CONSTRAINT fk_comcat_on_category FOREIGN KEY (category_id) REFERENCES category (id);
@@ -474,9 +497,6 @@ ALTER TABLE user_permissions
 
 ALTER TABLE user_roles
     ADD CONSTRAINT fk_user_roles_on_user FOREIGN KEY (user_id) REFERENCES users (id);
-
-ALTER TABLE variation_attributes
-    ADD CONSTRAINT "fk_varıatıon_attrıbutes_on_varıatıon" FOREIGN KEY (variation_id) REFERENCES variations (id);
 
 ALTER TABLE variation_images
     ADD CONSTRAINT "fk_varıatıon_ımages_on_varıatıon" FOREIGN KEY (variation_id) REFERENCES variations (id);

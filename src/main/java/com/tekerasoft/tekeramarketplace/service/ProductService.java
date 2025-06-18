@@ -87,10 +87,8 @@ public class ProductService {
                 var.setModelName(varReq.getModelName());
                 var.setModelCode(varReq.getModelCode());
                 var.setPrice(varReq.getPrice());
-                var.setStock(varReq.getStock());
                 var.setSku(varReq.getSku());
                 var.setBarcode(varReq.getBarcode());
-                var.setAttributes(varReq.getAttributes());
                 var.setProduct(product);
 
                 List<String> imgUrls = new ArrayList<>();
@@ -101,12 +99,22 @@ public class ProductService {
 
                     String imageModelCode = parsed.get("modelCode");
                     String imageColor = parsed.get("color");
-                    String variantColor = getColorFromAttributes(varReq.getAttributes());
-                    if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
-                            && variantColor.trim().equalsIgnoreCase(imageColor.trim())) {
 
-                        String imageUrl = fileService.productFileUpload(image, company.getName(),
-                                SlugGenerator.generateSlug(req.getName()));
+                    String variantColor = varReq.getAttributes().stream()
+                            .flatMap(attr -> attr.getStockAttribute().stream())
+                            .filter(attr -> attr.getKey().equalsIgnoreCase("color") || attr.getKey().equalsIgnoreCase("renk"))
+                            .map(StockAttribute::getValue)
+                            .findFirst()
+                            .orElse("");
+
+                    if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
+                            && variantColor.equalsIgnoreCase(imageColor)) {
+
+                        String imageUrl = fileService.productFileUpload(
+                                image,
+                                company.getName(),
+                                SlugGenerator.generateSlug(req.getName())
+                        );
                         imgUrls.add(imageUrl);
                     }
                 }
@@ -120,6 +128,28 @@ public class ProductService {
         } catch (RuntimeException e) {
             throw new RuntimeException("Error creating product", e);
         }
+    }
+
+    private static String getColorFromAttributes(List<StockAttribute> attributes) {
+        for (StockAttribute attr : attributes) {
+            String key = attr.getKey().toLowerCase();
+            if (key.contains("color") || key.contains("renk")) {
+                return attr.getValue();
+            }
+        }
+        return "";
+    }
+
+    private static Map<String, String> parseImageFileName(String filename) {
+        String name = filename.contains(".") ? filename.substring(0, filename.lastIndexOf('.'))
+                : filename;
+        String[] parts = name.split("_");
+        if (parts.length != 2) return null;
+
+        Map<String, String> result = new HashMap<>();
+        result.put("modelCode", parts[0]);
+        result.put("color", parts[1]);
+        return result;
     }
 
     public ApiResponse<?> deleteProduct(String id) {
@@ -187,28 +217,6 @@ public class ProductService {
         } catch (RuntimeException e) {
             throw new RuntimeException("Error updating product", e);
         }
-    }
-
-    private static String getColorFromAttributes(List<Attribute> attributes) {
-        for (Attribute attr : attributes) {
-            String key = attr.getKey().toLowerCase();
-            if (key.contains("color") || key.contains("renk")) {
-                return attr.getValue();
-            }
-        }
-        return "";
-    }
-
-    private static Map<String, String> parseImageFileName(String filename) {
-        String name = filename.contains(".") ? filename.substring(0, filename.lastIndexOf('.'))
-                : filename;
-        String[] parts = name.split("_");
-        if (parts.length != 2) return null;
-
-        Map<String, String> result = new HashMap<>();
-        result.put("modelCode", parts[0]);
-        result.put("color", parts[1]);
-        return result;
     }
 
 }

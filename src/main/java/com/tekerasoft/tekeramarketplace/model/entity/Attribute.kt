@@ -1,12 +1,28 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import jakarta.persistence.CollectionTable
+import jakarta.persistence.ElementCollection
 import jakarta.persistence.Embeddable
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 
-@Embeddable
-data class Attribute(
-    @JsonProperty("key")
-    var key: String = "",
-    @JsonProperty("value")
-    var value: String = "",
-)
+@Entity
+@Table(name = "attributes")
+open class Attribute(
+    @ElementCollection
+    @CollectionTable(
+        name = "attributes_stockAttributes",
+        joinColumns = [JoinColumn(name = "attribute_id")],
+    )
+    open var stockAttributes: MutableList<StockAttribute> = mutableListOf(),
+    @JsonProperty("stock")
+    open var stock: Int = 0,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "variation_id")
+    open var variation: Variation? = null
+): BaseEntity()
