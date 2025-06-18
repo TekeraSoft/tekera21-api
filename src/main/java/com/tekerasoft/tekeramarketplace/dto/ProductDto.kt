@@ -39,6 +39,7 @@ data class ProductDto(
                         it.modelName,
                         it.modelCode,
                         it.price,
+                        it.discountPrice,
                         it.stock,
                         it.sku,
                         it.barcode,
