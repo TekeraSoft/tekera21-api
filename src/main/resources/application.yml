@@ -8,11 +8,13 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
 
-  elasticsearch:
+  data:
+
+    elasticsearch:
     #uris: localhost:9200
 #    username: elastic
 #    password: tekera_pass
-    uris: elasticsearch:9200
+      uris: elasticsearch:9200
 
   datasource:
     driver-class-name: org.postgresql.Driver
