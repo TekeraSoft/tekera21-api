@@ -12,7 +12,10 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                .allowedOrigins(
                        "https://ar.tekera21.com",
-                       "https://api.tekera21.com",
+                       "https://panel.tekera21.com",
+                       "http://localhost:3000",
+                       "http://localhost:3001",
+                       "http://localhost:3002",
                        "https://tekera21.com",
                        "https://arzuamber.com"
                )
