@@ -8,7 +8,7 @@ data class VariationDto(
     val modelName: String,
     val modelCode: String,
     val price: BigDecimal,
-    val discountPrice: BigDecimal,
+    val discountPrice: BigDecimal?,
     val stock: Int,
     val sku: String,
     val barcode: String,
