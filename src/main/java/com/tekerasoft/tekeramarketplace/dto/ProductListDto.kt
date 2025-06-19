@@ -35,11 +35,14 @@ data class ProductListDto(
                         it.id,
                         it.modelName,
                         it.modelCode,
-                        it.price,
-                        it.discountPrice,
-                        it.sku,
-                        it.barcode,
-                        it.attributes.map { it -> AttributeDto(it.stockAttributes,it.stock)},
+                        it.attributes.map { it -> AttributeDto(
+                            it.stockAttributes,
+                            it.stock,
+                            it.price,
+                            it.discountPrice,
+                            it.sku,
+                            it.barcode
+                        )},
                         it.images
                     )
                 },

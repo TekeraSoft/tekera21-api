@@ -16,10 +16,6 @@ import java.math.BigDecimal
 open class Variation(
     open var modelName: String,
     open var modelCode: String,
-    open var price: BigDecimal = BigDecimal.ZERO,
-    open var discountPrice: BigDecimal? = BigDecimal.ZERO,
-    open var sku: String,
-    open var barcode: String,
 
     @OneToMany(mappedBy="variation",fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var attributes: MutableList<Attribute> = mutableListOf(),

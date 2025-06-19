@@ -14,18 +14,6 @@ data class VariationRequest(
     @JsonProperty("modelCode")
     val modelCode: String,
 
-    @JsonProperty("price")
-    val price: BigDecimal,
-
-    @JsonProperty("stock")
-    val stock: Int,
-
-    @JsonProperty("sku")
-    val sku: String,
-
-    @JsonProperty("barcode")
-    val barcode: String,
-
     @JsonProperty("attributes")
     val attributes: List<CreateAttributeRequest>,
 )

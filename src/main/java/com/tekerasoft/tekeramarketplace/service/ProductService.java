@@ -86,10 +86,20 @@ public class ProductService {
                 Variation var = new Variation();
                 var.setModelName(varReq.getModelName());
                 var.setModelCode(varReq.getModelCode());
-                var.setPrice(varReq.getPrice());
-                var.setSku(varReq.getSku());
-                var.setBarcode(varReq.getBarcode());
                 var.setProduct(product);
+
+                // Variation attributes
+                List<Attribute> variationAttributes = varReq.getAttributes().stream()
+                        .map(attr -> new Attribute(
+                                attr.getStockAttribute(),
+                                attr.getStock(),
+                                attr.getPrice(),
+                                attr.getDiscountPrice(),
+                                attr.getSku(),
+                                attr.getBarcode(),
+                                var
+                        )).collect(Collectors.toList());
+                var.setAttributes(variationAttributes);
 
                 List<String> imgUrls = new ArrayList<>();
 
@@ -118,6 +128,7 @@ public class ProductService {
                         imgUrls.add(imageUrl);
                     }
                 }
+
                 var.setImages(imgUrls);
                 variations.add(var);
             }

@@ -1,10 +1,14 @@
 CREATE TABLE attributes
 (
-    id           UUID    NOT NULL,
-    created_at   TIMESTAMP WITHOUT TIME ZONE,
-    updated_at   TIMESTAMP WITHOUT TIME ZONE,
-    stock        INTEGER NOT NULL,
-    variation_id UUID,
+    id             UUID    NOT NULL,
+    created_at     TIMESTAMP WITHOUT TIME ZONE,
+    updated_at     TIMESTAMP WITHOUT TIME ZONE,
+    stock          INTEGER NOT NULL,
+    price          DECIMAL,
+    discount_price DECIMAL,
+    sku            VARCHAR(255),
+    barcode        VARCHAR(255),
+    variation_id   UUID,
     CONSTRAINT "pk_attrıbutes" PRIMARY KEY (id)
 );
 
@@ -347,16 +351,12 @@ CREATE TABLE variation_images
 
 CREATE TABLE variations
 (
-    id             UUID NOT NULL,
-    created_at     TIMESTAMP WITHOUT TIME ZONE,
-    updated_at     TIMESTAMP WITHOUT TIME ZONE,
-    model_name     VARCHAR(255),
-    model_code     VARCHAR(255),
-    price          DECIMAL,
-    discount_price DECIMAL,
-    sku            VARCHAR(255),
-    barcode        VARCHAR(255),
-    product_id     UUID,
+    id         UUID NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+    model_name VARCHAR(255),
+    model_code VARCHAR(255),
+    product_id UUID,
     CONSTRAINT "pk_varıatıons" PRIMARY KEY (id)
 );
 
