@@ -163,6 +163,12 @@ public class ProductService {
         return result;
     }
 
+    public ProductDto getCustomerProduct(String id) {
+        return productRepository.findById(UUID.fromString(id))
+                .map(ProductDto::toDto)
+                .orElseThrow(()-> new NotFoundException("Product not found"));
+    }
+
     public ApiResponse<?> deleteProduct(String id) {
         Product product = productRepository.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Product not found: " + id)

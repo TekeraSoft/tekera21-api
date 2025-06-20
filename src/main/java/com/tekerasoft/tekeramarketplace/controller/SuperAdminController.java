@@ -2,6 +2,7 @@ package com.tekerasoft.tekeramarketplace.controller;
 
 import com.tekerasoft.tekeramarketplace.dto.CategoryDto;
 import com.tekerasoft.tekeramarketplace.dto.CompanyAdminDto;
+import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCategoryRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateSubCategoryRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
@@ -40,6 +41,11 @@ public class SuperAdminController {
     @PostMapping(value = "/createSubCategory", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> createSubCategory(@Valid @ModelAttribute CreateSubCategoryRequest req) {
         return subCategoryService.createSubCategory(req);
+    }
+
+    @GetMapping("/getCustomerProduct")
+    public ResponseEntity<ProductDto> getCustomerProduct(@RequestParam String id) {
+        return ResponseEntity.ok(productService.getCustomerProduct(id));
     }
 
     @GetMapping("/getAllCategory")

@@ -12,6 +12,8 @@ data class ProductDto(
     val slug: String,
     val code: String,
     val brandName: String,
+    val categoryId: UUID?,
+    val subCategoriesId: List<UUID?>,
     val company: ProductCompanyDto,
     val description: String,
     val variations: List<VariationDto>,
@@ -31,8 +33,10 @@ data class ProductDto(
                 from.slug,
                 from.code,
                 from.brandName,
+                from.category.id,
+                from.subCategories.map { it.id }.toList(),
                 from.company.let {
-                    ProductCompanyDto(it.name,it.logo, it.rate ) },
+                    ProductCompanyDto(it.id,it.name,it.logo, it.rate ) },
                 from.description,
                 from.variations.map {
                     VariationDto(

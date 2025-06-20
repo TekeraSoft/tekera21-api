@@ -22,7 +22,6 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - ELASTIC_PASSWORD=tekera_pass
     ports:
       - "9200:9200"
     networks:
