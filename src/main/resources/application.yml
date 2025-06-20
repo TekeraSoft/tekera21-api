@@ -10,8 +10,8 @@ spring:
 
   data:
     elasticsearch:
-      #uris: elasticsearch:9200
-      uris: localhost:9200
+      uris: elasticsearch:9200
+      #uris: localhost:9200
 
   datasource:
     driver-class-name: org.postgresql.Driver
