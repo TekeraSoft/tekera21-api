@@ -24,7 +24,7 @@ public class FileService {
         this.minioClient = minioClient;
     }
 
-    public String productFileUpload(MultipartFile file,String companyName,String slug) {
+    public String productFileUpload(MultipartFile file,String companyName,String slug, String color) {
         try {
             BucketExistsArgs args = BucketExistsArgs.builder().bucket(bucketName).build();
             if (!minioClient.bucketExists(args)) {
@@ -36,7 +36,7 @@ public class FileService {
             if (originalFilename.contains(".")) {
                 fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
             }
-            String fileName = slug + fileExtension;
+            String fileName = slug + "-clr_"+ color + fileExtension;
             String companyNameConvert = companyName.toLowerCase().replaceAll("\\s+", "_");
             InputStream inputStream = file.getInputStream();
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()

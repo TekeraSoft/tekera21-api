@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull
 import java.math.BigDecimal
 
 data class VariationRequest(
+
     @JsonProperty("modelName")
     val modelName: String,
 

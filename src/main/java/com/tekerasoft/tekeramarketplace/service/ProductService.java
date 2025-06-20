@@ -2,18 +2,13 @@ package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
-import com.tekerasoft.tekeramarketplace.dto.request.CreateProductRequest;
-import com.tekerasoft.tekeramarketplace.dto.request.FilterProductRequest;
-import com.tekerasoft.tekeramarketplace.dto.request.VariationRequest;
+import com.tekerasoft.tekeramarketplace.dto.request.*;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
-import com.tekerasoft.tekeramarketplace.repository.jparepository.CategoryRepository;
-import com.tekerasoft.tekeramarketplace.repository.jparepository.CompanyRepository;
-import com.tekerasoft.tekeramarketplace.repository.jparepository.ProductRepository;
-import com.tekerasoft.tekeramarketplace.repository.jparepository.SubCategoryRepository;
+import com.tekerasoft.tekeramarketplace.repository.jparepository.*;
 import com.tekerasoft.tekeramarketplace.specification.ProductSpecification;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
@@ -35,18 +30,22 @@ public class ProductService {
     private final SubCategoryRepository subCategoryRepository;
     private final CompanyRepository companyRepository;
     private final SearchItemService searchItemService;
+    private final VariationRepository variationRepository;
+    private final AttributeRepository attributeRepository;
 
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
                           SubCategoryRepository subCategoryRepository,
-                          CompanyRepository companyRepository, SearchItemService searchItemService) {
+                          CompanyRepository companyRepository, SearchItemService searchItemService, VariationRepository variationRepository, AttributeRepository attributeRepository) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.companyRepository = companyRepository;
         this.searchItemService = searchItemService;
+        this.variationRepository = variationRepository;
+        this.attributeRepository = attributeRepository;
     }
 
     @Transactional
@@ -123,7 +122,8 @@ public class ProductService {
                         String imageUrl = fileService.productFileUpload(
                                 image,
                                 company.getName(),
-                                SlugGenerator.generateSlug(req.getName())
+                                SlugGenerator.generateSlug(req.getName()),
+                                imageColor
                         );
                         imgUrls.add(imageUrl);
                     }
@@ -136,6 +136,105 @@ public class ProductService {
             productRepository.save(product);
 
             return new ApiResponse<>("Product Created", HttpStatus.CREATED.value());
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Error creating product", e);
+        }
+    }
+
+    @Transactional
+    public ApiResponse<?> update(UpdateProductRequest req, List<MultipartFile> images) {
+        try {
+            Product product = productRepository.findById(UUID.fromString(req.getId()))
+                    .orElseThrow(() -> new NotFoundException("Product not found: " + req.getId()));
+            product.setName(req.getName());
+            product.setSlug(SlugGenerator.generateSlug(req.getName()));
+            product.setCode(req.getCode());
+            product.setBrandName(req.getBrandName());
+            product.setDescription(req.getDescription());
+            product.setCurrencyType(req.getCurrencyType());
+            product.setProductType(req.getProductType());
+            product.setTags(req.getTags());
+            product.setAttributes(req.getAttributes());
+            product.setActive(true);
+
+            // Category
+            Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            product.setCategory(category);
+
+            // SubCategory
+            Set<SubCategory> subCategories = req.getSubCategories().stream()
+                    .map(id -> subCategoryRepository.findById(UUID.fromString(id))
+                            .orElseThrow(() -> new RuntimeException("SubCategory not found: " + id)))
+                    .collect(Collectors.toSet());
+            product.setSubCategories(subCategories);
+
+            // Variations
+            List<Variation> variations = new ArrayList<>();
+            for (VariationUpdateRequest varReq : req.getVariants()) {
+                Variation var = variationRepository.findById(UUID.fromString(varReq.getId()))
+                        .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
+                var.setModelName(varReq.getModelName());
+                var.setModelCode(varReq.getModelCode());
+                var.setProduct(product);
+
+                // Variation attributes
+                List<Attribute> variationAttributes = varReq.getAttributes().stream()
+                        .map(attr -> new Attribute(
+                                attr.getStockAttribute(),
+                                attr.getStock(),
+                                attr.getPrice(),
+                                attr.getDiscountPrice(),
+                                attr.getSku(),
+                                attr.getBarcode(),
+                                var
+                        )).collect(Collectors.toList());
+                var.setAttributes(variationAttributes);
+
+                if(!images.isEmpty()) {
+                    List<String> imgUrls = new ArrayList<>(var.getImages());
+
+                    for (MultipartFile image : images) {
+                        Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
+                        if (parsed == null) continue;
+
+                        String imageModelCode = parsed.get("modelCode");
+                        String imageColor = parsed.get("color");
+
+                        String variantColor = varReq.getAttributes().stream()
+                                .flatMap(attr -> attr.getStockAttribute().stream())
+                                .filter(attr -> attr.getKey().equalsIgnoreCase("color") || attr.getKey().equalsIgnoreCase("renk"))
+                                .map(StockAttribute::getValue)
+                                .findFirst()
+                                .orElse("");
+
+                        if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
+                                && variantColor.equalsIgnoreCase(imageColor)) {
+
+                            String imageUrl = fileService.productFileUpload(
+                                    image,
+                                    product.getCompany().getName(),
+                                    SlugGenerator.generateSlug(req.getName()),
+                                    imageColor
+                            );
+                            imgUrls.add(imageUrl);
+                        }
+                    }
+                    var.setImages(imgUrls);
+                }
+                variations.add(var);
+            }
+
+            if(!req.getDeleteImages().isEmpty()){
+                for (String image : req.getDeleteImages()) {
+                    fileService.deleteFileProduct(image);
+                }
+            }
+
+            product.setVariations(variations);
+            productRepository.save(product);
+
+            return new ApiResponse<>("Product Updated", HttpStatus.OK.value());
         } catch (RuntimeException e) {
             throw new RuntimeException("Error creating product", e);
         }
