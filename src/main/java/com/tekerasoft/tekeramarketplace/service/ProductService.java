@@ -102,6 +102,12 @@ public class ProductService {
 
                 List<String> imgUrls = new ArrayList<>();
 
+                Set<String> variantColors = varReq.getAttributes().stream()
+                        .flatMap(attr -> attr.getStockAttribute().stream())
+                        .filter(attr -> attr.getKey().equalsIgnoreCase("color") || attr.getKey().equalsIgnoreCase("renk"))
+                        .map(StockAttribute::getValue)
+                        .collect(Collectors.toSet());
+
                 for (MultipartFile image : images) {
                     Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
                     if (parsed == null) continue;
@@ -109,15 +115,8 @@ public class ProductService {
                     String imageModelCode = parsed.get("modelCode");
                     String imageColor = parsed.get("color");
 
-                    String variantColor = varReq.getAttributes().stream()
-                            .flatMap(attr -> attr.getStockAttribute().stream())
-                            .filter(attr -> attr.getKey().equalsIgnoreCase("color") || attr.getKey().equalsIgnoreCase("renk"))
-                            .map(StockAttribute::getValue)
-                            .findFirst()
-                            .orElse("");
-
                     if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
-                            && variantColor.equalsIgnoreCase(imageColor)) {
+                            && variantColors.contains(imageColor)) {
 
                         String imageUrl = fileService.productFileUpload(
                                 image,
@@ -194,6 +193,12 @@ public class ProductService {
                 if(!images.isEmpty()) {
                     List<String> imgUrls = new ArrayList<>(var.getImages());
 
+                    Set<String> variantColors = varReq.getAttributes().stream()
+                            .flatMap(attr -> attr.getStockAttribute().stream())
+                            .filter(attr -> attr.getKey().equalsIgnoreCase("color") || attr.getKey().equalsIgnoreCase("renk"))
+                            .map(StockAttribute::getValue)
+                            .collect(Collectors.toSet());
+
                     for (MultipartFile image : images) {
                         Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
                         if (parsed == null) continue;
@@ -201,15 +206,8 @@ public class ProductService {
                         String imageModelCode = parsed.get("modelCode");
                         String imageColor = parsed.get("color");
 
-                        String variantColor = varReq.getAttributes().stream()
-                                .flatMap(attr -> attr.getStockAttribute().stream())
-                                .filter(attr -> attr.getKey().equalsIgnoreCase("color") || attr.getKey().equalsIgnoreCase("renk"))
-                                .map(StockAttribute::getValue)
-                                .findFirst()
-                                .orElse("");
-
                         if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
-                                && variantColor.equalsIgnoreCase(imageColor)) {
+                                && variantColors.contains(imageColor)) {
 
                             String imageUrl = fileService.productFileUpload(
                                     image,
