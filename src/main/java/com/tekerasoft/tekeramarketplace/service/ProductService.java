@@ -177,7 +177,10 @@ public class ProductService {
                 var.setModelCode(varReq.getModelCode());
                 var.setProduct(product);
 
+                var.getAttributes().clear();
+
                 // Variation attributes
+                // 🔁 SONRA YENİLERİNİ EKLE
                 List<Attribute> variationAttributes = varReq.getAttributes().stream()
                         .map(attr -> new Attribute(
                                 attr.getStockAttribute(),
@@ -188,7 +191,8 @@ public class ProductService {
                                 attr.getBarcode(),
                                 var
                         )).collect(Collectors.toList());
-                var.setAttributes(variationAttributes);
+
+                var.getAttributes().addAll(variationAttributes);
 
                 if(!images.isEmpty()) {
                     List<String> imgUrls = new ArrayList<>(var.getImages());
