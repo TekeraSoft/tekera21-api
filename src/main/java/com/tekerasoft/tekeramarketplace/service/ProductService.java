@@ -227,9 +227,18 @@ public class ProductService {
                 variations.add(var);
             }
 
-            if(!req.getDeleteImages().isEmpty()){
-                for (String image : req.getDeleteImages()) {
-                    fileService.deleteFileProduct(image);
+            if (req.getDeleteImages() != null && !req.getDeleteImages().isEmpty()) {
+                for (String imageUrlToDelete : req.getDeleteImages()) {
+                    // 1. Fiziksel dosyayı MinIO'dan sil
+                    fileService.deleteFileProduct(imageUrlToDelete);
+
+                    // 2. Tüm varyasyonları gezip, bu URL varsa listesinden çıkar
+                    for (Variation var : variations) {
+                        List<String> updatedImages = new ArrayList<>(var.getImages());
+                        if (updatedImages.removeIf(img -> img.equals(imageUrlToDelete))) {
+                            var.setImages(updatedImages); // Listeyi yeniden set et
+                        }
+                    }
                 }
             }
 
