@@ -17,7 +17,7 @@ open class Variation(
     open var modelName: String,
     open var modelCode: String,
 
-    @OneToMany(mappedBy="variation",fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy="variation",fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open var attributes: MutableList<Attribute> = mutableListOf(),
 
     @ElementCollection
