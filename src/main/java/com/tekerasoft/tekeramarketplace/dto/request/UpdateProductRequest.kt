@@ -2,9 +2,9 @@ package com.tekerasoft.tekeramarketplace.dto.request
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.tekerasoft.tekeramarketplace.model.entity.AttributeDetail
 import com.tekerasoft.tekeramarketplace.model.entity.CurrencyType
 import com.tekerasoft.tekeramarketplace.model.entity.ProductType
-import com.tekerasoft.tekeramarketplace.model.entity.StockAttribute
 
 data class UpdateProductRequest(
 
@@ -43,7 +43,7 @@ data class UpdateProductRequest(
     val productType: ProductType,
 
     @JsonProperty("attributes")
-    val attributes: List<StockAttribute>,
+    val attributes: List<AttributeDetail>,
 
     @JsonProperty("deleteImages")
     @JsonInclude(JsonInclude.Include.NON_NULL)

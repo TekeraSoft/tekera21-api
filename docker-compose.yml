@@ -148,21 +148,21 @@ services:
     networks:
       - tekera-network
 
-  tekera-api:
-    build:
-      context: .
-    container_name: tekera21-api
-    depends_on:
-      - tekera-db
-      - minio1
-      - elasticsearch
-      - logstash
-      - kafka
-    ports:
-      - "9091:8080"
-    networks:
-      - tekera-network
-    restart: unless-stopped
+#  tekera-api:
+#    build:
+#      context: .
+#    container_name: tekera21-api
+#    depends_on:
+#      - tekera-db
+#      - minio1
+#      - elasticsearch
+#      - logstash
+#      - kafka
+#    ports:
+#      - "9091:8080"
+#    networks:
+#      - tekera-network
+#    restart: unless-stopped
 
 volumes:
   tekera_postgres_data:

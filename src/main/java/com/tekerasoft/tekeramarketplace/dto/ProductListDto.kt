@@ -1,9 +1,9 @@
 package com.tekerasoft.tekeramarketplace.dto
 
+import com.tekerasoft.tekeramarketplace.model.entity.AttributeDetail
 import com.tekerasoft.tekeramarketplace.model.entity.CurrencyType
 import com.tekerasoft.tekeramarketplace.model.entity.Product
 import com.tekerasoft.tekeramarketplace.model.entity.ProductType
-import com.tekerasoft.tekeramarketplace.model.entity.StockAttribute
 import java.util.UUID
 
 data class ProductListDto(
@@ -17,7 +17,7 @@ data class ProductListDto(
     val currencyType: CurrencyType,
     val tags: List<String>,
     val productType: ProductType,
-    val attributes: List<StockAttribute>,
+    val attributeDetails: List<AttributeDetail>,
     val rate: Double,
 ){
     companion object {
@@ -35,8 +35,9 @@ data class ProductListDto(
                         it.id,
                         it.modelName,
                         it.modelCode,
+                        it.color,
                         it.attributes.map { it -> AttributeDto(
-                            it.stockAttributes,
+                            it.attributeDetails,
                             it.stock,
                             it.price,
                             it.discountPrice,
@@ -49,7 +50,7 @@ data class ProductListDto(
                 from.currencyType,
                 from.tags,
                 from.productType,
-                from.attributes.map { StockAttribute(it.key, it.value) },
+                from.attributes.map { AttributeDetail(it.key, it.value) },
                 from.rate,
             )
         }

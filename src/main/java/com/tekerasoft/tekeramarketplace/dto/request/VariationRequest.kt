@@ -15,6 +15,9 @@ data class VariationRequest(
     @JsonProperty("modelCode")
     val modelCode: String,
 
+    @JsonProperty("color")
+    val color: String,
+
     @JsonProperty("attributes")
     val attributes: List<CreateAttributeRequest>,
 )

@@ -9,16 +9,13 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import java.math.BigDecimal
 
 @Entity
 @Table(name = "variations")
 open class Variation(
     open var modelName: String,
     open var modelCode: String,
-
-    @OneToMany(mappedBy="variation",fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
-    open var attributes: MutableList<Attribute> = mutableListOf(),
+    open var color: String,
 
     @ElementCollection
     @CollectionTable(
@@ -26,6 +23,9 @@ open class Variation(
         joinColumns = [JoinColumn(name = "variation_id")]
     )
     open var images: List<String> = listOf(),
+
+    @OneToMany(mappedBy="variation",fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    open var attributes: MutableList<Attribute> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

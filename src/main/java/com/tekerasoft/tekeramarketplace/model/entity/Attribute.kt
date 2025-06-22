@@ -14,23 +14,22 @@ import java.math.BigDecimal
 @Entity
 @Table(name = "attributes")
 open class Attribute(
+
+    open var price: BigDecimal = BigDecimal.ZERO,
+    open var discountPrice: BigDecimal? = BigDecimal.ZERO,
+    open var stock: Int,
+    open var sku: String,
+    open var barcode: String,
+
     @ElementCollection
     @CollectionTable(
         name = "attributes_stockAttributes",
         joinColumns = [JoinColumn(name = "attribute_id")],
     )
-    @JsonProperty("stockAttributes")
-    open var stockAttributes: MutableList<StockAttribute> = mutableListOf(),
-    @JsonProperty("stock")
-    open var stock: Int = 0,
-
-    open var price: BigDecimal = BigDecimal.ZERO,
-    open var discountPrice: BigDecimal? = BigDecimal.ZERO,
-
-    open var sku: String,
-    open var barcode: String,
+    open var attributeDetails: MutableList<AttributeDetail> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "variation_id")
-    open var variation: Variation? = null
-): BaseEntity()
+    open var variation: Variation? = null,
+
+    ): BaseEntity()

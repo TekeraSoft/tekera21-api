@@ -59,7 +59,7 @@ open class Product(
 
     @ElementCollection
     @CollectionTable(name = "product_attributes", joinColumns = [JoinColumn(name = "product_id")])
-    open var attributes: List<StockAttribute> = listOf(),
+    open var attributes: MutableList<AttributeDetail> = mutableListOf(),
 
     open var rate: Double = 0.0,
 

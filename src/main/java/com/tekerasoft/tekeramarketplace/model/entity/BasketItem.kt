@@ -20,7 +20,7 @@ open class BasketItem(
         name = "basket_item_attributes",
         joinColumns = [JoinColumn(name = "basket_item_id")]
     )
-    open var attribute: List<StockAttribute>,
+    open var attribute: List<AttributeDetail>,
     open var image: String,
     open var companyId: String
 ): BaseEntity()

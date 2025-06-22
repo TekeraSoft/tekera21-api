@@ -6,6 +6,7 @@ data class VariationDto(
     val id: UUID?,
     val modelName: String,
     val modelCode: String,
+    val color: String,
     val attributes: List<AttributeDto>,
     val images: List<String>?,
 )
