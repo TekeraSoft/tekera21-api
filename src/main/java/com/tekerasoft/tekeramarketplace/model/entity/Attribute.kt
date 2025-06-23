@@ -14,7 +14,6 @@ import java.math.BigDecimal
 @Entity
 @Table(name = "attributes")
 open class Attribute(
-
     open var price: BigDecimal = BigDecimal.ZERO,
     open var discountPrice: BigDecimal? = BigDecimal.ZERO,
     open var stock: Int,

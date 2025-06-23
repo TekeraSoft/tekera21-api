@@ -4,7 +4,7 @@ import com.tekerasoft.tekeramarketplace.model.entity.AttributeDetail
 import java.math.BigDecimal
 
 data class AttributeDto(
-    val attributeDetails: MutableList<AttributeDetail>,
+    val attributeDetails: List<AttributeDetail>,
     val stock: Int,
     val price: BigDecimal,
     val discountPrice: BigDecimal?,

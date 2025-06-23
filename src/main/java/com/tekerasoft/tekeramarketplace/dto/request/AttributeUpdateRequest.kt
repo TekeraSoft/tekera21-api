@@ -5,7 +5,7 @@ import com.tekerasoft.tekeramarketplace.model.entity.AttributeDetail
 import java.math.BigDecimal
 
 data class AttributeUpdateRequest(
-    @JsonProperty("stockAttribute")
+    @JsonProperty("attributeDetails")
     val attributeDetails: MutableList<AttributeDetail>,
     @JsonProperty("stock")
     val stock: Int,

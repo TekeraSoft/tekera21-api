@@ -22,27 +22,44 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms4g -Xmx4g
     ports:
       - "9200:9200"
     networks:
       - tekera-network
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-#  elastic-token-generator:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
-#    command: >
-#      bash -c "
-#        sleep 10 &&
-#        elasticsearch-users useradd kibana_system -p kibana_pass -r kibana_system &&
-#        elasticsearch-service-tokens create kibana kibana-token > /tokens/token &&
-#        cat /tokens/token
-#      "
-#    volumes:
-#      - ./tokens:/tokens
-#    depends_on:
-#      - elasticsearch
-#    networks:
-#      - tekera-network
-#    restart: "no"
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.13.4
+    container_name: logstash
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    volumes:
+      - ./logstash:/usr/share/logstash/pipeline
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - tekera-network
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -s http://localhost:9600/_node/stats | grep -q '\"events\"'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.4
@@ -53,23 +70,12 @@ services:
     ports:
       - "5601:5601"
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
     networks:
       - tekera-network
     volumes:
       - ./tokens:/tokens
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.13.4
-    container_name: logstash
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./logstash:/usr/share/logstash/pipeline
-    depends_on:
-      - elasticsearch
-    networks:
-      - tekera-network
 
   minio1:
     image: minio/minio:latest
@@ -148,21 +154,26 @@ services:
     networks:
       - tekera-network
 
-#  tekera-api:
-#    build:
-#      context: .
-#    container_name: tekera21-api
-#    depends_on:
-#      - tekera-db
-#      - minio1
-#      - elasticsearch
-#      - logstash
-#      - kafka
-#    ports:
-#      - "9091:8080"
-#    networks:
-#      - tekera-network
-#    restart: unless-stopped
+  tekera-api:
+    build:
+      context: .
+    container_name: tekera21-api
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      logstash:
+        condition: service_healthy
+      tekera-db:
+        condition: service_started
+      minio1:
+        condition: service_started
+      kafka:
+        condition: service_started
+    ports:
+      - "9091:8080"
+    networks:
+      - tekera-network
+    restart: unless-stopped
 
 volumes:
   tekera_postgres_data:
