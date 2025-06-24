@@ -5,13 +5,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
+import java.util.List;
+
 @Configuration
 public class KafkaTopicConfig {
 
-    @Bean
-    public NewTopic javaGuidesTopic() {
-        return TopicBuilder.name("mindmap-processing-topic")
-                .build();
+    public List<NewTopic> kafkaTopics() {
+        return List.of(
+                TopicBuilder.name("mindmap-processing-topic").build(),
+                TopicBuilder.name("delete-image-processing").build(),
+                TopicBuilder.name("log-event-topic").build()
+        );
     }
 
 }
