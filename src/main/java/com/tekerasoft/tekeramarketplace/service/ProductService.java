@@ -258,14 +258,9 @@ public class ProductService {
         }
     }
 
-    private static String getColorFromAttributes(List<AttributeDetail> attributes) {
-        for (AttributeDetail attr : attributes) {
-            String key = attr.getKey().toLowerCase();
-            if (key.contains("color") || key.contains("renk")) {
-                return attr.getValue();
-            }
-        }
-        return "";
+    public ProductListDto getProductById(String id) {
+        return productRepository.findById(UUID.fromString(id)).map(ProductListDto::toDto)
+                .orElseThrow(() -> new NotFoundException("Product not found: " + id));
     }
 
     private static Map<String, String> parseImageFileName(String filename) {

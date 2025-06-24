@@ -30,6 +30,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.findBySlug(slug));
     }
 
+    @GetMapping("/getProductById")
+    public ResponseEntity<ProductListDto> getProductById(@RequestParam String id) {
+        return ResponseEntity.ok(productService.getProductById(id));
+    }
+
     @GetMapping("/findCompanyReturnProducts/{companyId}")
     public ResponseEntity<Page<ProductListDto>> findCompanyReturnProducts(@PathVariable String companyId,Pageable pageable) {
         return ResponseEntity.ok(productService.findCompanyReturnProducts(companyId,pageable));
