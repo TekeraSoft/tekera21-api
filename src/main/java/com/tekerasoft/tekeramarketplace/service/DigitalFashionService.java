@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.TargetPictureDto;
+import com.tekerasoft.tekeramarketplace.dto.payload.DeletePathList;
 import com.tekerasoft.tekeramarketplace.dto.payload.MindMapMessage;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateTargetPictureRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
@@ -27,6 +28,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,10 +44,10 @@ public class DigitalFashionService {
     private final TargetPictureRepository targetPictureRepository;
     private final FabricRepository fabricRepository;
     private final FileService fileService;
-    private final KafkaTemplate<String, MindMapMessage> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public DigitalFashionService(TargetPictureRepository targetPictureRepository, FabricRepository fabricRepository,
-                                 FileService fileService, KafkaTemplate<String, MindMapMessage> kafkaTemplate) {
+                                 FileService fileService, KafkaTemplate<String, Object> kafkaTemplate) {
         this.targetPictureRepository = targetPictureRepository;
         this.fabricRepository = fabricRepository;
         this.fileService = fileService;
@@ -147,13 +150,19 @@ public class DigitalFashionService {
 
     public ApiResponse<?> deleteTargetPicture(String id) {
         try {
-            TargetPicture tp = targetPictureRepository.findById(UUID.fromString(id)).get();
+            TargetPicture tp = targetPictureRepository.findById(UUID.fromString(id)).orElseThrow(
+                    () -> new NotFoundException("Target picture not found for id: " + id)
+            );
+            List<String> pathList = new ArrayList<>();
+            pathList.add(tp.getMindPath());
+            pathList.add(tp.getTargetPic());
+            pathList.add(tp.getDefaultContent());
+            pathList.add(tp.getSpecialContent());
+
+            kafkaTemplate.send("delete-image-processing", new DeletePathList(pathList));
+
             targetPictureRepository.deleteById(UUID.fromString(id));
-            fileService.deleteInFolderFile(tp.getMindPath());
-            fileService.deleteInFolderFile(tp.getTargetPic());
-            fileService.deleteInFolderFile(tp.getDefaultContent());
-            fileService.deleteInFolderFile(tp.getSpecialContent());
-            return new ApiResponse<>("TargetPicture deleted", HttpStatus.OK.value());
+            return new ApiResponse<>("Target Picture Deleted", HttpStatus.OK.value());
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }

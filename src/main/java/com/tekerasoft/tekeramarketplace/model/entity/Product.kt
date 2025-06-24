@@ -35,8 +35,7 @@ open class Product(
     open var category: Category,
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "product_subcategories",
-        joinColumns = [JoinColumn(name = "product_fk")],
+    @JoinTable(name = "product_subcategories", joinColumns = [JoinColumn(name = "product_fk")],
         inverseJoinColumns = [JoinColumn(name = "subcategory_id")])
     open var subCategories: MutableSet<SubCategory> = mutableSetOf(),
 

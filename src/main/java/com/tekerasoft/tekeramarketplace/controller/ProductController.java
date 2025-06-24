@@ -36,12 +36,14 @@ public class ProductController {
     }
 
     @GetMapping("/findCompanyReturnProducts/{companyId}")
-    public ResponseEntity<Page<ProductListDto>> findCompanyReturnProducts(@PathVariable String companyId,Pageable pageable) {
+    public ResponseEntity<Page<ProductListDto>> findCompanyReturnProducts(@PathVariable String companyId,
+                                                                          Pageable pageable) {
         return ResponseEntity.ok(productService.findCompanyReturnProducts(companyId,pageable));
     }
 
     @GetMapping("/findCompanyReturnProduct/{companyId}/{slug}")
-    public ResponseEntity<ProductDto> findCompanyReturnProduct(@PathVariable String companyId, @PathVariable String slug) {
+    public ResponseEntity<ProductDto> findCompanyReturnProduct(@PathVariable String companyId,
+                                                               @PathVariable String slug) {
         return ResponseEntity.ok(productService.findCompanyReturnProduct(companyId, slug));
     }
 

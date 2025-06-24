@@ -37,7 +37,8 @@ public class ProductService {
                           FileService fileService,
                           CategoryRepository categoryRepository,
                           SubCategoryRepository subCategoryRepository,
-                          CompanyRepository companyRepository, SearchItemService searchItemService, VariationRepository variationRepository, AttributeRepository attributeRepository) {
+                          CompanyRepository companyRepository, SearchItemService searchItemService,
+                          VariationRepository variationRepository, AttributeRepository attributeRepository) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
