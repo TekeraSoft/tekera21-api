@@ -10,11 +10,11 @@ import java.util.List;
 @Configuration
 public class KafkaTopicConfig {
 
+    @Bean
     public List<NewTopic> kafkaTopics() {
         return List.of(
                 TopicBuilder.name("mindmap-processing-topic").build(),
-                TopicBuilder.name("delete-image-processing").build(),
-                TopicBuilder.name("log-event-topic").build()
+                TopicBuilder.name("delete-image-processing").build()
         );
     }
 
