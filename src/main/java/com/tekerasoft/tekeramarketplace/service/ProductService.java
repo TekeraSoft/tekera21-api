@@ -148,7 +148,6 @@ public class ProductService {
             Product product = productRepository.findById(UUID.fromString(req.getId()))
                     .orElseThrow(() -> new NotFoundException("Product not found: " + req.getId()));
             product.setName(req.getName());
-            product.setSlug(SlugGenerator.generateSlug(req.getName()));
             product.setCode(req.getCode());
             product.setBrandName(req.getBrandName());
             product.setDescription(req.getDescription());
@@ -157,6 +156,10 @@ public class ProductService {
             product.setTags(req.getTags());
             product.setAttributes(req.getAttributes());
             product.setActive(true);
+
+            if(!product.getName().equals(req.getName())) {
+                product.setName(req.getName());
+            }
 
             // Category
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
