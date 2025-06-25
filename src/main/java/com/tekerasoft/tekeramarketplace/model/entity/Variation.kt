@@ -24,7 +24,7 @@ open class Variation(
     )
     open var images: List<String> = listOf(),
 
-    @OneToMany(mappedBy="variation",fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy="variation",fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var attributes: MutableList<Attribute> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
