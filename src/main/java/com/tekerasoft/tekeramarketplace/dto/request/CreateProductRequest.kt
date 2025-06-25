@@ -45,6 +45,6 @@ data class CreateProductRequest(
     @JsonProperty("productType")
     val productType: ProductType,
 
-    @JsonProperty("attributes")
-    val attributes: List<AttributeDetail>
+    @JsonProperty("attributeDetails")
+    val attributeDetails: List<AttributeDetail>
 )
