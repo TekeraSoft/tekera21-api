@@ -175,7 +175,6 @@ public class ProductService {
                     // Mevcut varyasyon güncelleniyor
                     var = variationRepository.findById(UUID.fromString(varReq.getId()))
                             .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
-                    var.getAttributes().clear(); // Eski attribute'ları temizle
                 } else {
                     // Yeni varyasyon oluşturuluyor
                     var = new Variation();
@@ -197,8 +196,7 @@ public class ProductService {
                                 attr.getAttributeDetails(),
                                 var
                         )).collect(Collectors.toList());
-                var.getAttributes().addAll(variationAttributes);
-
+                var.setAttributes(variationAttributes);
                 // Images eşleştirme
                 if (!images.isEmpty()) {
                     List<String> imgUrls = new ArrayList<>(var.getImages() != null ? var.getImages() : new ArrayList<>());
