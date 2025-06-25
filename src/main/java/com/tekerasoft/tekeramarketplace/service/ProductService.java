@@ -320,6 +320,10 @@ public class ProductService {
         return productRepository.findActiveProducts(pageable).map(ProductListDto::toDto);
     }
 
+    public Page<ProductDto> findAllAdminProduct(Pageable pageable) {
+        return productRepository.findAll(pageable).map(ProductDto::toDto);
+    }
+
     public Page<ProductListDto> filterProduct(String color,String size, String gender, Pageable pageable) {
 
         return productRepository.findByQueryField(color, size, gender, pageable)

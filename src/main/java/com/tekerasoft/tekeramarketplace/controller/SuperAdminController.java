@@ -85,4 +85,9 @@ public class SuperAdminController {
         return ResponseEntity.ok(productService.changeProductActiveStatus(productId,status));
     }
 
+    @GetMapping("/getAllAdminProduct")
+    public ResponseEntity<Page<ProductDto>> getAllAdminProduct(Pageable pageable) {
+        return ResponseEntity.ok(productService.findAllAdminProduct(pageable));
+    }
+
 }

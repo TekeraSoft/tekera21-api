@@ -12,8 +12,8 @@ data class ProductDto(
     val slug: String,
     val code: String,
     val brandName: String,
-    val categoryId: UUID?,
-    val subCategoriesId: List<UUID?>,
+    val category: AdminCategoryDto?,
+    val subCategories: List<AdminSubCategoryDto>,
     val company: ProductCompanyDto,
     val description: String,
     val variations: List<VariationDto>,
@@ -22,7 +22,8 @@ data class ProductDto(
     val productType: ProductType,
     val attributeDetails: List<AttributeDetail>,
     val rate: Double,
-    val comments: List<CommentDto>
+    val comments: List<CommentDto>,
+    val isActive: Boolean?
 ) {
     companion object {
         @JvmStatic
@@ -33,8 +34,8 @@ data class ProductDto(
                 from.slug,
                 from.code,
                 from.brandName,
-                from.category.id,
-                from.subCategories.map { it.id }.toList(),
+                from.category.let { AdminCategoryDto(it.id,it.name, it.image) },
+                from.subCategories.map { AdminSubCategoryDto(it.id, it.name, it.image) }.toList(),
                 from.company.let {
                     ProductCompanyDto(it.id,it.name,it.logo, it.rate ) },
                 from.description,
@@ -60,7 +61,8 @@ data class ProductDto(
                 from.productType,
                 from.attributes.map { AttributeDetail(it.key, it.value) },
                 from.rate,
-                from.comments.map { CommentDto(it.id,it.userName,it.rate,it.message) }
+                from.comments.map { CommentDto(it.id,it.userName,it.rate,it.message) },
+                from.isActive
             )
         }
     }
