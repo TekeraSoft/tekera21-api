@@ -6,7 +6,7 @@ data class FilterProductRequest (
     @JsonProperty("color")
     val color: String? = null,
     @JsonProperty("size")
-    val size: String? = null,
+    val clothSize: String? = null,
     @JsonProperty("gender")
     val gender: String? = null
 )

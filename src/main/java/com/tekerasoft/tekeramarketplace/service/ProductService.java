@@ -322,7 +322,7 @@ public class ProductService {
 
     public Page<ProductListDto> filterProduct(FilterProductRequest req, Pageable pageable) {
 
-        return productRepository.findByQueryField(req.getColor(), req.getSize(), req.getGender(), pageable)
+        return productRepository.findByQueryField(req.getColor(), req.getClothSize(), req.getGender(), pageable)
                 .map(ProductListDto::toDto);
     }
 
