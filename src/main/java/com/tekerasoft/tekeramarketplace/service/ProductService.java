@@ -9,12 +9,10 @@ import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.*;
-import com.tekerasoft.tekeramarketplace.specification.ProductSpecification;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,14 +29,13 @@ public class ProductService {
     private final CompanyRepository companyRepository;
     private final SearchItemService searchItemService;
     private final VariationRepository variationRepository;
-    private final AttributeRepository attributeRepository;
 
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
                           SubCategoryRepository subCategoryRepository,
                           CompanyRepository companyRepository, SearchItemService searchItemService,
-                          VariationRepository variationRepository, AttributeRepository attributeRepository) {
+                          VariationRepository variationRepository) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
@@ -46,7 +43,6 @@ public class ProductService {
         this.companyRepository = companyRepository;
         this.searchItemService = searchItemService;
         this.variationRepository = variationRepository;
-        this.attributeRepository = attributeRepository;
     }
 
     @Transactional
@@ -148,6 +144,7 @@ public class ProductService {
         try {
             Product product = productRepository.findById(UUID.fromString(req.getId()))
                     .orElseThrow(() -> new NotFoundException("Product not found: " + req.getId()));
+
             product.setName(req.getName());
             product.setCode(req.getCode());
             product.setBrandName(req.getBrandName());
@@ -157,10 +154,6 @@ public class ProductService {
             product.setTags(req.getTags());
             product.setAttributes(req.getAttributeDetails());
             product.setActive(true);
-
-            if(!product.getName().equals(req.getName())) {
-                product.setName(req.getName());
-            }
 
             // Category
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
@@ -177,17 +170,23 @@ public class ProductService {
             // Variations
             List<Variation> variations = new ArrayList<>();
             for (VariationUpdateRequest varReq : req.getVariants()) {
-                Variation var = variationRepository.findById(UUID.fromString(varReq.getId()))
-                        .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
+                Variation var;
+                if (varReq.getId() != null && !varReq.getId().isEmpty()) {
+                    // Mevcut varyasyon güncelleniyor
+                    var = variationRepository.findById(UUID.fromString(varReq.getId()))
+                            .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
+                    var.getAttributes().clear(); // Eski attribute'ları temizle
+                } else {
+                    // Yeni varyasyon oluşturuluyor
+                    var = new Variation();
+                    var.setProduct(product); // Ürünü ilişkilendir
+                }
+
                 var.setModelName(varReq.getModelName());
                 var.setModelCode(varReq.getModelCode());
                 var.setColor(varReq.getColor());
-                var.setProduct(product);
 
-                var.getAttributes().clear();
-
-                // Variation attributes
-                // 🔁 SONRA YENİLERİNİ EKLE
+                // Variation Attributes
                 List<Attribute> variationAttributes = varReq.getAttributes().stream()
                         .map(attr -> new Attribute(
                                 attr.getPrice(),
@@ -198,18 +197,11 @@ public class ProductService {
                                 attr.getAttributeDetails(),
                                 var
                         )).collect(Collectors.toList());
-
                 var.getAttributes().addAll(variationAttributes);
 
-                if(!images.isEmpty()) {
-                    List<String> imgUrls = new ArrayList<>(var.getImages());
-
-//                    Set<String> variantColors = varReq.getAttributes().stream()
-//                            .flatMap(attr -> attr.getStockAttribute().stream())
-//                            .filter(attr -> attr.getKey().equalsIgnoreCase("color") ||
-//                                    attr.getKey().equalsIgnoreCase("renk"))
-//                            .map(AttributeDetail::getValue)
-//                            .collect(Collectors.toSet());
+                // Images eşleştirme
+                if (!images.isEmpty()) {
+                    List<String> imgUrls = new ArrayList<>(var.getImages() != null ? var.getImages() : new ArrayList<>());
 
                     for (MultipartFile image : images) {
                         Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
@@ -220,7 +212,6 @@ public class ProductService {
 
                         if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
                                 && varReq.getColor().contains(imageColor)) {
-
                             String imageUrl = fileService.productFileUpload(
                                     image,
                                     product.getCompany().getName(),
@@ -232,30 +223,30 @@ public class ProductService {
                     }
                     var.setImages(imgUrls);
                 }
+
                 variations.add(var);
             }
 
+            // Delete images
             if (req.getDeleteImages() != null && !req.getDeleteImages().isEmpty()) {
                 for (String imageUrlToDelete : req.getDeleteImages()) {
-                    // 1. Fiziksel dosyayı MinIO'dan sil
                     fileService.deleteFileProduct(imageUrlToDelete);
-
-                    // 2. Tüm varyasyonları gezip, bu URL varsa listesinden çıkar
                     for (Variation var : variations) {
-                        List<String> updatedImages = new ArrayList<>(var.getImages());
+                        List<String> updatedImages = new ArrayList<>(var.getImages() != null ? var.getImages() : new ArrayList<>());
                         if (updatedImages.removeIf(img -> img.equals(imageUrlToDelete))) {
-                            var.setImages(updatedImages); // Listeyi yeniden set et
+                            var.setImages(updatedImages);
                         }
                     }
                 }
             }
 
+            // Varyasyonları set et ve kaydet
             product.setVariations(variations);
             productRepository.save(product);
 
             return new ApiResponse<>("Product Updated", HttpStatus.OK.value());
         } catch (RuntimeException e) {
-            throw new RuntimeException("Error creating product", e);
+            throw new RuntimeException("Error updating product", e);
         }
     }
 
@@ -330,11 +321,11 @@ public class ProductService {
                 .map(ProductListDto::toDto);
     }
 
-//    public Page<ProductListDto> filterProducts(FilterProductRequest req, Pageable pageable) {
-//        Specification<Product> spec = ProductSpecification
-//                .hasVariationAttributesWithOptionalModelName(req.getModelName(), req.getAttributes());
-//        return productRepository.findAll(spec, pageable).map(ProductListDto::toDto);
-//    }
+    public Page<ProductDto> filterAdminProduct(String color,String size, String gender, Pageable pageable) {
+
+        return productRepository.findByQueryField(color, size, gender, pageable)
+                .map(ProductDto::toDto);
+    }
 
     public ApiResponse<?> changeProductActiveStatus(String productId, Boolean active) {
         Product product = productRepository.findById(UUID.fromString(productId))

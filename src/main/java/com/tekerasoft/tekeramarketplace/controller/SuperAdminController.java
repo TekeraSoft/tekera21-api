@@ -90,4 +90,13 @@ public class SuperAdminController {
         return ResponseEntity.ok(productService.findAllAdminProduct(pageable));
     }
 
+    @GetMapping("/filterAdminProduct")
+    public ResponseEntity<Page<ProductDto>> filterProduct(
+            @RequestParam(required = false) String color,
+            @RequestParam(required = false) String size,
+            @RequestParam(required = false) String gender,
+            Pageable pageable) {
+        return  ResponseEntity.ok(productService.filterAdminProduct(color,size,gender, pageable));
+    }
+
 }

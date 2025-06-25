@@ -6,4 +6,5 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @Configuration
 @EnableMongoRepositories(basePackages = "com.tekerasoft.tekeramarketplace.repository.nosql")
 public class MongoConfig {
+
 }
