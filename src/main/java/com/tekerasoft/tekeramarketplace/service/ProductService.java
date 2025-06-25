@@ -144,6 +144,7 @@ public class ProductService {
         try {
             Product product = productRepository.findById(UUID.fromString(req.getId()))
                     .orElseThrow(() -> new NotFoundException("Product not found: " + req.getId()));
+
             product.setName(req.getName());
             product.setCode(req.getCode());
             product.setBrandName(req.getBrandName());
@@ -154,47 +155,39 @@ public class ProductService {
             product.setAttributes(req.getAttributeDetails());
             product.setActive(true);
 
-            if(!product.getName().equals(req.getName())) {
-                product.setName(req.getName());
-            }
-
             // Category
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             product.setCategory(category);
 
-            // SubCategory
+            // SubCategories
             Set<SubCategory> subCategories = req.getSubCategories().stream()
                     .map(id -> subCategoryRepository.findById(UUID.fromString(id))
                             .orElseThrow(() -> new RuntimeException("SubCategory not found: " + id)))
                     .collect(Collectors.toSet());
             product.setSubCategories(subCategories);
 
-            product.getVariations().clear();
+            // Variation güncellenmesi — referans koruyarak
+            product.getVariations().clear(); // Eski listeyi temizle ama referansı değiştirme
 
-            // Variations
-            List<Variation> variations = new ArrayList<>();
             for (VariationUpdateRequest varReq : req.getVariants()) {
                 Variation var;
                 if (varReq.getId() != null && !varReq.getId().isEmpty()) {
-                    // Mevcut varyasyon güncelleniyor
+                    // Mevcut varyasyon
                     var = variationRepository.findById(UUID.fromString(varReq.getId()))
                             .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
                     var.getAttributes().clear(); // Eski attribute'ları temizle
                 } else {
-                    // Yeni varyasyon oluşturuluyor
+                    // Yeni varyasyon
                     var = new Variation();
-                    var.setProduct(product); // Ürünü ilişkilendir
                 }
+
+                var.setProduct(product);
                 var.setModelName(varReq.getModelName());
                 var.setModelCode(varReq.getModelCode());
                 var.setColor(varReq.getColor());
-                var.setProduct(product);
 
-                var.getAttributes().clear();
-
-                // Variation attributes
-                // 🔁 SONRA YENİLERİNİ EKLE
+                // Yeni attribute'lar oluşturulup set ediliyor
                 List<Attribute> variationAttributes = varReq.getAttributes().stream()
                         .map(attr -> new Attribute(
                                 attr.getPrice(),
@@ -205,18 +198,11 @@ public class ProductService {
                                 attr.getAttributeDetails(),
                                 var
                         )).collect(Collectors.toList());
-
                 var.getAttributes().addAll(variationAttributes);
 
-                if(!images.isEmpty()) {
-                    List<String> imgUrls = new ArrayList<>(var.getImages());
-
-//                    Set<String> variantColors = varReq.getAttributes().stream()
-//                            .flatMap(attr -> attr.getStockAttribute().stream())
-//                            .filter(attr -> attr.getKey().equalsIgnoreCase("color") ||
-//                                    attr.getKey().equalsIgnoreCase("renk"))
-//                            .map(AttributeDetail::getValue)
-//                            .collect(Collectors.toSet());
+                // Görseller
+                if (!images.isEmpty()) {
+                    List<String> imgUrls = new ArrayList<>(var.getImages() != null ? var.getImages() : new ArrayList<>());
 
                     for (MultipartFile image : images) {
                         Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
@@ -239,30 +225,28 @@ public class ProductService {
                     }
                     var.setImages(imgUrls);
                 }
-                variations.add(var);
+
+                product.getVariations().add(var); // referansı koparmadan listeye ekleniyor
             }
 
+            // Silinecek görsellerin işlenmesi
             if (req.getDeleteImages() != null && !req.getDeleteImages().isEmpty()) {
                 for (String imageUrlToDelete : req.getDeleteImages()) {
-                    // 1. Fiziksel dosyayı MinIO'dan sil
                     fileService.deleteFileProduct(imageUrlToDelete);
 
-                    // 2. Tüm varyasyonları gezip, bu URL varsa listesinden çıkar
-                    for (Variation var : variations) {
-                        List<String> updatedImages = new ArrayList<>(var.getImages());
+                    for (Variation var : product.getVariations()) {
+                        List<String> updatedImages = new ArrayList<>(var.getImages() != null ? var.getImages() : new ArrayList<>());
                         if (updatedImages.removeIf(img -> img.equals(imageUrlToDelete))) {
-                            var.setImages(updatedImages); // Listeyi yeniden set et
+                            var.setImages(updatedImages);
                         }
                     }
                 }
             }
 
-            product.setVariations(variations);
             productRepository.save(product);
-
             return new ApiResponse<>("Product Updated", HttpStatus.OK.value());
         } catch (RuntimeException e) {
-            throw new RuntimeException("Error creating product", e);
+            throw new RuntimeException("Error updating product", e);
         }
     }
 
