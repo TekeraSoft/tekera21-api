@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class VariationUpdateRequest (
     @JsonProperty("id")
-    val id: String,
+    val id: String?=null,
 
     @JsonProperty("modelName")
     val modelName: String,
