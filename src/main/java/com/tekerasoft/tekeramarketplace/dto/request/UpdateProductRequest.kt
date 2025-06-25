@@ -43,7 +43,7 @@ data class UpdateProductRequest(
     val productType: ProductType,
 
     @JsonProperty("attributes")
-    val attributes: List<AttributeDetail>,
+    val attributeDetails: List<AttributeDetail>,
 
     @JsonProperty("deleteImages")
     @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -61,7 +61,7 @@ public class ProductService {
             product.setCurrencyType(req.getCurrencyType());
             product.setProductType(req.getProductType());
             product.setTags(req.getTags());
-            product.setAttributes(req.getAttributes());
+            product.setAttributes(req.getAttributeDetails());
             product.setActive(true);
 
             // Company
@@ -155,7 +155,7 @@ public class ProductService {
             product.setCurrencyType(req.getCurrencyType());
             product.setProductType(req.getProductType());
             product.setTags(req.getTags());
-            product.setAttributes(req.getAttributes());
+            product.setAttributes(req.getAttributeDetails());
             product.setActive(true);
 
             if(!product.getName().equals(req.getName())) {
