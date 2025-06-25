@@ -170,6 +170,8 @@ public class ProductService {
                     .collect(Collectors.toSet());
             product.setSubCategories(subCategories);
 
+            product.getVariations().clear();
+
             // Variations
             List<Variation> variations = new ArrayList<>();
             for (VariationUpdateRequest varReq : req.getVariants()) {

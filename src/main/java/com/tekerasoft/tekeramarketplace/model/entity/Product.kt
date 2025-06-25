@@ -39,7 +39,7 @@ open class Product(
         inverseJoinColumns = [JoinColumn(name = "subcategory_id")])
     open var subCategories: MutableSet<SubCategory> = mutableSetOf(),
 
-    @OneToMany(mappedBy="product",fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy="product",fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open var variations: MutableList<Variation> = mutableListOf(),
 
     @Enumerated(EnumType.STRING)
