@@ -48,9 +48,14 @@ public class ProductController {
     }
 
     @GetMapping("/filterProduct")
-    public ResponseEntity<Page<ProductListDto>> filterProduct(@RequestBody FilterProductRequest req, Pageable pageable)
-    {
-        return ResponseEntity.ok(productService.filterProducts(req,pageable));
+    public ResponseEntity<Page<ProductListDto>> filterProduct(@RequestParam FilterProductRequest req, Pageable pageable) {
+        return  ResponseEntity.ok(productService.filterProduct(req, pageable));
     }
+
+//    @GetMapping("/filterProduct")
+//    public ResponseEntity<Page<ProductListDto>> filterProduct(@RequestBody FilterProductRequest req, Pageable pageable)
+//    {
+//        return ResponseEntity.ok(productService.filterProducts(req,pageable));
+//    }
 
 }

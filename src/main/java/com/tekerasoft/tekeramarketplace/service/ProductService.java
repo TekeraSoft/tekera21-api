@@ -320,11 +320,17 @@ public class ProductService {
         return productRepository.findActiveProducts(pageable).map(ProductListDto::toDto);
     }
 
-    public Page<ProductListDto> filterProducts(FilterProductRequest req, Pageable pageable) {
-        Specification<Product> spec = ProductSpecification
-                .hasVariationAttributesWithOptionalModelName(req.getModelName(), req.getAttributes());
-        return productRepository.findAll(spec, pageable).map(ProductListDto::toDto);
+    public Page<ProductListDto> filterProduct(FilterProductRequest req, Pageable pageable) {
+
+        return productRepository.findByQueryField(req.getColor(), req.getSize(), req.getGender(), pageable)
+                .map(ProductListDto::toDto);
     }
+
+//    public Page<ProductListDto> filterProducts(FilterProductRequest req, Pageable pageable) {
+//        Specification<Product> spec = ProductSpecification
+//                .hasVariationAttributesWithOptionalModelName(req.getModelName(), req.getAttributes());
+//        return productRepository.findAll(spec, pageable).map(ProductListDto::toDto);
+//    }
 
     public ApiResponse<?> changeProductActiveStatus(String productId, Boolean active) {
         Product product = productRepository.findById(UUID.fromString(productId))

@@ -1,6 +1,12 @@
 package com.tekerasoft.tekeramarketplace.dto.request
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class FilterProductRequest (
-    val modelName: String?,
-    val attributes: Map<String, String>?
+    @JsonProperty("color")
+    val color: String? = null,
+    @JsonProperty("size")
+    val size: String? = null,
+    @JsonProperty("gender")
+    val gender: String? = null
 )
