@@ -176,10 +176,16 @@ public class ProductService {
                     // Mevcut varyasyon
                     var = variationRepository.findById(UUID.fromString(varReq.getId()))
                             .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
-                    var.getAttributes().clear(); // Eski attribute'ları temizle
+
+                    if (var.getAttributes() == null) {
+                        var.setAttributes(new ArrayList<>());
+                    } else {
+                        var.getAttributes().clear();
+                    }
                 } else {
                     // Yeni varyasyon
                     var = new Variation();
+                    var.setAttributes(new ArrayList<>()); // null'a karşı garanti
                 }
 
                 var.setProduct(product);
