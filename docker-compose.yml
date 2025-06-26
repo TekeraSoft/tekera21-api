@@ -16,64 +16,45 @@ services:
       - tekera_postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
-    container_name: elasticsearch
     environment:
       - discovery.type=single-node
-      - xpack.security.enabled=false
+      - xpack.security.enabled=true          # 🔒 Kimlik doğrulama devrede
+      - xpack.security.http.ssl.enabled=false
       - ES_JAVA_OPTS=-Xms2g -Xmx2g
+      - ELASTIC_PASSWORD=Cl6dmf9dncnJFAdh83p3   # super-user “elastic”in parolası
+      - KIBANA_SYSTEM_PASSWORD=mJgH8RnwcTrz2asQ2IcC
     ports:
       - "9200:9200"
+    healthcheck:
+      test: curl -s --user elastic:Cl6dmf9dncnJFAdh83p3 http://localhost:9200/_cluster/health?pretty
+      interval: 10s
+      retries: 10
     networks:
       - tekera-network
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    cap_add:
-      - IPC_LOCK
-    healthcheck:
-      test: >
-        bash -c '
-          curl -s http://localhost:9200/_cluster/health | grep -q "\"status\":\"green\"" ||
-          curl -s http://localhost:9200/_cluster/health | grep -q "\"status\":\"yellow\""
-        '
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 20s
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.13.4
-    container_name: logstash
-    ports:
-      - "5000:5000"
-      - "9600:9600"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=Cl6dmf9dncnJFAdh83p3
     volumes:
-      - ./logstash:/usr/share/logstash/pipeline
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    healthcheck:
+      test: curl -s http://localhost:9600/_node/stats | grep -q '"events"'
     networks:
       - tekera-network
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -s http://localhost:9600/_node/stats | grep -q '\"events\"'" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.4
     container_name: kibana
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - SERVER_BASEPATH=/kibana
-      - SERVER_REWRITEBASEPATH=true
-      - SERVER_PUBLICBASEURL=https://api.tekera21.com/kibana
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=EMXCaaY*E4U9cFSrSTDR
     ports:
       - "5601:5601"
     depends_on:

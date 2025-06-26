@@ -13,16 +13,23 @@ import java.time.Duration;
 @Configuration
 @EnableElasticsearchRepositories(basePackages = "com.tekerasoft.tekeramarketplace.repository.esrepository")
 @ComponentScan(basePackages = {"com.tekerasoft.tekeramarketplace"})
-public class ElasticConfig extends ElasticsearchConfiguration {
+public class ElasticConfig {
 
-    @Value("${spring.data.elasticsearch.uris}")
-    private String uri;
-
-    @NotNull
-    @Override
-    public ClientConfiguration clientConfiguration() {
-        return ClientConfiguration.builder()
-                .connectedTo(uri)
-                .build();
-    }
+//    @Value("${spring.elasticsearch.uris}")
+//    private String uri;
+//
+//    @Value("${spring.elasticsearch.username}")
+//    private String username;
+//
+//    @Value("${spring.elasticsearch.password}")
+//    private String password;
+//
+//    @NotNull
+//    @Override
+//    public ClientConfiguration clientConfiguration() {
+//        return ClientConfiguration.builder()
+//                .connectedTo(uri)
+//                .withBasicAuth(username, password)
+//                .build();
+//    }
 }
