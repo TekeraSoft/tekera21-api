@@ -8,6 +8,7 @@ import com.tekerasoft.tekeramarketplace.model.entity.Category;
 import com.tekerasoft.tekeramarketplace.model.entity.SubCategory;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.CategoryRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.SubCategoryRepository;
+import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,7 @@ public class SubCategoryService {
             SubCategory subCategory = new SubCategory();
             subCategory.setCategory(category);
             subCategory.setName(req.getName());
+            subCategory.setSlug(SlugGenerator.generateSlug(req.getName()));
             subCategory.setImage(imagePath);
             subCategoryRepository.save(subCategory);
             return new ApiResponse<>("Sub Categories Created", HttpStatus.CREATED.value());

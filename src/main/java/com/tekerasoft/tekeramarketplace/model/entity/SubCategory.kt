@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToOne
 @Entity
 open class SubCategory(
     open var name: String,
+    open var slug: String,
     open var image: String,
 
     @ManyToOne(fetch = FetchType.LAZY)

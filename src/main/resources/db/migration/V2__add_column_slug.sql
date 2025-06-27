@@ -1,0 +1,5 @@
+ALTER TABLE category
+    ADD COLUMN slug VARCHAR(255);
+
+ALTER TABLE sub_category
+    ADD COLUMN slug VARCHAR(255);

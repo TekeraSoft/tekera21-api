@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany
 @Entity
 open class Category(
     open var name: String,
+    open var slug: String,
     open var image: String,
 
     @OneToMany(mappedBy = "category",cascade = [CascadeType.ALL], fetch = FetchType.LAZY)

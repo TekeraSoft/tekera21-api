@@ -30,8 +30,8 @@ data class ProductListDto(
                 from.name,
                 from.slug,
                 from.code,
-                from.category.let { AdminCategoryDto(it.id, it.name,it.image) },
-                from.subCategories.map { AdminSubCategoryDto(it.id, it.name,it.image) },
+                from.category.let { AdminCategoryDto(it.id, it.name,it.slug,it.image) },
+                from.subCategories.map { AdminSubCategoryDto(it.id, it.name,it.slug,it.image) },
                 from.brandName,
                 from.description,
                 from.variations.map { it ->

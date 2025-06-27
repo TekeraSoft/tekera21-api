@@ -2,14 +2,11 @@ package com.tekerasoft.tekeramarketplace.controller;
 
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
-import com.tekerasoft.tekeramarketplace.dto.request.FilterProductRequest;
 import com.tekerasoft.tekeramarketplace.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/api/product")

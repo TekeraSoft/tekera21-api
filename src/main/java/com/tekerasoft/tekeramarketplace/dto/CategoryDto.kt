@@ -6,6 +6,7 @@ import java.util.UUID
 data class CategoryDto(
     val id: UUID?,
     val name: String,
+    val slug: String,
     val image: String,
     val subCategories: List<SubCategoryDto>
 ) {
@@ -15,6 +16,7 @@ data class CategoryDto(
             return CategoryDto(
                 category.id,
                 category.name,
+                category.slug,
                 category.image,
                 category.subCategories.map { SubCategoryDto(it.id,it.name, it.image) }
             )

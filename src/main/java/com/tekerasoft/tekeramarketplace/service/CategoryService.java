@@ -8,6 +8,7 @@ import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.Category;
 import com.tekerasoft.tekeramarketplace.model.entity.SubCategory;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.CategoryRepository;
+import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,7 @@ public class CategoryService {
         }
         String imagePath = fileService.folderFileUpload(req.getFile(), "category");
         Category category = new Category();
+        category.setSlug(SlugGenerator.generateSlug(req.getName()));
         category.setName(req.getName());
         category.setImage(imagePath);
         categoryRepository.save(category);
