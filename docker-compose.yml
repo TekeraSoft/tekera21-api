@@ -25,7 +25,7 @@ services:
       - xpack.security.http.ssl.enabled=false
       - ES_JAVA_OPTS=-Xms2g -Xmx2g
       - ELASTIC_PASSWORD=Cl6dmf9dncnJFAdh83p3   # super-user “elastic”in parolası
-      - KIBANA_SYSTEM_PASSWORD=mJgH8RnwcTrz2asQ2IcC
+      - KIBANA_SYSTEM_PASSWORD=lkB4iAEAgfvs*i4P-WJY
     ports:
       - "9200:9200"
     healthcheck:
@@ -54,7 +54,7 @@ services:
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=EMXCaaY*E4U9cFSrSTDR
+      - ELASTICSEARCH_PASSWORD=lkB4iAEAgfvs*i4P-WJY
     ports:
       - "5601:5601"
     depends_on:
