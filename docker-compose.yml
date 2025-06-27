@@ -24,12 +24,12 @@ services:
       - xpack.security.enabled=true          # 🔒 Kimlik doğrulama devrede
       - xpack.security.http.ssl.enabled=false
       - ES_JAVA_OPTS=-Xms2g -Xmx2g
-      - ELASTIC_PASSWORD=Cl6dmf9dncnJFAdh83p3   # super-user “elastic”in parolası
+      - ELASTIC_PASSWORD=lkB4iAEAgfvs*i4P-WJY   # super-user “elastic”in parolası
       - KIBANA_SYSTEM_PASSWORD=lkB4iAEAgfvs*i4P-WJY
     ports:
       - "9200:9200"
     healthcheck:
-      test: curl -s --user elastic:Cl6dmf9dncnJFAdh83p3 http://localhost:9200/_cluster/health?pretty
+      test: curl -s --user elastic:lkB4iAEAgfvs*i4P-WJY http://localhost:9200/_cluster/health?pretty
       interval: 10s
       retries: 10
     networks:
@@ -40,7 +40,7 @@ services:
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=Cl6dmf9dncnJFAdh83p3
+      - ELASTICSEARCH_PASSWORD=lkB4iAEAgfvs*i4P-WJY
     volumes:
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
     healthcheck:

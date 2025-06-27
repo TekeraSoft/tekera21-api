@@ -11,6 +11,8 @@ data class ProductListDto(
     val name: String,
     val slug: String,
     val code: String,
+    val category: AdminCategoryDto,
+    val subCategories: List<AdminSubCategoryDto>,
     val brandName: String,
     val description: String,
     val variations: List<VariationDto>,
@@ -28,6 +30,8 @@ data class ProductListDto(
                 from.name,
                 from.slug,
                 from.code,
+                from.category.let { AdminCategoryDto(it.id, it.name,it.image) },
+                from.subCategories.map { AdminSubCategoryDto(it.id, it.name,it.image) },
                 from.brandName,
                 from.description,
                 from.variations.map { it ->
