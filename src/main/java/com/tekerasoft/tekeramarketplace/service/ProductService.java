@@ -153,7 +153,6 @@ public class ProductService {
             product.setProductType(req.getProductType());
             product.setTags(req.getTags());
             product.setAttributes(req.getAttributeDetails());
-            product.setActive(true);
 
             // Category
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
