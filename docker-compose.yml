@@ -1,4 +1,5 @@
-version: '3.8'
+#docker compose up setup !!! bu komutu çalıştırmaz iseniz elasticsearch user şifreleri yüklenmez
+#docker compose up --build -d
 
 services:
   tekera-db:
@@ -16,62 +17,6 @@ services:
       - tekera_postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
-  #docker exec -it elasticsearch bin/elasticsearch-setup-passwords interactive bu komut yeni şifreler belirler
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=true          # 🔒 Kimlik doğrulama devrede
-      - xpack.security.http.ssl.enabled=false
-      - ES_JAVA_OPTS=-Xms2g -Xmx2g
-      - ELASTIC_PASSWORD=lkB4iAEAgfvs*i4P-WJY   # super-user “elastic”in parolası
-      - KIBANA_SYSTEM_PASSWORD=lkB4iAEAgfvs*i4P-WJY
-    ports:
-      - "9200:9200"
-    healthcheck:
-      test: curl -s --user elastic:lkB4iAEAgfvs*i4P-WJY http://localhost:9200/_cluster/health?pretty
-      interval: 10s
-      retries: 10
-    networks:
-      - tekera-network
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.13.4
-    ports:
-      - "5000:5000"
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=lkB4iAEAgfvs*i4P-WJY
-      - LOGSTASH_SETTING_XPACK_MONITORING_ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - LOGSTASH_SETTING_XPACK_MONITORING_ELASTICSEARCH_USERNAME=logstash_system
-      - LOGSTASH_SETTING_XPACK_MONITORING_ELASTICSEARCH_PASSWORD=lkB4iAEAgfvs*i4P-WJY
-    volumes:
-      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
-    healthcheck:
-      test: curl -s http://localhost:9600/_node/stats | grep -q '"events"'
-    networks:
-      - tekera-network
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.13.4
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - SERVER_BASEPATH=/kibana
-      - SERVER_REWRITEBASEPATH=true
-      - SERVER_PUBLICBASEURL=https://api.tekera21.com/kibana
-      - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=lkB4iAEAgfvs*i4P-WJY
-    ports:
-      - "5601:5601"
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
-    networks:
-      - tekera-network
-    volumes:
-      - ./tokens:/tokens
 
   minio1:
     image: minio/minio:latest
@@ -88,24 +33,6 @@ services:
     networks:
       - tekera-network
 
-  mc-once1:
-    image: minio/mc
-    depends_on:
-      - minio1
-    entrypoint: >
-      sh -c "
-        echo '🕒 MinIO hazır mı kontrol ediliyor...' &&
-        until mc alias set myminio http://minio1:9000 tekera_user tekera_pass; do
-          echo '⏳ Bekleniyor...'; sleep 2;
-        done &&
-        echo '✅ mc alias tamam.' &&
-        mc mb myminio/tekera-bucket || true &&
-        mc anonymous set download myminio/tekera-bucket &&
-        echo '✅ Bucket public yapıldı.'
-      "
-    networks:
-      - tekera-network
-    restart: "no"
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -155,15 +82,9 @@ services:
       context: .
     container_name: tekera21-api
     depends_on:
-      elasticsearch:
-        condition: service_healthy
-      logstash:
-        condition: service_healthy
       tekera-db:
         condition: service_started
       minio1:
-        condition: service_started
-      kafka:
         condition: service_started
     ports:
       - "9091:8080"
@@ -171,9 +92,114 @@ services:
       - tekera-network
     restart: unless-stopped
 
+  mc-once1:
+    image: minio/mc
+    depends_on:
+      - minio1
+    entrypoint: >
+      sh -c "
+        echo '🕒 MinIO hazır mı kontrol ediliyor...' &&
+        until mc alias set myminio http://minio1:9000 tekera_user tekera_pass; do
+          echo '⏳ Bekleniyor...'; sleep 2;
+        done &&
+        echo '✅ mc alias tamam.' &&
+        mc mb myminio/tekera-bucket || true &&
+        mc anonymous set download myminio/tekera-bucket &&
+        echo '✅ Bucket public yapıldı.'
+      "
+    networks:
+      - tekera-network
+    restart: "no"
+
+  elasticsearch:
+    build:
+      context: elasticsearch/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+      - elasticsearch:/usr/share/elasticsearch/data:Z
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      node.name: elasticsearch
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      discovery.type: single-node
+    networks:
+      - tekera-network
+    restart: unless-stopped
+
+  kibana:
+    build:
+      context: kibana/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
+    ports:
+      - 5601:5601
+    environment:
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD}
+    networks:
+      - tekera-network
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+  logstash:
+    build:
+      context: logstash/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
+    ports:
+      - 5044:5044
+      - 50000:50000/tcp
+      - 50000:50000/udp
+      - 9600:9600
+    environment:
+      LS_JAVA_OPTS: -Xms256m -Xmx256m
+      LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD}
+    networks:
+      - tekera-network
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+  setup:
+    profiles:
+      - setup
+    build:
+      context: setup/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    init: true
+    volumes:
+      - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
+      - ./setup/lib.sh:/lib.sh:ro,Z
+      - ./setup/roles:/roles:ro,Z
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD}
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD}
+      METRICBEAT_INTERNAL_PASSWORD: ${METRICBEAT_INTERNAL_PASSWORD}
+      FILEBEAT_INTERNAL_PASSWORD: ${FILEBEAT_INTERNAL_PASSWORD}
+      HEARTBEAT_INTERNAL_PASSWORD: ${HEARTBEAT_INTERNAL_PASSWORD}
+      MONITORING_INTERNAL_PASSWORD: ${MONITORING_INTERNAL_PASSWORD}
+      BEATS_SYSTEM_PASSWORD: ${BEATS_SYSTEM_PASSWORD}
+    networks:
+      - tekera-network
+    depends_on:
+      - elasticsearch
+
 volumes:
   tekera_postgres_data:
   minio1_data:
+  elasticsearch:
 
 networks:
   tekera-network:

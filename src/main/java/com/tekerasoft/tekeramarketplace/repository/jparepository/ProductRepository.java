@@ -36,7 +36,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
     Page<Product> findByQueryField(@Param("color") String color,
                                    @Param("size") String size,
                                    @Param("tag") String tag,
-                                   @Param("tag") String style,
+                                   @Param("style") String style,
                                    Pageable pageable);
 
     Optional<Product> findBySlug(String slug);

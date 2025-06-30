@@ -95,8 +95,9 @@ public class SuperAdminController {
             @RequestParam(required = false) String color,
             @RequestParam(required = false) String size,
             @RequestParam(required = false) String gender,
+            @RequestParam(required = false) String style,
             Pageable pageable) {
-        return  ResponseEntity.ok(productService.filterAdminProduct(color,size,gender, pageable));
+        return  ResponseEntity.ok(productService.filterAdminProduct(color,size,gender,style, pageable));
     }
 
 }
