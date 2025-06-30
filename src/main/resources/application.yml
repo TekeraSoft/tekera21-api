@@ -10,8 +10,9 @@ spring:
 
   elasticsearch:
     uris: http://elasticsearch:9200
+    #uris: http://localhost:9200
     username: elastic
-    password: Cl6dmf9dncnJFAdh83p3
+    password: lkB4iAEAgfvs*i4P-WJY
 
   datasource:
     driver-class-name: org.postgresql.Driver

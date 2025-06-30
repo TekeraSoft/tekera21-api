@@ -10,7 +10,7 @@ import jakarta.persistence.OneToMany
 open class Category(
     open var name: String,
     open var slug: String,
-    open var image: String,
+    open var image: String? = null,
 
     @OneToMany(mappedBy = "category",cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     open var subCategories: MutableList<SubCategory> = mutableListOf(),

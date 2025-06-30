@@ -9,7 +9,7 @@ import jakarta.persistence.ManyToOne
 open class SubCategory(
     open var name: String,
     open var slug: String,
-    open var image: String,
+    open var image: String? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

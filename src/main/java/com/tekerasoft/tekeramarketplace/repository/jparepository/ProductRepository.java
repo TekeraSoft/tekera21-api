@@ -30,11 +30,13 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
     JOIN p.tags t
     WHERE (:color IS NULL OR v.color = :color)
       AND (:size IS NULL OR (ad.key = 'size' AND ad.value = :size))
+      AND (:style IS NULL OR (ad.key = 'style' AND ad.value = : style))
       AND (:tag IS NULL OR t = :tag)
 """)
     Page<Product> findByQueryField(@Param("color") String color,
                                    @Param("size") String size,
                                    @Param("tag") String tag,
+                                   @Param("tag") String style,
                                    Pageable pageable);
 
     Optional<Product> findBySlug(String slug);

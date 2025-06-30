@@ -320,15 +320,15 @@ public class ProductService {
         return productRepository.findAll(pageable).map(ProductDto::toDto);
     }
 
-    public Page<ProductListDto> filterProduct(String color,String size, String gender, Pageable pageable) {
+    public Page<ProductListDto> filterProduct(String color,String size, String gender,String style, Pageable pageable) {
 
-        return productRepository.findByQueryField(color, size, gender, pageable)
+        return productRepository.findByQueryField(color, size, gender, style, pageable)
                 .map(ProductListDto::toDto);
     }
 
-    public Page<ProductDto> filterAdminProduct(String color,String size, String gender, Pageable pageable) {
+    public Page<ProductDto> filterAdminProduct(String color,String size, String gender,String style ,Pageable pageable) {
 
-        return productRepository.findByQueryField(color, size, gender, pageable)
+        return productRepository.findByQueryField(color, size, gender, style, pageable)
                 .map(ProductDto::toDto);
     }
 
@@ -337,17 +337,17 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("Product not found: " + productId));
         try {
             product.setActive(active);
-            Product saveProduct = productRepository.save(product);
+            productRepository.save(product);
 
-            if(active) {
-                SearchItem searchItem = new SearchItem();
-                searchItem.setId(saveProduct.getId().toString());
-                searchItem.setName(saveProduct.getName());
-                searchItem.setItemType(SearchItemType.PRODUCT);
-                searchItemService.createIndex(searchItem);
-            } else {
-                searchItemService.deleteItem(saveProduct.getId().toString());
-            }
+//            if(active) {
+//                SearchItem searchItem = new SearchItem();
+//                searchItem.setId(saveProduct.getId().toString());
+//                searchItem.setName(saveProduct.getName());
+//                searchItem.setItemType(SearchItemType.PRODUCT);
+//                searchItemService.createIndex(searchItem);
+//            } else {
+//                searchItemService.deleteItem(saveProduct.getId().toString());
+//            }
 
             return new ApiResponse<>("Product Status Updated", HttpStatus.OK.value());
         } catch (RuntimeException e) {

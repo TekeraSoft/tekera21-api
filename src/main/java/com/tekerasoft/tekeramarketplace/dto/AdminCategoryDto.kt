@@ -6,5 +6,5 @@ data class AdminCategoryDto(
     val id: UUID?,
     val name: String,
     val slug: String,
-    val image: String
+    val image: String?
 )
