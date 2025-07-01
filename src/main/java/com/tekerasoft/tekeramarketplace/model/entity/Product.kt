@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToMany
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
+import jakarta.persistence.OrderColumn
 import jakarta.persistence.Table
 
 @Entity
@@ -40,6 +41,7 @@ open class Product(
     open var subCategories: MutableSet<SubCategory> = mutableSetOf(),
 
     @OneToMany(mappedBy="product",fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OrderColumn(name = "position")
     open var variations: MutableList<Variation> = mutableListOf(),
 
     @Enumerated(EnumType.STRING)

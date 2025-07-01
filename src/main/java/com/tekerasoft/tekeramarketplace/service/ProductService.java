@@ -6,8 +6,6 @@ import com.tekerasoft.tekeramarketplace.dto.request.*;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
-import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
-import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.*;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
@@ -145,6 +143,7 @@ public class ProductService {
             Product product = productRepository.findById(UUID.fromString(req.getId()))
                     .orElseThrow(() -> new NotFoundException("Product not found: " + req.getId()));
 
+            // ---------- Temel alanlar ----------
             product.setName(req.getName());
             product.setCode(req.getCode());
             product.setBrandName(req.getBrandName());
@@ -154,45 +153,44 @@ public class ProductService {
             product.setTags(req.getTags());
             product.setAttributes(req.getAttributeDetails());
 
-            // Category
+            // ---------- Kategori ----------
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             product.setCategory(category);
 
-            // SubCategories
+            // ---------- Alt kategoriler ----------
             Set<SubCategory> subCategories = req.getSubCategories().stream()
                     .map(id -> subCategoryRepository.findById(UUID.fromString(id))
                             .orElseThrow(() -> new RuntimeException("SubCategory not found: " + id)))
                     .collect(Collectors.toSet());
             product.setSubCategories(subCategories);
 
-            // Variation güncellenmesi — referans koruyarak
-            product.getVariations().clear(); // Eski listeyi temizle ama referansı değiştirme
+            // ---------- Varyasyonlar (sırayı koruyarak) ----------
+            List<Variation> orderedVariations = new ArrayList<>();
 
             for (VariationUpdateRequest varReq : req.getVariants()) {
+
                 Variation var;
                 if (varReq.getId() != null && !varReq.getId().isEmpty()) {
                     // Mevcut varyasyon
                     var = variationRepository.findById(UUID.fromString(varReq.getId()))
                             .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
 
-                    if (var.getAttributes() == null) {
-                        var.setAttributes(new ArrayList<>());
-                    } else {
-                        var.getAttributes().clear();
-                    }
+                    // Attribute listesini sıfırla
+                    var.getAttributes().clear();
                 } else {
                     // Yeni varyasyon
                     var = new Variation();
-                    var.setAttributes(new ArrayList<>()); // null'a karşı garanti
+                    var.setAttributes(new ArrayList<>());
                 }
 
+                // Varyasyon temel bilgileri
                 var.setProduct(product);
                 var.setModelName(varReq.getModelName());
                 var.setModelCode(varReq.getModelCode());
                 var.setColor(varReq.getColor());
 
-                // Yeni attribute'lar oluşturulup set ediliyor
+                // ---------- Attribute'lar ----------
                 List<Attribute> variationAttributes = varReq.getAttributes().stream()
                         .map(attr -> new Attribute(
                                 attr.getPrice(),
@@ -202,19 +200,20 @@ public class ProductService {
                                 attr.getBarcode(),
                                 attr.getAttributeDetails(),
                                 var
-                        )).collect(Collectors.toList());
+                        ))
+                        .collect(Collectors.toList());
                 var.getAttributes().addAll(variationAttributes);
 
-                // Görseller
-                if (!images.isEmpty()) {
-                    List<String> imgUrls = new ArrayList<>(var.getImages() != null ? var.getImages() : new ArrayList<>());
+                // ---------- Görseller ----------
+                if (images != null && !images.isEmpty()) {
+                    List<String> imgUrls = new ArrayList<>(var.getImages() == null ? List.of() : var.getImages());
 
                     for (MultipartFile image : images) {
                         Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
                         if (parsed == null) continue;
 
                         String imageModelCode = parsed.get("modelCode");
-                        String imageColor = parsed.get("color");
+                        String imageColor     = parsed.get("color");
 
                         if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
                                 && varReq.getColor().contains(imageColor)) {
@@ -231,16 +230,20 @@ public class ProductService {
                     var.setImages(imgUrls);
                 }
 
-                product.getVariations().add(var); // referansı koparmadan listeye ekleniyor
+                // Sırası korunacak listeye ekle
+                orderedVariations.add(var);
             }
 
-            // Silinecek görsellerin işlenmesi
+            // Eski listeyi temizle + sıralı listeyi ekle
+            product.getVariations().clear();
+            product.getVariations().addAll(orderedVariations);
+
+            // ---------- Silinecek görseller ----------
             if (req.getDeleteImages() != null && !req.getDeleteImages().isEmpty()) {
                 for (String imageUrlToDelete : req.getDeleteImages()) {
                     fileService.deleteFileProduct(imageUrlToDelete);
-
                     for (Variation var : product.getVariations()) {
-                        List<String> updatedImages = new ArrayList<>(var.getImages() != null ? var.getImages() : new ArrayList<>());
+                        List<String> updatedImages = new ArrayList<>(var.getImages() == null ? List.of() : var.getImages());
                         if (updatedImages.removeIf(img -> img.equals(imageUrlToDelete))) {
                             var.setImages(updatedImages);
                         }
@@ -250,6 +253,7 @@ public class ProductService {
 
             productRepository.save(product);
             return new ApiResponse<>("Product Updated", HttpStatus.OK.value());
+
         } catch (RuntimeException e) {
             throw new RuntimeException("Error updating product", e);
         }
