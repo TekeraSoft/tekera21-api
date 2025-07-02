@@ -132,6 +132,32 @@ public class FileService {
         }
     }
 
+    public String productVideoUpload(InputStream inputStream, long size, String contentType, String extension, String companyName) {
+        try {
+            // Bucket kontrolü
+            if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            }
+
+            // Dosya adı üretimi
+            String fileName = UUID.randomUUID() + (extension != null ? extension : "");
+            String companyNameConvert = companyName.toLowerCase().replaceAll("\\s+", "_");
+            // MinIO'ya yükle
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object("products/"+ companyNameConvert + "/" + fileName)
+                            .stream(inputStream, size, -1)
+                            .contentType(contentType != null ? contentType : "application/octet-stream")
+                            .build()
+            );
+
+            return "products/" + companyNameConvert + "/" + fileName;
+        } catch (Exception e) {
+            throw new RuntimeException("MinIO upload error: " + e.getMessage(), e);
+        }
+    }
+
     public void deleteFileProduct(String fileName) {
         try {
             RemoveObjectArgs removeObjectArgs = RemoveObjectArgs.builder()

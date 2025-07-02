@@ -7,12 +7,19 @@ import com.tekerasoft.tekeramarketplace.service.DigitalFashionService;
 import com.tekerasoft.tekeramarketplace.service.FileService;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
+import org.bytedeco.ffmpeg.global.avcodec;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.FFmpegFrameRecorder;
+import org.bytedeco.javacv.Frame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -65,5 +72,8 @@ public class KafkaConsumer {
         }
     }
 
-
+//    @KafkaListener(topics = "resize-product-video", groupId = "tekeraGroup")
+//    public void processResizeProductVideo(MultipartFile video, String productId) throws IOException {
+//
+//    }
 }

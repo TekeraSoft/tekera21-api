@@ -15,6 +15,7 @@ public class KafkaTopicConfig {
         return List.of(
                 TopicBuilder.name("mindmap-processing-topic").build(),
                 TopicBuilder.name("delete-image-processing").build()
+//                TopicBuilder.name("resize-product-video").build()
         );
     }
 

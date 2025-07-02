@@ -7,14 +7,17 @@ import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.*;
+import com.tekerasoft.tekeramarketplace.utils.ResizeProductVideo;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,13 +30,15 @@ public class ProductService {
     private final CompanyRepository companyRepository;
     private final SearchItemService searchItemService;
     private final VariationRepository variationRepository;
+    private final ResizeProductVideo resizeProductVideo;
+    private final KafkaTemplate<?, ?> kafkaTemplate;
 
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
                           SubCategoryRepository subCategoryRepository,
                           CompanyRepository companyRepository, SearchItemService searchItemService,
-                          VariationRepository variationRepository) {
+                          VariationRepository variationRepository, ResizeProductVideo resizeProductVideo, KafkaTemplate<?, ?> kafkaTemplate) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
@@ -41,10 +46,12 @@ public class ProductService {
         this.companyRepository = companyRepository;
         this.searchItemService = searchItemService;
         this.variationRepository = variationRepository;
+        this.resizeProductVideo = resizeProductVideo;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Transactional
-    public ApiResponse<?> create(CreateProductRequest req, List<MultipartFile> images) {
+    public ApiResponse<?> create(CreateProductRequest req, MultipartFile video ,List<MultipartFile> images) {
         try {
             Product product = new Product();
             product.setName(req.getName());
@@ -98,13 +105,6 @@ public class ProductService {
 
                 List<String> imgUrls = new ArrayList<>();
 
-//                Set<String> variantColors = varReq.getAttributes().stream()
-//                        .flatMap(attr -> attr.getStockAttribute().stream())
-//                        .filter(attr -> attr.getKey().equalsIgnoreCase("color") ||
-//                                attr.getKey().equalsIgnoreCase("renk"))
-//                        .map(AttributeDetail::getValue)
-//                        .collect(Collectors.toSet());
-
                 for (MultipartFile image : images) {
                     Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
                     if (parsed == null) continue;
@@ -129,16 +129,22 @@ public class ProductService {
                 variations.add(var);
             }
             product.setVariations(variations);
+            if(!video.isEmpty()) {
+                String videoUrl = resizeProductVideo.resizeProductVideo(video,company.getName());
+                product.setVideoUrl(videoUrl);
+            }
             productRepository.save(product);
 
             return new ApiResponse<>("Product Created", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
             throw new RuntimeException("Error creating product", e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Transactional
-    public ApiResponse<?> update(UpdateProductRequest req, List<MultipartFile> images) {
+    public ApiResponse<?> update(UpdateProductRequest req, MultipartFile video ,List<MultipartFile> images) {
         try {
             Product product = productRepository.findById(UUID.fromString(req.getId()))
                     .orElseThrow(() -> new NotFoundException("Product not found: " + req.getId()));
@@ -250,12 +256,17 @@ public class ProductService {
                     }
                 }
             }
-
+            if(!video.isEmpty()) {
+                String videoUrl = resizeProductVideo.resizeProductVideo(video,product.getCompany().getName());
+                product.setVideoUrl(videoUrl);
+            }
             productRepository.save(product);
             return new ApiResponse<>("Product Updated", HttpStatus.OK.value());
 
         } catch (RuntimeException e) {
             throw new RuntimeException("Error updating product", e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -290,7 +301,6 @@ public class ProductService {
             for (Variation var : product.getVariations()) {
                 var.getImages().forEach(fileService::deleteFileProduct);
             }
-            searchItemService.deleteItem(product.getId().toString());
             productRepository.delete(product);
             return new ApiResponse<>("Product Deleted", HttpStatus.OK.value());
         } catch (RuntimeException e) {
@@ -324,9 +334,14 @@ public class ProductService {
         return productRepository.findAll(pageable).map(ProductDto::toDto);
     }
 
-    public Page<ProductListDto> filterProduct(String color,String size, String gender,String style, Pageable pageable) {
+    public Page<ProductListDto> filterProduct(String color,String clothSize, String gender,String style, Pageable pageable) {
 
-        return productRepository.findByQueryField(color, size, gender, style, pageable)
+        color = (color == null || color.isEmpty() ? null : color);
+        clothSize = (clothSize == null || clothSize.isEmpty() ? null : clothSize);
+        gender = (gender == null || gender.isEmpty() ? null : gender);
+        style = (style == null || style.isEmpty() ? null : style);
+
+        return productRepository.findByQueryField(color, clothSize, gender, style, pageable)
                 .map(ProductListDto::toDto);
     }
 

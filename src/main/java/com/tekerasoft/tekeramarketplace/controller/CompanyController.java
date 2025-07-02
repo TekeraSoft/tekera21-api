@@ -31,15 +31,17 @@ public class CompanyController {
     @Operation(summary = "Company create product action")
     @PostMapping(value = "/createProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> createProduct(@Valid @RequestPart("data") CreateProductRequest req,
+                                                 @RequestPart(value = "video", required = false) MultipartFile video,
                                                  @RequestPart(value = "images") List<MultipartFile> images)
     {
-        return productService.create(req,images);
+        return productService.create(req,video,images);
     }
 
     @PutMapping(value = "/updateProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> updateProduct(@RequestPart("data") UpdateProductRequest req,
+                                        @RequestPart(value = "video", required = false)  MultipartFile video,
                                         @RequestPart(value = "images", required = false) List<MultipartFile> images){
-        return productService.update(req,images);
+        return productService.update(req,video,images);
     }
 
     @GetMapping("/findCompanyReturnProducts/{companyId}")
