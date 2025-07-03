@@ -1,17 +1,24 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /workspace
 
-COPY pom.xml mvnw ./
-COPY .mvn .mvn
-RUN ./mvnw -q dependency:go-offline      # bağımlılıkları indir
+# 1) Maven wrapper, .mvn dizini ve pom.xml’i birlikte kopyala
+COPY mvnw pom.xml ./
+COPY .mvn/ .mvn
 
+# 2) CRLF temizle + yürütme izni ver
+RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
+
+# 3) Bağımlılıkları indir (offline cache)
+RUN ./mvnw -q dependency:go-offline
+
+# 4) Kaynak kodu ekle ve JAR üret
 COPY src src
-RUN ./mvnw -q package -DskipTests        # JAR üret
+RUN ./mvnw -q package -DskipTests
 
-################## RUNTIME evresi ################
+
+######################## RUNTIME evresi ######################
 FROM eclipse-temurin:17-jre-jammy
 
-# JavaCPP/JavaCV native’lerini küçült ‑ opsiyonel
 ENV JAVACPP_PLATFORM=linux-x86_64 \
     JAVACPP_DEPENDENCIES=true \
     JAVA_TOOL_OPTIONS="-Djava.io.tmpdir=/tmp"
