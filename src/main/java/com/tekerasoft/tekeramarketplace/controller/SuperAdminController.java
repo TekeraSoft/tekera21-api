@@ -17,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/api/super-admin")
 public class SuperAdminController {
@@ -94,10 +96,10 @@ public class SuperAdminController {
     public ResponseEntity<Page<ProductDto>> filterProduct(
             @RequestParam(required = false) String color,
             @RequestParam(required = false) String size,
-            @RequestParam(required = false) String gender,
+            @RequestParam(required = false) List<String> tags,
             @RequestParam(required = false) String style,
             Pageable pageable) {
-        return  ResponseEntity.ok(productService.filterAdminProduct(color,size,gender,style, pageable));
+        return  ResponseEntity.ok(productService.filterAdminProduct(color,size,tags,style, pageable));
     }
 
 }

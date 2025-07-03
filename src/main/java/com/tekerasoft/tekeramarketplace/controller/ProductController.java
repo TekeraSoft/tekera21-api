@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/api/product")
 public class ProductController {
@@ -48,10 +50,10 @@ public class ProductController {
     public ResponseEntity<Page<ProductListDto>> filterProduct(
             @RequestParam(required = false) String color,
             @RequestParam(required = false) String clothSize,
-            @RequestParam(required = false) String gender,
+            @RequestParam(required = false) List<String> tags,
             @RequestParam(required = false) String style,
             Pageable pageable) {
-        return  ResponseEntity.ok(productService.filterProduct(color,clothSize,gender,style, pageable));
+        return  ResponseEntity.ok(productService.filterProduct(color,clothSize,tags,style, pageable));
     }
 
 //    @GetMapping("/filterProduct")

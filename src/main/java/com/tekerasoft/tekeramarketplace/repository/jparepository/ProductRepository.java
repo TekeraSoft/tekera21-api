@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,12 +34,12 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
       AND (:color IS NULL OR v.color = :color)
       AND (:size  IS NULL OR (ad.key = 'size'  AND ad.value = :size))
       AND (:style IS NULL OR (ad.key = 'style' AND ad.value = :style))
-      AND (:tag   IS NULL OR t = :tag)
+      AND (:tags  IS NULL OR t IN :tags)
 """)
-    Page<Product> findByQueryField(@Param("color") String color,
-                                   @Param("size")  String size,
-                                   @Param("tag")   String tag,
-                                   @Param("style") String style,
+    Page<Product> findByQueryField(@Param("color")  String color,
+                                   @Param("size")   String size,
+                                   @Param("tags") List<String> tags,  // <‑‑ List!
+                                   @Param("style")  String style,
                                    Pageable pageable);
 
     Optional<Product> findBySlug(String slug);

@@ -336,20 +336,20 @@ public class ProductService {
         return productRepository.findAll(pageable).map(ProductDto::toDto);
     }
 
-    public Page<ProductListDto> filterProduct(String color,String clothSize, String gender,String style, Pageable pageable) {
+    public Page<ProductListDto> filterProduct(String color,String clothSize, List<String> tags,String style, Pageable pageable) {
 
         color = (color == null || color.isEmpty() ? null : color);
         clothSize = (clothSize == null || clothSize.isEmpty() ? null : clothSize);
-        gender = (gender == null || gender.isEmpty() ? null : gender);
+        tags = (tags == null || tags.isEmpty() ? null : tags);
         style = (style == null || style.isEmpty() ? null : style);
 
-        return productRepository.findByQueryField(color, clothSize, gender, style, pageable)
+        return productRepository.findByQueryField(color, clothSize, tags, style, pageable)
                 .map(ProductListDto::toDto);
     }
 
-    public Page<ProductDto> filterAdminProduct(String color,String size, String gender,String style ,Pageable pageable) {
+    public Page<ProductDto> filterAdminProduct(String color,String size, List<String> tags,String style ,Pageable pageable) {
 
-        return productRepository.findByQueryField(color, size, gender, style, pageable)
+        return productRepository.findByQueryField(color, size, tags, style, pageable)
                 .map(ProductDto::toDto);
     }
 
