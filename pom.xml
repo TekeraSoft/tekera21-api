@@ -103,11 +103,6 @@
             <artifactId>javacv-platform</artifactId>
             <version>1.5.10</version> <!-- Güncel versiyonu kontrol edin -->
         </dependency>
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>ffmpeg-platform-gpl</artifactId>  <!-- Tüm decoder/encoder'lar -->
-            <version>6.1.1-1.5.10</version>
-        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
