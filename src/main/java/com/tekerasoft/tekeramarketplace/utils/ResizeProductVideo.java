@@ -4,6 +4,7 @@ import com.tekerasoft.tekeramarketplace.model.entity.Product;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.ProductRepository;
 import com.tekerasoft.tekeramarketplace.service.FileService;
 import org.bytedeco.ffmpeg.global.avcodec;
+import org.bytedeco.javacv.FFmpegFrameFilter;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 
 @Component
@@ -29,41 +31,59 @@ public class ResizeProductVideo {
 
     public String resizeProductVideo(MultipartFile video, String companyName) throws IOException {
 
-        /* 0) Kaynağı seek‑edilebilir dosyaya yaz */
         String ext = Optional.ofNullable(video.getOriginalFilename())
                 .filter(f -> f.contains("."))
                 .map(f -> f.substring(f.lastIndexOf('.')).toLowerCase())
                 .orElse(".mp4");
 
-        Path raw  = Files.createTempFile("raw-",  ext);   // .mov ya da .mp4
-        video.transferTo(raw.toFile());                   // HEAP'e kopya yok!
+        Path raw  = Files.createTempFile("raw-",  ext);
+        try (InputStream videoStream = video.getInputStream()) {
+            Files.copy(videoStream, raw, StandardCopyOption.REPLACE_EXISTING);
+        }
 
         Path temp = Files.createTempFile("resized-", ".mp4");
 
-        try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(raw.toFile());
-             FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(temp.toString(), 1280, 720)) {
+        try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(raw.toFile())) {
+            // !!! BURADA DEĞİŞİKLİK YAPIYORUZ !!!
+            // FFmpeg'in otomatik rotasyonunu engellemek için input option ekliyoruz.
+            // Bazı JavaCV sürümlerinde setOption("noautorotate", "1") işe yarayabilir.
+            // Eğer bu çalışmazsa, grabber.setVideoOption("noautorotate", "1") denenebilir.
+            // Ya da doğrudan "noautorotate" olarak eklemek gerekir.
+            grabber.setOption("noautorotate", "1"); // Bu satır, otomatik rotasyonu engellemeye çalışır.
 
-            grabber.setFormat(ext.equals(".mov") ? "mov" : "mp4");
-            grabber.start();                                   // ← Hata artık yok
+            grabber.start();
 
-            recorder.setFormat("mp4");
-            recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
-            recorder.setAudioCodec(avcodec.AV_CODEC_ID_AAC);   // sesi koru
-            recorder.setAudioBitrate(grabber.getAudioBitrate());
-            recorder.setAudioChannels(grabber.getAudioChannels());
-            recorder.setFrameRate(grabber.getFrameRate());
-            recorder.setVideoOption("crf", "28");
-            recorder.setVideoOption("preset", "slow");
-            recorder.start();
+            int width = grabber.getImageWidth();
+            int height = grabber.getImageHeight();
 
-            Frame f;
-            while ((f = grabber.grabFrame()) != null) recorder.record(f);
+            try (FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(temp.toString(), width, height, grabber.getAudioChannels())) {
 
-            recorder.stop();
+                recorder.setFormat("mp4");
+                recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
+                int audioChannels = grabber.getAudioChannels() > 0 ? grabber.getAudioChannels() : 1; // default 1 kanal
+                // Ses codec'ini grabber'dan alarak ayarlayın
+                recorder.setAudioCodec(grabber.getAudioCodec());
+                recorder.setAudioBitrate(grabber.getAudioBitrate());
+                recorder.setAudioChannels(audioChannels);
+                recorder.setFrameRate(grabber.getFrameRate());
+
+                // CRF değerini 28 yaparak kaliteyi düşürüp boyut küçültme
+                recorder.setVideoOption("crf", "28");
+                recorder.setVideoOption("preset", "slow");
+
+                recorder.start();
+
+                Frame frame;
+                while ((frame = grabber.grabFrame()) != null) {
+                    recorder.record(frame);
+                }
+
+                recorder.stop();
+            }
+
             grabber.stop();
         }
 
-        /* 3) MinIO'ya yolla */
         String url;
         try (InputStream is = Files.newInputStream(temp)) {
             url = fileService.productVideoUpload(is,
@@ -75,6 +95,7 @@ public class ResizeProductVideo {
             Files.deleteIfExists(raw);
             Files.deleteIfExists(temp);
         }
+
         return url;
     }
 }

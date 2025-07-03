@@ -1,20 +1,23 @@
-FROM openjdk:17 AS build
+FROM maven:3.9.6-eclipse-temurin-17 AS build
+WORKDIR /workspace
 
-# Maven'ı ve proje dosyalarını kopyala
 COPY pom.xml mvnw ./
-# Windows satır sonlarını kaldır
-RUN sed -i 's/\r//' mvnw && chmod +x mvnw
-
 COPY .mvn .mvn
+RUN ./mvnw -q dependency:go-offline      # bağımlılıkları indir
 
-# Bağımlılıkları çöz
-RUN ./mvnw dependency:resolve
-
-# Kaynak kodu kopyala ve paket oluştur (testleri atla)
 COPY src src
-RUN ./mvnw package -DskipTests
+RUN ./mvnw -q package -DskipTests        # JAR üret
 
-FROM openjdk:17
+################## RUNTIME evresi ################
+FROM eclipse-temurin:17-jre-jammy
+
+# JavaCPP/JavaCV native’lerini küçült ‑ opsiyonel
+ENV JAVACPP_PLATFORM=linux-x86_64 \
+    JAVACPP_DEPENDENCIES=true \
+    JAVA_TOOL_OPTIONS="-Djava.io.tmpdir=/tmp"
+
 WORKDIR /tekera-marketplace
-COPY --from=build target/*.jar tekera-marketplace.jar
-ENTRYPOINT ["java", "-jar", "tekera-marketplace.jar"]
+COPY --from=build /workspace/target/*.jar tekera-marketplace.jar
+
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","tekera-marketplace.jar"]

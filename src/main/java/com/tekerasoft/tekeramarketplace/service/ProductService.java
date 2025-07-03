@@ -259,6 +259,8 @@ public class ProductService {
             if(!video.isEmpty()) {
                 String videoUrl = resizeProductVideo.resizeProductVideo(video,product.getCompany().getName());
                 product.setVideoUrl(videoUrl);
+            } else {
+                product.setVideoUrl(null);
             }
             productRepository.save(product);
             return new ApiResponse<>("Product Updated", HttpStatus.OK.value());

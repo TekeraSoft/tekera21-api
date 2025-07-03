@@ -98,10 +98,16 @@
             <artifactId>minio</artifactId>
             <version>${minio.version}</version>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.bytedeco</groupId>-->
+<!--            <artifactId>javacv</artifactId>-->
+<!--            <version>1.5.10</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacv-platform</artifactId>
-            <version>1.5.10</version> <!-- Güncel versiyonu kontrol edin -->
+            <version>1.5.12</version> <!-- Güncel versiyonu kontrol edin -->
         </dependency>
 
         <dependency>
