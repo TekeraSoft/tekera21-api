@@ -3,13 +3,13 @@ package com.tekerasoft.tekeramarketplace.controller;
 import com.tekerasoft.tekeramarketplace.dto.CategoryDto;
 import com.tekerasoft.tekeramarketplace.dto.CompanyAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
+import com.tekerasoft.tekeramarketplace.dto.ThemeDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCategoryRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateSubCategoryRequest;
+import com.tekerasoft.tekeramarketplace.dto.request.CreateThemeRequest;
+import com.tekerasoft.tekeramarketplace.dto.request.UpdateThemeRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
-import com.tekerasoft.tekeramarketplace.service.CategoryService;
-import com.tekerasoft.tekeramarketplace.service.CompanyService;
-import com.tekerasoft.tekeramarketplace.service.ProductService;
-import com.tekerasoft.tekeramarketplace.service.SubCategoryService;
+import com.tekerasoft.tekeramarketplace.service.*;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,13 +26,15 @@ public class SuperAdminController {
     private final SubCategoryService subCategoryService;
     private final CompanyService companyService;
     private final ProductService productService;
+    private final ThemeService themeService;
 
     public SuperAdminController(CategoryService categoryService, SubCategoryService subCategoryService,
-                                CompanyService companyService, ProductService productService) {
+                                CompanyService companyService, ProductService productService, ThemeService themeService) {
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
         this.companyService = companyService;
         this.productService = productService;
+        this.themeService = themeService;
     }
 
     @PostMapping(value = "/createCategory", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -102,4 +104,23 @@ public class SuperAdminController {
         return  ResponseEntity.ok(productService.filterAdminProduct(color,size,tags,style, pageable));
     }
 
+    @PostMapping("/createTheme")
+    public ResponseEntity<ApiResponse<?>> createTheme(@Valid @ModelAttribute List<CreateThemeRequest> req) {
+        return ResponseEntity.ok(themeService.createTheme(req));
+    }
+
+    @PutMapping("/updateTheme")
+    public ResponseEntity<ApiResponse<?>> updateTheme(@Valid @ModelAttribute List<UpdateThemeRequest> req) {
+        return ResponseEntity.ok(themeService.updateTheme(req));
+    }
+
+    @DeleteMapping("/deleteTheme")
+    public ResponseEntity<ApiResponse<?>> deleteTheme(@RequestParam String id) {
+        return ResponseEntity.ok(themeService.deleteTheme(id));
+    }
+
+    @GetMapping("getAllTheme")
+    public ResponseEntity<List<ThemeDto>> getAllTheme() {
+        return ResponseEntity.ok(themeService.getAllTheme());
+    }
 }
