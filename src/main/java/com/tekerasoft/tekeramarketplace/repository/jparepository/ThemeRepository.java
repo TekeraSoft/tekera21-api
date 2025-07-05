@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
 public interface ThemeRepository extends JpaRepository<Theme, UUID> {
+    boolean existsByName(String name);
 }

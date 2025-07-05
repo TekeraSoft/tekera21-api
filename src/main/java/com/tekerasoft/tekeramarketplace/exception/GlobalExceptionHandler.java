@@ -97,7 +97,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error("Unhandled exception occurred", ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiResponse<>("Unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
     }
 
     @ExceptionHandler(DigitalFashionSubCategoryException.class)
@@ -105,6 +105,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error("Unhandled exception occurred", ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiResponse<>("Unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+    }
+
+    @ExceptionHandler(ThemeException.class)
+    public ResponseEntity<Object> handleThemeException(ThemeException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
     }
 }

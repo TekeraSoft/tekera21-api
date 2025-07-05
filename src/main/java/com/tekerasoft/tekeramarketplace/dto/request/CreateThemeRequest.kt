@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.dto.request
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
@@ -11,8 +12,9 @@ data class CreateThemeRequest(
     @JsonProperty("name")
     val name: String,
 
-    @field:NotNull(message = "Theme category cannot be blank")
+    @field:NotNull(message = "Theme image cannot be blank")
     @JsonProperty("image")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     val image: MultipartFile? = null,
 
 )

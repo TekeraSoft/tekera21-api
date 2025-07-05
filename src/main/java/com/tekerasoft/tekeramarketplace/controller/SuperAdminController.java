@@ -29,7 +29,9 @@ public class SuperAdminController {
     private final ThemeService themeService;
 
     public SuperAdminController(CategoryService categoryService, SubCategoryService subCategoryService,
-                                CompanyService companyService, ProductService productService, ThemeService themeService) {
+                                CompanyService companyService, ProductService productService,
+                                ThemeService themeService)
+    {
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
         this.companyService = companyService;
@@ -104,13 +106,13 @@ public class SuperAdminController {
         return  ResponseEntity.ok(productService.filterAdminProduct(color,size,tags,style, pageable));
     }
 
-    @PostMapping("/createTheme")
-    public ResponseEntity<ApiResponse<?>> createTheme(@Valid @ModelAttribute List<CreateThemeRequest> req) {
+    @PostMapping(value ="/createTheme", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<?>> createTheme(@Valid @ModelAttribute CreateThemeRequest req) {
         return ResponseEntity.ok(themeService.createTheme(req));
     }
 
-    @PutMapping("/updateTheme")
-    public ResponseEntity<ApiResponse<?>> updateTheme(@Valid @ModelAttribute List<UpdateThemeRequest> req) {
+    @PutMapping(value = "/updateTheme", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<?>> updateTheme(@Valid @ModelAttribute UpdateThemeRequest req) {
         return ResponseEntity.ok(themeService.updateTheme(req));
     }
 
