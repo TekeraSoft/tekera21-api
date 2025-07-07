@@ -28,26 +28,27 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final CompanyRepository companyRepository;
-    private final SearchItemService searchItemService;
     private final VariationRepository variationRepository;
     private final ResizeProductVideo resizeProductVideo;
-    private final KafkaTemplate<?, ?> kafkaTemplate;
 
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
                           SubCategoryRepository subCategoryRepository,
-                          CompanyRepository companyRepository, SearchItemService searchItemService,
-                          VariationRepository variationRepository, ResizeProductVideo resizeProductVideo, KafkaTemplate<?, ?> kafkaTemplate) {
+                          CompanyRepository companyRepository,
+                          VariationRepository variationRepository,
+                          ResizeProductVideo resizeProductVideo) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.companyRepository = companyRepository;
-        this.searchItemService = searchItemService;
         this.variationRepository = variationRepository;
         this.resizeProductVideo = resizeProductVideo;
-        this.kafkaTemplate = kafkaTemplate;
+    }
+
+    public Product getById(UUID id) {
+        return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product not found: " + id));
     }
 
     @Transactional

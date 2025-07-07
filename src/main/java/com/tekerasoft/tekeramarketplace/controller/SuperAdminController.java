@@ -1,13 +1,7 @@
 package com.tekerasoft.tekeramarketplace.controller;
 
-import com.tekerasoft.tekeramarketplace.dto.CategoryDto;
-import com.tekerasoft.tekeramarketplace.dto.CompanyAdminDto;
-import com.tekerasoft.tekeramarketplace.dto.ProductDto;
-import com.tekerasoft.tekeramarketplace.dto.ThemeDto;
-import com.tekerasoft.tekeramarketplace.dto.request.CreateCategoryRequest;
-import com.tekerasoft.tekeramarketplace.dto.request.CreateSubCategoryRequest;
-import com.tekerasoft.tekeramarketplace.dto.request.CreateThemeRequest;
-import com.tekerasoft.tekeramarketplace.dto.request.UpdateThemeRequest;
+import com.tekerasoft.tekeramarketplace.dto.*;
+import com.tekerasoft.tekeramarketplace.dto.request.*;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.service.*;
 import jakarta.validation.Valid;
@@ -27,16 +21,18 @@ public class SuperAdminController {
     private final CompanyService companyService;
     private final ProductService productService;
     private final ThemeService themeService;
+    private final FashionCollectionService fashionCollectionService;
 
     public SuperAdminController(CategoryService categoryService, SubCategoryService subCategoryService,
                                 CompanyService companyService, ProductService productService,
-                                ThemeService themeService)
+                                ThemeService themeService, FashionCollectionService fashionCollectionService)
     {
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
         this.companyService = companyService;
         this.productService = productService;
         this.themeService = themeService;
+        this.fashionCollectionService = fashionCollectionService;
     }
 
     @PostMapping(value = "/createCategory", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -124,5 +120,25 @@ public class SuperAdminController {
     @GetMapping("getAllTheme")
     public ResponseEntity<List<ThemeDto>> getAllTheme() {
         return ResponseEntity.ok(themeService.getAllTheme());
+    }
+
+    @GetMapping("/getAllFashionCollection")
+    public ResponseEntity<List<FashionCollectionDto>>  getAllFashionCollection(Pageable pageable) {
+        return ResponseEntity.ok(fashionCollectionService.getAllFashionCollection(pageable));
+    }
+
+    @PostMapping(value ="/createFashionCollection", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<?>> createFashionCollection(@Valid @ModelAttribute CreateFashionCollectionRequest req) {
+        return ResponseEntity.ok(fashionCollectionService.createFashionCollection(req));
+    }
+
+    @PutMapping(value = "/updateFashionCollection", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<?>>  updateFashionCollection(@Valid @ModelAttribute UpdateFashionCollectionRequest req) {
+        return ResponseEntity.ok(fashionCollectionService.updateFashionCollection(req));
+    }
+
+    @DeleteMapping("/deleteFashionCollection")
+    public ResponseEntity<ApiResponse<?>> deleteFashionCollection(@RequestParam("id") String id) {
+        return ResponseEntity.ok(fashionCollectionService.deleteFashionCollection(id));
     }
 }

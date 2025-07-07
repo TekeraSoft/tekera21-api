@@ -1,0 +1,95 @@
+package com.tekerasoft.tekeramarketplace.service;
+
+import com.tekerasoft.tekeramarketplace.dto.FashionCollectionDto;
+import com.tekerasoft.tekeramarketplace.dto.request.CreateFashionCollectionRequest;
+import com.tekerasoft.tekeramarketplace.dto.request.UpdateFashionCollectionRequest;
+import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
+import com.tekerasoft.tekeramarketplace.model.entity.FashionCollection;
+import com.tekerasoft.tekeramarketplace.model.entity.Product;
+import com.tekerasoft.tekeramarketplace.repository.jparepository.FashionCollectionRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+public class FashionCollectionService {
+
+    private final FashionCollectionRepository fashionCollectionRepository;
+    private final ProductService productService;
+    private final FileService fileService;
+
+    public FashionCollectionService(FashionCollectionRepository fashionCollectionRepository,
+                                    ProductService productService, FileService fileService) {
+        this.fashionCollectionRepository = fashionCollectionRepository;
+        this.productService = productService;
+        this.fileService = fileService;
+    }
+
+    public ApiResponse<?> createFashionCollection(CreateFashionCollectionRequest req) {
+        List<Product> productList = new ArrayList<>();
+        req.getProducts().forEach(product -> {
+            productList.add(productService.getById(UUID.fromString(product)));
+        });
+        FashionCollection collection = new FashionCollection();
+        String imagePath = fileService.folderFileUpload(req.getImage(), "fashion-collection-images");
+        collection.setImage(imagePath);
+        collection.setProducts(productList);
+        collection.setCollectionName(req.getCollectionName());
+        collection.setDescription(req.getDescription());
+        collection.setActive(true);
+        fashionCollectionRepository.save(collection);
+        return new ApiResponse<>("Collection Created", HttpStatus.CREATED.value());
+    }
+
+    @Transactional                          // tek transaction
+    public ApiResponse<?> updateFashionCollection(UpdateFashionCollectionRequest req) {
+
+        FashionCollection collection = fashionCollectionRepository.findById(
+                        UUID.fromString(req.getId()))
+                .orElseThrow(() -> new NotFoundException("Fashion Collection not found"));
+
+        /* 1️⃣ Koleksiyonu yerinde temizle */
+        collection.getProducts().clear();
+
+        /* 2️⃣ Yeni Product’ları ekle */
+        req.getProducts().forEach(productId -> {
+            Product p = productService.getById(UUID.fromString(productId));
+            collection.getProducts().add(p);       // ⇦ addAll da olur
+        });
+
+        /* 3️⃣ Diğer alanlar */
+        if (!req.getImage().isEmpty()) {
+            fileService.deleteInFolderFile(collection.getImage());
+            String path = fileService.folderFileUpload(req.getImage(), "fashion-collection-images");
+            collection.setImage(path);
+        }
+        collection.setCollectionName(req.getCollectionName());
+        collection.setDescription(req.getDescription());
+
+        /* 4️⃣ Kaydet (flush otomatik) */
+        fashionCollectionRepository.save(collection);
+
+        return new ApiResponse<>("Collection Updated", HttpStatus.OK.value());
+    }
+
+    public List<FashionCollectionDto> getAllFashionCollection(Pageable pageable) {
+        return fashionCollectionRepository.findActiveCollections(pageable).stream().map(FashionCollectionDto::toDto)
+                .toList();
+    }
+
+    public ApiResponse<?> deleteFashionCollection(String id) {
+        FashionCollection collection = fashionCollectionRepository.findById(UUID.fromString(id))
+                        .orElseThrow(() -> new NotFoundException("Fashion Collection not found"));
+       fileService.deleteInFolderFile(collection.getImage());
+       fashionCollectionRepository.delete(collection);
+        return new ApiResponse<>("Collection Deleted", HttpStatus.OK.value());
+    }
+
+
+}
