@@ -4,6 +4,7 @@ CREATE TABLE fashion_collection
     created_at      TIMESTAMP WITHOUT TIME ZONE,
     updated_at      TIMESTAMP WITHOUT TIME ZONE,
     collection_name VARCHAR(255),
+    slug            VARCHAR(255) NOT NULL,
     image           VARCHAR(255),
     description     TEXT,
     is_active       BOOLEAN NOT NULL,

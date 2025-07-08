@@ -11,7 +11,7 @@ import jakarta.persistence.OneToMany
 open class FashionCollection(
 
     open var collectionName: String,
-    open var slug: String,
+    open var slug: String? = null,
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "fashion_collection_products",                // ara tablo

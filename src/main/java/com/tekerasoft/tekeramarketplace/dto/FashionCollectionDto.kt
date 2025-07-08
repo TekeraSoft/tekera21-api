@@ -6,7 +6,7 @@ import java.util.UUID
 data class FashionCollectionDto(
     val id: UUID?,
     val collectionName: String,
-    val slug: String,
+    val slug: String?,
     val products: List<ProductDto>,
     val image: String?,
     val description: String?,
