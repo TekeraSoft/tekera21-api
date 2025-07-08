@@ -5,6 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
 
 @Entity
@@ -12,13 +13,13 @@ open class FashionCollection(
 
     open var collectionName: String,
     open var slug: String? = null,
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "fashion_collection_products",                // ara tablo
-        joinColumns = [JoinColumn(name = "fashion_collection_id")],   // bu entity’nin FK’si
-        inverseJoinColumns = [JoinColumn(name = "product_id")]        // karşı tarafın FK’si
+        name = "fashion_collection_products",
+        joinColumns = [JoinColumn(name = "fashion_collection_id")],
+        inverseJoinColumns = [JoinColumn(name = "product_id")]
     )
-    open var products: MutableList<Product> = mutableListOf(),
+    open var products: MutableSet<Product> = mutableSetOf(),
 
     open var image: String? = null,
 

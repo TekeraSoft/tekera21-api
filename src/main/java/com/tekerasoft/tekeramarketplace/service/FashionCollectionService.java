@@ -15,9 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class FashionCollectionService {
@@ -34,7 +32,8 @@ public class FashionCollectionService {
     }
 
     public ApiResponse<?> createFashionCollection(CreateFashionCollectionRequest req) {
-        List<Product> productList = new ArrayList<>();
+        Set<Product> productList = new LinkedHashSet<>(); {
+        };
         req.getProducts().forEach(product -> {
             productList.add(productService.getById(UUID.fromString(product)));
         });

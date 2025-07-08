@@ -1,27 +1,34 @@
-CREATE TABLE fashion_collection
-(
-    id              UUID    NOT NULL,
-    created_at      TIMESTAMP WITHOUT TIME ZONE,
-    updated_at      TIMESTAMP WITHOUT TIME ZONE,
-    collection_name VARCHAR(255),
-    slug            VARCHAR(255) NOT NULL,
-    image           VARCHAR(255),
-    description     TEXT,
-    is_active       BOOLEAN NOT NULL,
-    CONSTRAINT "pk_fashıoncollectıon" PRIMARY KEY (id)
+CREATE TABLE fashion_collection (
+                                    id              UUID        PRIMARY KEY,              -- BaseEntity.id
+                                    collection_name VARCHAR(255) NOT NULL,
+                                    slug            VARCHAR(255),                         -- NULL olabilir
+                                    image           VARCHAR(255),
+                                    description     TEXT,
+                                    is_active       BOOLEAN      DEFAULT TRUE,
+                                    created_at      TIMESTAMP    DEFAULT now(),
+                                    updated_at      TIMESTAMP    DEFAULT now()
 );
 
-CREATE TABLE fashion_collection_products
-(
-    fashion_collection_id UUID NOT NULL,
-    product_id            UUID NOT NULL
+CREATE TABLE fashion_collection_products (
+                                             fashion_collection_id UUID NOT NULL,
+                                             product_id            UUID NOT NULL,
+
+    /* Aynı ürün + koleksiyon ikilisi yalnızca 1 kez yer alabilir */
+                                             PRIMARY KEY (fashion_collection_id, product_id),
+
+    /* Koleksiyon silinirse ilgili satırlar da silinsin  */
+                                             CONSTRAINT fk_fcp_collection
+                                                 FOREIGN KEY (fashion_collection_id)
+                                                     REFERENCES fashion_collection(id)
+                                                     ON DELETE CASCADE,
+
+    /* Ürün silinirse yine JOIN satırı silinsin           */
+                                             CONSTRAINT fk_fcp_product
+                                                 FOREIGN KEY (product_id)
+                                                     REFERENCES products(id)
+                                                     ON DELETE CASCADE
 );
 
-ALTER TABLE fashion_collection_products
-    ADD CONSTRAINT "uc_fashıon_collectıon_products_product" UNIQUE (product_id);
-
-ALTER TABLE fashion_collection_products
-    ADD CONSTRAINT "fk_fascolpro_on_fashıon_collectıon" FOREIGN KEY (fashion_collection_id) REFERENCES fashion_collection (id);
-
-ALTER TABLE fashion_collection_products
-    ADD CONSTRAINT fk_fascolpro_on_product FOREIGN KEY (product_id) REFERENCES products (id);
+/* Performans için ek indeksler (opsiyonel ama tavsiye edilir) */
+CREATE INDEX idx_fcp_collection ON fashion_collection_products(fashion_collection_id);
+CREATE INDEX idx_fcp_product    ON fashion_collection_products(product_id);
