@@ -8,7 +8,9 @@ import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.FashionCollection;
 import com.tekerasoft.tekeramarketplace.model.entity.Product;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.FashionCollectionRepository;
+import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,7 @@ public class FashionCollectionService {
         FashionCollection collection = new FashionCollection();
         String imagePath = fileService.folderFileUpload(req.getImage(), "fashion-collection-images");
         collection.setImage(imagePath);
+        collection.setSlug(SlugGenerator.generateSlug(req.getCollectionName()));
         collection.setProducts(productList);
         collection.setCollectionName(req.getCollectionName());
         collection.setDescription(req.getDescription());
@@ -70,6 +73,7 @@ public class FashionCollectionService {
             collection.setImage(path);
         }
         collection.setCollectionName(req.getCollectionName());
+        collection.setSlug(req.getCollectionName());
         collection.setDescription(req.getDescription());
 
         /* 4️⃣ Kaydet (flush otomatik) */
@@ -78,9 +82,8 @@ public class FashionCollectionService {
         return new ApiResponse<>("Collection Updated", HttpStatus.OK.value());
     }
 
-    public List<FashionCollectionDto> getAllFashionCollection(Pageable pageable) {
-        return fashionCollectionRepository.findActiveCollections(pageable).stream().map(FashionCollectionDto::toDto)
-                .toList();
+    public Page<FashionCollectionDto> getAllFashionCollection(Pageable pageable) {
+        return fashionCollectionRepository.findActiveCollections(pageable).map(FashionCollectionDto::toDto);
     }
 
     public ApiResponse<?> deleteFashionCollection(String id) {

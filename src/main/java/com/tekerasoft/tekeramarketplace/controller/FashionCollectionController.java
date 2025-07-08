@@ -2,6 +2,7 @@ package com.tekerasoft.tekeramarketplace.controller;
 
 import com.tekerasoft.tekeramarketplace.dto.FashionCollectionDto;
 import com.tekerasoft.tekeramarketplace.service.FashionCollectionService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,7 @@ public class FashionCollectionController {
     }
 
     @GetMapping("/getAllFashionCollection")
-    public ResponseEntity<List<FashionCollectionDto>> getAllFashionCollection(Pageable pageable) {
+    public ResponseEntity<Page<FashionCollectionDto>> getAllFashionCollection(Pageable pageable) {
         return ResponseEntity.ok(fashionCollectionService.getAllFashionCollection(pageable));
     }
 
