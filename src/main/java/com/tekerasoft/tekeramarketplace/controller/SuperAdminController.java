@@ -141,4 +141,9 @@ public class SuperAdminController {
     public ResponseEntity<ApiResponse<?>> deleteFashionCollection(@RequestParam("id") String id) {
         return ResponseEntity.ok(fashionCollectionService.deleteFashionCollection(id));
     }
+
+    @GetMapping("/getFashionCollection")
+    public ResponseEntity<FashionCollectionDto> getFashionCollection(@RequestParam String id) {
+        return ResponseEntity.ok(fashionCollectionService.getFashionCollection(id));
+    }
 }

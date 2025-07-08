@@ -86,6 +86,11 @@ public class FashionCollectionService {
         return fashionCollectionRepository.findActiveCollections(pageable).map(FashionCollectionDto::toDto);
     }
 
+    public FashionCollectionDto getFashionCollection(String id) {
+        return fashionCollectionRepository.findById(UUID.fromString(id))
+                .map(FashionCollectionDto::toDto).orElseThrow(() -> new NotFoundException("Fashion Collection not found"));
+    }
+
     public ApiResponse<?> deleteFashionCollection(String id) {
         FashionCollection collection = fashionCollectionRepository.findById(UUID.fromString(id))
                         .orElseThrow(() -> new NotFoundException("Fashion Collection not found"));
