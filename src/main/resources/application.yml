@@ -60,5 +60,5 @@ spring:
 
 server:
   tomcat:
-    max-http-form-post-size: 500MB   # <‑‑ esas sınır buydu
-    max-swallow-size: 500MB          # upload’ı yarıda keserse bile yutulsun
+    max-http-form-post-size: 524288000   # 500MB
+    max-swallow-size: 524288000          # 500MB
