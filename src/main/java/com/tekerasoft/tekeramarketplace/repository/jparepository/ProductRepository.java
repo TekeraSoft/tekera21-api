@@ -14,7 +14,12 @@ import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpecificationExecutor<Product> {
 
-    @Query("SELECT p FROM Product p WHERE p.isActive = true")
+    @Query("""
+       SELECT p
+       FROM Product p
+       WHERE p.isActive = true
+       ORDER BY p.createdAt DESC, p.id DESC
+       """)
     Page<Product> findActiveProducts(Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.isActive = true AND p.company.id = :companyId")

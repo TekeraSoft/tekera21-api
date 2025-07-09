@@ -336,7 +336,8 @@ public class ProductService {
         return productRepository.findAll(pageable).map(ProductDto::toDto);
     }
 
-    public Page<ProductListDto> filterProduct(String color,String clothSize, List<String> tags,String style, Pageable pageable) {
+    public Page<ProductListDto> filterProduct(String color,String clothSize, List<String> tags,String style,
+                                              Pageable pageable) {
 
         color = (color == null || color.isEmpty() ? null : color);
         clothSize = (clothSize == null || clothSize.isEmpty() ? null : clothSize);
@@ -347,7 +348,8 @@ public class ProductService {
                 .map(ProductListDto::toDto);
     }
 
-    public Page<ProductDto> filterAdminProduct(String color,String size, List<String> tags,String style ,Pageable pageable) {
+    public Page<ProductDto> filterAdminProduct(String color,String size, List<String> tags,String style ,
+                                               Pageable pageable) {
 
         return productRepository.findByQueryField(color, size, tags, style, pageable)
                 .map(ProductDto::toDto);

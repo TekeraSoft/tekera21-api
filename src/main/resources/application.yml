@@ -57,3 +57,8 @@ spring:
   mind-creator:
     #api: http://localhost:3009/generate
     api: http://mind-generator:3009/generate
+
+server:
+  tomcat:
+    max-http-form-post-size: 500MB   # <‑‑ esas sınır buydu
+    max-swallow-size: 500MB          # upload’ı yarıda keserse bile yutulsun
