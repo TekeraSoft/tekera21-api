@@ -8,6 +8,6 @@ data class AttributeDto(
     val stock: Int,
     val price: BigDecimal,
     val discountPrice: BigDecimal?,
-    val sku: String,
-    val barcode: String,
+    val sku: String?,
+    val barcode: String?,
 )

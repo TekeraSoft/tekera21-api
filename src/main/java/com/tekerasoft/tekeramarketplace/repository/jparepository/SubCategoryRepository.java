@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface SubCategoryRepository extends JpaRepository<SubCategory, UUID> {
     Boolean existsByName(String name);
+    SubCategory findByName(String name);
 }

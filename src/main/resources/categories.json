@@ -1,0 +1,255 @@
+[
+  {
+    "name": "Erkek",
+    "slug": "erkek",
+    "subCategories": [
+      {
+        "name": "Giyim",
+        "slug": "giyim",
+        "children": [
+          { "name": "Tişört", "slug": "tisort" },
+          { "name": "Gömlek", "slug": "gomlek" },
+          { "name": "Pantolon", "slug": "pantolon" },
+          { "name": "Jeans", "slug": "jeans" },
+          { "name": "Ceket", "slug": "ceket" },
+          { "name": "Mont", "slug": "mont" },
+          { "name": "Sweatshirt", "slug": "sweatshirt" },
+          { "name": "Kazak", "slug": "kazak" },
+          { "name": "Hırka", "slug": "hirka" },
+          { "name": "Kaban", "slug": "kaban" },
+          { "name": "Yelek", "slug": "yelek" },
+          { "name": "Takım Elbise", "slug": "takim-elbise" },
+          { "name": "Blazer", "slug": "blazer" },
+          { "name": "Trençkot", "slug": "trenckot" },
+          { "name": "Palto", "slug": "palto" },
+          { "name": "Polar", "slug": "polar" }
+        ]
+      },
+      {
+        "name": "Ayakkabı",
+        "slug": "ayakkabi",
+        "children": [
+          { "name": "Spor Ayakkabı", "slug": "spor-ayakkabi" },
+          { "name": "Günlük Ayakkabı", "slug": "gunluk-ayakkabi" },
+          { "name": "Klasik Ayakkabı", "slug": "klasik-ayakkabi" },
+          { "name": "Bot", "slug": "bot" },
+          { "name": "Sandalet", "slug": "sandalet" },
+          { "name": "Terlik", "slug": "terlik" },
+          { "name": "Loafer", "slug": "loafer" },
+          { "name": "Çizme", "slug": "cizme" }
+        ]
+      },
+      {
+        "name": "Çanta",
+        "slug": "canta",
+        "children": [
+          { "name": "Sırt Çantası", "slug": "sirt-cantasi" },
+          { "name": "Laptop Çantası", "slug": "laptop-cantasi" },
+          { "name": "El Çantası", "slug": "el-cantasi" },
+          { "name": "Bel Çantası", "slug": "bel-cantasi" },
+          { "name": "Portföy", "slug": "portfoy" },
+          { "name": "Cüzdan", "slug": "cuzdan" }
+        ]
+      },
+      {
+        "name": "Saat & Aksesuar",
+        "slug": "saat-aksesuar",
+        "children": [
+          { "name": "Saat", "slug": "saat" },
+          { "name": "Güneş Gözlüğü", "slug": "gunes-gozlugu" },
+          { "name": "Kravat", "slug": "kravat" },
+          { "name": "Kemer", "slug": "kemer" },
+          { "name": "Atkı", "slug": "atki" },
+          { "name": "Eldiven", "slug": "eldiven" }
+        ]
+      },
+      {
+        "name": "Spor & Outdoor",
+        "slug": "spor-outdoor",
+        "children": [
+          { "name": "Eşofman Takımı", "slug": "esofman-takimi" },
+          { "name": "Tişört", "slug": "tisort" },
+          { "name": "Şort", "slug": "sort" },
+          { "name": "Forma", "slug": "forma" },
+          { "name": "Outdoor Mont", "slug": "outdoor-mont" },
+          { "name": "Outdoor Ayakkabı", "slug": "outdoor-ayakkabi" },
+          { "name": "Outdoor Pantolon", "slug": "outdoor-pantolon" },
+          { "name": "Outdoor Malzemeleri", "slug": "outdoor-malzemeleri" },
+          { "name": "Spor Ayakkabı", "slug": "spor-ayakkabi" },
+          { "name": "Eldiven", "slug": "eldiven" },
+          { "name": "Sweater", "slug": "sweater" },
+          { "name": "Koşu", "slug": "kosu" },
+          { "name": "Dalış Malzemeleri", "slug": "dalis-malzemeleri" },
+          { "name": "Kar Sporları", "slug": "kar-sporlari" },
+          { "name": "Kamp Malzemeleri", "slug": "kamp-malzemeleri" }
+        ]
+      },
+      {
+        "name": "Kişisel Bakım",
+        "slug": "kisisel-bakim",
+        "children": [
+          { "name": "Parfüm", "slug": "parfum" },
+          { "name": "Cilt Bakımı", "slug": "cilt-bakimi" },
+          { "name": "Tıraş Ürünleri", "slug": "tiras-urunleri" },
+          { "name": "Vücut Bakımı", "slug": "vucut-bakimi" },
+          { "name": "El ve Tırnak Bakımı", "slug": "el-ve-tirnak-bakimi" }
+        ]
+      },
+      {
+        "name": "İç Giyim",
+        "slug": "ic-giyim",
+        "children": [
+          { "name": "Boxer", "slug": "boxer" },
+          { "name": "Atlet", "slug": "atlet" },
+          { "name": "Pijama", "slug": "pijama" },
+          { "name": "Şort", "slug": "sort" },
+          { "name": "İçlik", "slug": "iclik" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kadın",
+    "slug": "kadin",
+    "subCategories": [
+      {
+        "name": "Giyim",
+        "slug": "giyim",
+        "children": [
+          { "name": "Elbise", "slug": "elbise" },
+          { "name": "Etek", "slug": "etek" },
+          { "name": "Pantolon", "slug": "pantolon" },
+          { "name": "Ceket", "slug": "ceket" },
+          { "name": "Mont", "slug": "mont" },
+          { "name": "Kazak", "slug": "kazak" },
+          { "name": "Bluz", "slug": "bluz" },
+          { "name": "Tişört", "slug": "tisort" },
+          { "name": "Gömlek", "slug": "gomlek" },
+          { "name": "Yelek", "slug": "yelek" },
+          { "name": "Sweatshirt", "slug": "sweatshirt" },
+          { "name": "Hırka", "slug": "hirka" },
+          { "name": "Trençkot", "slug": "trenckot" },
+          { "name": "Takım", "slug": "takim" },
+          { "name": "Polar", "slug": "polar" },
+          { "name": "Uzun Tunik", "slug": "uzun-tunik" }
+        ]
+      },
+      {
+        "name": "Ayakkabı",
+        "slug": "ayakkabi",
+        "children": [
+          { "name": "Topuklu Ayakkabı", "slug": "topuklu-ayakkabi" },
+          { "name": "Spor Ayakkabı", "slug": "spor-ayakkabi" },
+          { "name": "Günlük Ayakkabı", "slug": "gunluk-ayakkabi" },
+          { "name": "Sandalet", "slug": "sandalet" },
+          { "name": "Terlik", "slug": "terlik" },
+          { "name": "Bot", "slug": "bot" },
+          { "name": "Çizme", "slug": "cizme" },
+          { "name": "Babet", "slug": "babet" },
+          { "name": "Loafer", "slug": "loafer" }
+        ]
+      },
+      {
+        "name": "Çanta",
+        "slug": "canta",
+        "children": [
+          { "name": "Omuz Çantası", "slug": "omuz-cantasi" },
+          { "name": "Kol Çantası", "slug": "kol-cantasi" },
+          { "name": "Sırt Çantası", "slug": "sirt-cantasi" },
+          { "name": "Bel Çantası", "slug": "bel-cantasi" },
+          { "name": "Abiye Çanta", "slug": "abiye-canta" },
+          { "name": "Laptop Çantası", "slug": "laptop-cantasi" },
+          { "name": "Postacı Çantası", "slug": "postaci-cantasi" },
+          { "name": "Kozmetik Çantası", "slug": "kozmetik-cantasi" },
+          { "name": "Cüzdan", "slug": "cuzdan" },
+          { "name": "Spor Çantası", "slug": "spor-cantasi" },
+          { "name": "Valiz", "slug": "valiz" },
+          { "name": "Anne Bebek Çantası", "slug": "anne-bebek-cantasi" },
+          { "name": "Plaj Çantası", "slug": "plaj-cantasi" },
+          { "name": "Beslenme Çantası", "slug": "beslenme-cantasi" },
+          { "name": "Çanta Aksesuarı", "slug": "canta-aksesuari" },
+          { "name": "Kızın Spor Çantası", "slug": "kizin-spor-cantasi" }
+        ]
+      },
+      {
+        "name": "Aksesuar",
+        "slug": "aksesuar",
+        "children": [
+          { "name": "Saat", "slug": "saat" },
+          { "name": "Gözlük", "slug": "gozluk" },
+          { "name": "Kolye", "slug": "kolye" },
+          { "name": "Bileklik", "slug": "bileklik" },
+          { "name": "Yüzük", "slug": "yuzuk" },
+          { "name": "Küpe", "slug": "kupe" },
+          { "name": "Eldiven", "slug": "eldiven" },
+          { "name": "Atkı", "slug": "atki" },
+          { "name": "Şal", "slug": "sal" }
+        ]
+      },
+      {
+        "name": "İç Giyim",
+        "slug": "ic-giyim",
+        "children": [
+          { "name": "Pijama Takım", "slug": "pijama-takim" },
+          { "name": "Gecelik", "slug": "gecelik" },
+          { "name": "Sütyen", "slug": "sutyen" },
+          { "name": "İç Giyim Takımı", "slug": "ic-giyim-takimi" },
+          { "name": "Korse", "slug": "korse" },
+          { "name": "Atlet", "slug": "atlet" },
+          { "name": "Bustiyer", "slug": "bustiyer" },
+          { "name": "Body", "slug": "body" },
+          { "name": "Aksesuar", "slug": "aksesuar" },
+          { "name": "Kombinezon", "slug": "kombinezon" },
+          { "name": "Termal", "slug": "termal" }
+        ]
+      },
+      {
+        "name": "Kozmetik",
+        "slug": "kozmetik",
+        "children": [
+          { "name": "Parfüm", "slug": "parfum" },
+          { "name": "Cilt Bakımı", "slug": "cilt-bakimi" },
+          { "name": "Makyaj", "slug": "makyaj" },
+          { "name": "Saç Bakım", "slug": "sac-bakim" },
+          { "name": "Deodorant", "slug": "deodorant" },
+          { "name": "Ağız & Diş Bakımı", "slug": "agiz-dis-bakimi" },
+          { "name": "Güneş Ürünleri", "slug": "gunes-urunleri" },
+          { "name": "Hijyenik Ped", "slug": "hijyenik-ped" },
+          { "name": "Duş & Banyo Ürünleri", "slug": "dus-banyo-urunleri" },
+          { "name": "Sabun", "slug": "sabun" },
+          { "name": "Duş Jeli", "slug": "dus-jeli" },
+          { "name": "Ayak Bakım Ürünleri", "slug": "ayak-bakim-urunleri" },
+          { "name": "Cilt Maskesi", "slug": "cilt-maskesi" },
+          { "name": "Serum", "slug": "serum" },
+          { "name": "Sprey", "slug": "sprey" },
+          { "name": "Makyaj Temizleyici", "slug": "makyaj-temizleyici" },
+          { "name": "BB & CC Krem", "slug": "bb-cc-krem" },
+          { "name": "Fondöten", "slug": "fondoten" },
+          { "name": "Yüz Nemlendirici", "slug": "yuz-nemlendirici" }
+        ]
+      },
+      {
+        "name": "Spor & Outdoor",
+        "slug": "spor-outdoor",
+        "children": [
+          { "name": "Sweatshirt", "slug": "sweatshirt" },
+          { "name": "Hırka", "slug": "hirka" },
+          { "name": "Spor Sütyeni", "slug": "spor-sutyeni" },
+          { "name": "Tayt", "slug": "tayt" },
+          { "name": "Eşofman", "slug": "esofman" },
+          { "name": "Koşu Ayakkabısı", "slug": "kosu-ayakkabisi" },
+          { "name": "Spor Giyim", "slug": "spor-giyim" },
+          { "name": "Spor Ekipmanları", "slug": "spor-ekipmanlari" },
+          { "name": "Şort", "slug": "sort" },
+          { "name": "Outdoor Bot", "slug": "outdoor-bot" },
+          { "name": "Outdoor Malzemeleri", "slug": "outdoor-malzemeleri" },
+          { "name": "Spor Çantası", "slug": "spor-cantasi" },
+          { "name": "Outdoor Giyim", "slug": "outdoor-giyim" },
+          { "name": "Outdoor Ceket", "slug": "outdoor-ceket" },
+          { "name": "Mont", "slug": "mont" },
+          { "name": "Polar", "slug": "polar" }
+        ]
+      }
+    ]
+  }
+]
