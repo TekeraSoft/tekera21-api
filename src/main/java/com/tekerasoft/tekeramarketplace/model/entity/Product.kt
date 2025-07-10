@@ -29,16 +29,16 @@ open class Product(
     open var brandName: String,
 
     @Column(columnDefinition = "TEXT")
-    open var description: String,
+    open var description: String? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    open var category: Category,
+    open var category: Category? = null,
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "product_subcategories", joinColumns = [JoinColumn(name = "product_fk")],
         inverseJoinColumns = [JoinColumn(name = "subcategory_id")])
-    open var subCategories: MutableSet<SubCategory> = mutableSetOf(),
+    open var subCategories: MutableSet<SubCategory>? = mutableSetOf(),
 
     @OneToMany(mappedBy="product",fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     @OrderColumn(name = "position")
@@ -53,7 +53,7 @@ open class Product(
 
     @ElementCollection
     @CollectionTable(name= "product_tags", joinColumns = [JoinColumn(name = "product_fk")])
-    open var tags: List<String>,
+    open var tags: List<String>? = mutableListOf(),
 
     @Enumerated(EnumType.STRING)
     open var productType: ProductType,

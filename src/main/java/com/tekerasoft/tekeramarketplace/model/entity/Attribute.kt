@@ -17,8 +17,8 @@ open class Attribute(
     open var price: BigDecimal = BigDecimal.ZERO,
     open var discountPrice: BigDecimal? = BigDecimal.ZERO,
     open var stock: Int,
-    open var sku: String,
-    open var barcode: String,
+    open var sku: String? = null,
+    open var barcode: String? = null,
 
     @ElementCollection
     @CollectionTable(

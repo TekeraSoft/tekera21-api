@@ -1,9 +1,11 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 
 @Entity
 open class SubCategory(
@@ -14,4 +16,12 @@ open class SubCategory(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     open var category: Category,
-): BaseEntity()
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    open var parent: SubCategory? = null,
+
+    @OneToMany(mappedBy = "parent", cascade = [CascadeType.ALL], orphanRemoval = true)
+    open var children: MutableList<SubCategory> = mutableListOf()
+
+) : BaseEntity()

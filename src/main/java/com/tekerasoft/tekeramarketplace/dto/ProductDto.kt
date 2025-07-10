@@ -16,7 +16,7 @@ data class ProductDto(
     val category: AdminCategoryDto?,
     val subCategories: List<AdminSubCategoryDto>,
     val company: ProductCompanyDto,
-    val description: String,
+    val description: String?,
     val variations: List<VariationDto>,
     val currencyType: CurrencyType,
     val tags: List<String>,
@@ -36,8 +36,8 @@ data class ProductDto(
                 from.code,
                 from.videoUrl,
                 from.brandName,
-                from.category.let { AdminCategoryDto(it.id,it.name, it.slug,it.image) },
-                from.subCategories.map { AdminSubCategoryDto(it.id, it.name, it.slug ,it.image) }.toList(),
+                from.category?.let { AdminCategoryDto(it.id,it.name, it.slug,it.image) },
+                from.subCategories?.map { AdminSubCategoryDto(it.id, it.name, it.slug ,it.image) }?.toList() ?: mutableListOf(),
                 from.company.let {
                     ProductCompanyDto(it.id,it.name,it.logo, it.rate ) },
                 from.description,
@@ -59,7 +59,7 @@ data class ProductDto(
                     )
                 },
                 from.currencyType,
-                from.tags.toList(),
+                from.tags?.toList() ?: mutableListOf(),
                 from.productType,
                 from.attributes.map { AttributeDetail(it.key, it.value) },
                 from.rate,

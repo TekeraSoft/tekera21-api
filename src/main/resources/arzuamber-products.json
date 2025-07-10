@@ -1,0 +1,3315 @@
+[
+  {
+    "id": "33e4139c-c678-40c2-987b-cd30a51f150b",
+    "name": "Cepken 2'li Takım Pembe Triko",
+    "slug": "cepken-2li-takim-pembe-triko-48303",
+    "populate": false,
+    "newSeason": false,
+    "category": "Takım",
+    "subCategory": "",
+    "description": "<p>Cesur ve dikkat çekici bir stil arayanlar için tasarlandı! Bu pembe triko ikili takım, özel kesimi ve cepken detaylı üstüyle fark yaratıyor. Yumuşak dokusu sayesinde gün boyu rahatlık sunarken, şıklığınızdan da ödün vermez. Gömlek, bralet ya da tek başına kullanarak kendi tarzınızı yaratabilirsiniz.</p><p></p><p>✅ 2’li takım: Cepken üst + Triko kazak</p><p>✅ Yumuşak ve esnek kumaş</p><p>✅ Özgün kesim, modern görünüm</p><p>✅ Sokak modasına uygun cesur bir tarz</p><p></p><hr>",
+    "price": 680,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Pembe",
+        "stockSize": [
+          {
+            "id": "f57dc405-0eba-4b93-951f-1dba3643436b",
+            "size": "Standart",
+            "stock": 2
+          }
+        ],
+        "stockCode": "KCSC683C",
+        "images": [
+          "74233b39-4ef4-4cfb-9f46-53307380907c.jpg",
+          "96f3b8ed-682a-4a72-9317-bab2fa0a7fc9.jpg",
+          "8882d386-2429-45e1-920e-afae795a410f.jpg",
+          "4467dd11-203c-4fdf-bd64-c75a6ab404c1.jpg",
+          "9898f365-19ad-48b7-b83a-99ff40d971a1.jpg",
+          "8a72b856-f222-4893-a4b1-1ef5ad7b0e5f.png"
+        ]
+      },
+      {
+        "color": "Gri",
+        "stockSize": [
+          {
+            "id": "f969dd5f-ab78-4c01-b6a1-7416836a18f4",
+            "size": "Standart",
+            "stock": 3
+          }
+        ],
+        "stockCode": "LXI4LPPU",
+        "images": [
+          "a504a235-da41-4226-bcda-48a4981025ad.jpg",
+          "66a54914-23da-48fa-bbfa-8b3294666d11.jpg",
+          "5f16cc4e-f8bc-4a30-803d-9947a51083be.jpg",
+          "6598a41e-6f4c-45a6-bb2d-11c30165cc1c.jpg",
+          "4b9cd814-1074-4d41-ae09-d4cd5f55a17f.jpg",
+          "24bf9283-61ce-4be6-a06e-2b23ba917304.png"
+        ]
+      },
+      {
+        "color": "Bordo",
+        "stockSize": [
+          {
+            "id": "ce6a0ba7-daaf-4078-bd73-6fc9e66e54a5",
+            "size": "Standart",
+            "stock": 3
+          }
+        ],
+        "stockCode": "MMRVH3TW",
+        "images": [
+          "aa714d4c-a35b-483f-9800-a524ce63fa88.jpg",
+          "fbc590cf-bf08-4859-888c-0b84a8bc4ef9.jpg",
+          "015ee996-72bf-4780-a638-51464f6dbc59.jpg",
+          "a7039f71-082b-478e-b20d-043efa2139b2.jpg",
+          "ded1d6ac-f985-4735-a50d-337cf6eecd86.jpg",
+          "be0fe160-02c5-4960-a766-e1db6cf63537.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 8,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "cecb750a-48e7-49d4-aa26-527e35ea70c2",
+    "name": "Denizci Esnek Kumas Bluz Ve Etek Takımı",
+    "slug": "denizci-esnek-kumas-bluz-ve-etek-takimi-41632",
+    "populate": true,
+    "newSeason": false,
+    "category": "Takım",
+    "subCategory": "",
+    "description": "<p>Zarafetin ve şıklığın modern yorumu bu ikili takımda buluştu! Altın düğme detayları ve lacivert çizgilerle tamamlanan bu crop bluz ve etek takımı, hem klasik hem de sofistike bir stil sunuyor. Özel davetlerden ofis şıklığına kadar her ortamda dikkat çekici bir duruş sağlar.</p><p></p><p>✅ Vücuda oturan, esnek kumaş</p><p>✅ Altın düğme ve çizgi detayları</p><p>✅ Takım olarak şık ve kullanışlı</p><p>✅ Günlük kullanım veya özel günler için ideal</p>",
+    "price": 1700,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "db8e97b2-c1ec-4e42-8ea7-f3fc3df1f40d",
+            "size": "Standart",
+            "stock": 1
+          }
+        ],
+        "stockCode": "F8UC6R3Y",
+        "images": [
+          "c2cf2d1e-2116-41a0-b35e-86029324b647.jpg",
+          "5adffb6a-08ec-492e-b012-717fb29d6de6.jpg",
+          "7762904c-6884-4491-9b0b-21a88942dad9.jpg",
+          "361360ad-b58a-4b49-8c55-4fc98d096820.jpg",
+          "4a88e5f2-4881-4b41-8572-6ba3900ae73a.jpg",
+          "9d6c35fc-8714-4ea9-8a3f-c4a5c667ae82.png"
+        ]
+      },
+      {
+        "color": "Lacivert",
+        "stockSize": [
+          {
+            "id": "1c24d898-3315-48cb-a9dd-f5c5b3575e52",
+            "size": "Standart",
+            "stock": 2
+          }
+        ],
+        "stockCode": "SV7HSODP",
+        "images": [
+          "a20ffd82-3d0d-4850-aca1-1a0a9350d775.jpg",
+          "db943597-e4c7-4f4b-adfa-3061ad25c9b2.jpg",
+          "00390d62-00c0-43e0-a586-a9e94ab96ab3.jpg",
+          "48163e0b-210f-4a9f-b3dd-8e60136364e6.jpg",
+          "84b5059f-991d-4b5e-bac0-c535277fcee9.jpg",
+          "30efcd5a-7321-4253-88b7-8391b8d202f5.png"
+        ]
+      },
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "e692144c-38bf-40fb-b508-c306db212c1b",
+            "size": "Standart",
+            "stock": 1
+          }
+        ],
+        "stockCode": "YHLLLAVC",
+        "images": [
+          "9fd775cd-c68a-4f62-b52b-b86398698268.jpg",
+          "a8fb97c6-7224-4b10-b166-c585b77ee0ff.jpg",
+          "3a50fc96-e1df-4d0e-9cb2-fcd604e91bef.jpg",
+          "4beb3996-6791-4bc9-8f97-7c104c023c07.jpg",
+          "b462d8b3-0578-49a3-afec-5dbe10b18dfc.jpg",
+          "eb740fac-319a-4e61-bb18-efab4681ada5.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 4,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "209e2b71-ba5a-487e-b523-6d0d3a4b3767",
+    "name": "Renkli Leopar Desenli Fermuarlı Hoodie",
+    "slug": "renkli-leopar-desenli-fermuarli-hoodie-19031",
+    "populate": false,
+    "newSeason": false,
+    "category": "Sweatshirt",
+    "subCategory": "",
+    "description": "<p>Enerji dolu tarzıyla dikkat çeken bu crop hoodie, renkli leopar desenleriyle gününüze hareket katacak! Hafif kumaşı sayesinde hem rahatlık hem stil sunar. Kapüşonlu yapısı ve fermuarlı ön kısmı sayesinde spor kombinlerinizin vazgeçilmezi olacak.</p><p></p><p>✅ Renkli ve enerjik leopar deseni</p><p>✅ Rahat kesim, elastik bel kısmı</p><p>✅ Fermuarlı ve kapüşonlu tasarım</p><p>✅ Günlük kullanım ve sokak stili için ideal</p>",
+    "price": 650,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Leopar ",
+        "stockSize": [
+          {
+            "id": "d19169b2-cdcd-48cf-96b7-bf2e372715a5",
+            "size": "S",
+            "stock": 1
+          },
+          {
+            "id": "7698b84d-5fb5-4483-bbd4-fde8608f21d0",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "ebe3af00-a6b4-4152-ba56-f8cd041e9add",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "698c7972-3e78-4bea-be62-5dd19d6c3305",
+            "size": "XL",
+            "stock": 1
+          }
+        ],
+        "stockCode": "02EHLXLH",
+        "images": [
+          "85775ca0-4475-4099-87e5-fcf61f070c95.jpg",
+          "f6847ff0-ab37-40e0-b38c-18b222b79b0f.jpg",
+          "4a8d70b0-6f5d-47cf-8bd0-c29113161ddb.jpg",
+          "b4c67345-932d-45d0-8d7b-e06d484ae6eb.jpg",
+          "ec4e7e02-f4d4-441a-ac46-9c3b9fc332b0.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 4,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "db06362c-6e6f-43fa-9707-b4e5dedf15c2",
+    "name": "Elbise Ve Kazak Takımı",
+    "slug": "elbise-ve-kazak-takimi-98463",
+    "populate": false,
+    "newSeason": false,
+    "category": "Takım",
+    "subCategory": "",
+    "description": "<p>Günlük şıklığı ve rahatlığı bir araya getiren bu elbise ve kazak takımı, stil sahibi kadınların dolabında mutlaka yer almalı. Midi boy elbise yumuşak dokusuyla gün boyu konfor sunarken, uyumlu kazak hem şıklık hem sıcaklık sağlar.</p><p>İster ofiste, ister arkadaş buluşmalarında ya da alışverişte kolayca kombinleyebileceğiniz bu takım, zamansız tasarımıyla her mevsime uyum sağlar.</p>",
+    "price": 1500,
+    "lang": "tr",
+    "length": "Midi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "6af7aa8e-5570-4e76-8227-db04695a5f03",
+            "size": "Standart",
+            "stock": 3
+          }
+        ],
+        "stockCode": "OEKEH1ST",
+        "images": [
+          "b7a2d987-22d4-4d88-89ef-c1e2f44164b1.jpg",
+          "0d127a6b-6292-4d88-aed3-fba54bc4bd7d.jpg",
+          "15e14082-e5e8-4025-88c9-46ef7507ea6b.jpg",
+          "49b3099a-c2b8-4fd7-b95e-661870ca14e2.png"
+        ]
+      },
+      {
+        "color": "Krem",
+        "stockSize": [
+          {
+            "id": "0993f732-b7f1-4b7b-be2c-fad6547c4bdd",
+            "size": "Standart",
+            "stock": 3
+          }
+        ],
+        "stockCode": "XJA218T5",
+        "images": [
+          "b516434e-c257-4ab7-88ce-0fbdd6fe1fe6.jpg",
+          "451eca78-26fc-4721-976b-48899c9e8526.jpg",
+          "42c6f094-9e3b-4694-8f3b-76c445cbbce1.jpg",
+          "4a935d8e-0fca-4b48-8632-495b0de62ec3.jpg",
+          "0b104534-5cb6-4530-8651-f1fcddac24ba.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 6,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "b94ea79e-d64c-4f6b-b5da-56ea75a4d1f6",
+    "name": "Leopar Desenli Fermuarlı Kapüşonlu Sweatshirt ",
+    "slug": "leopar-desenli-fermuarli-kapusonlu-sweatshirt--91277",
+    "populate": false,
+    "newSeason": false,
+    "category": "Sweatshirt",
+    "subCategory": "",
+    "description": "",
+    "price": 820,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Leopar ",
+        "stockSize": [
+          {
+            "id": "fdb4761f-897d-4e5a-8a94-956d60b58401",
+            "size": "S",
+            "stock": 2
+          },
+          {
+            "id": "60c2e8b1-3d8f-4be7-bdde-73aa5c69e44b",
+            "size": "M",
+            "stock": 2
+          },
+          {
+            "id": "1eaccfe5-f0c0-4c68-8ae5-2f4aba5415a4",
+            "size": "L",
+            "stock": 1
+          }
+        ],
+        "stockCode": "77TOA63S",
+        "images": [
+          "2d8ac9ad-f781-45cd-9553-00c061dc7341.jpg",
+          "9dad8f89-79f1-4b15-8fd4-4e5717c54619.jpg",
+          "c7a39d55-52a7-42c7-a3ff-0f74f2d7727d.jpg",
+          "731f589c-df66-446b-95fe-8bae47e80205.jpg",
+          "77babc3e-81f1-4209-bac2-822fbbbbcbfb.jpg",
+          "03968fde-97aa-49b6-b69a-d313e688844b.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 5,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "8517c6e1-ef49-453e-b696-6abad143a53d",
+    "name": "Kuzu Nakışlı Düğmeli Krem Triko",
+    "slug": "kuzu-nakisli-dugmeli-krem-triko-45007",
+    "populate": false,
+    "newSeason": false,
+    "category": "Bluz",
+    "subCategory": "",
+    "description": "<p>Sevimliliği konforla buluşturan bu krem triko bluz, üzerindeki kuzu nakışlarıyla göz alıcı bir şirinlik sunar. Düğmeli yapısı sayesinde hem hırka hem bluz olarak kullanılabilir. Yumuşak dokusu, gün boyu rahatlık sağlarken crop kesimi modern ve genç bir görünüm kazandırır. Jean pantolonlarla ya da eteklerle kolayca kombinlenebilir. Gündelik şıklığı sevenler için harika bir tercih!</p>",
+    "price": 600,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Krem",
+        "stockSize": [
+          {
+            "id": "75c24e4b-8923-4f9a-b064-44038995bcf4",
+            "size": "Standart",
+            "stock": 3
+          }
+        ],
+        "stockCode": "KDATOJMO",
+        "images": [
+          "3fd65dce-1801-4bab-a02c-ed8ed89ee28f.jpg",
+          "70dfd8df-8df3-4272-b1a8-7d2f0db86c70.jpg",
+          "472727ba-4bd5-442a-a6c2-deeff43b1c2b.jpg",
+          "b7df22cb-01e2-4fa0-9582-66f8a6ab2e7c.jpg",
+          "31fe62f8-6d35-4061-b118-1e2afe1b5909.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 3,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "79e36bae-3eb9-4f13-b06f-7416ed8acd5e",
+    "name": "Varak Baskılı Beyaz Midi Elbise",
+    "slug": "varak-baskili-beyaz-midi-elbise-38571",
+    "populate": false,
+    "newSeason": false,
+    "category": "Elbise",
+    "subCategory": "",
+    "description": "<p>Gecenin yıldızı olmaya hazır mısınız? Parlak varak baskısıyla öne çıkan bu midi siyah elbise, vücudu saran yapısı ve kolsuz tasarımıyla feminen bir siluet sunar. Özel davetler, akşam yemekleri ve partiler için ideal olan bu model, zarafetiyle bakışları üzerine çeker. Yumuşak ve esnek kumaşı sayesinde gün boyu rahatlık sağlar. Minimal takılarla kombinleyerek şıklığınızı tamamlayabilirsiniz.</p>",
+    "price": 800,
+    "lang": "tr",
+    "length": "Midi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "bfb1bf21-241b-41b3-aea0-2208f1ea679f",
+            "size": "S",
+            "stock": 2
+          },
+          {
+            "id": "b3170b8d-49c5-4f18-a664-83e084ad7152",
+            "size": "M",
+            "stock": 2
+          },
+          {
+            "id": "26ec6a04-2f93-44fc-8208-47c96547d10c",
+            "size": "L",
+            "stock": 1
+          }
+        ],
+        "stockCode": "E3PLPIUS",
+        "images": [
+          "0f08e7bb-4d9e-46de-887b-f0ce9e3ac7cd.jpg",
+          "738d2bd9-9ebc-43fe-aa36-71b559ad9feb.jpg",
+          "35111d3e-e5e0-4705-bd57-a7fd5ce896d6.jpg",
+          "c9426679-f80d-4e79-b8c5-855542bd27b6.jpg",
+          "4e6bbc9b-5bb5-45a9-adca-91f067b8fa65.jpg",
+          "6624eb93-a9af-4c75-bffd-1eab8742bf28.png"
+        ]
+      },
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "ef805417-cc02-4ee2-b2f6-e3270df2a80a",
+            "size": "S",
+            "stock": 2
+          },
+          {
+            "id": "1838dbb3-1213-4521-b1a8-2e5ffdb9f882",
+            "size": "M",
+            "stock": 2
+          },
+          {
+            "id": "66691794-5dae-4b9f-b05b-580fcc08a855",
+            "size": "L",
+            "stock": 1
+          }
+        ],
+        "stockCode": "QUXP05IA",
+        "images": [
+          "afd1acfe-7919-4f14-9d28-0968a5bc1dfd.jpg",
+          "c5e72c61-0d8f-4c84-aaea-a0ff1304e3cc.jpg",
+          "9e79c36b-358f-49ec-801c-199b59d0a22c.jpg",
+          "0387c3eb-60c1-4b27-a5f9-52ba945e1613.jpg",
+          "07046bd2-3fa8-4483-a744-546ac41447a2.jpg",
+          "914171a3-b8c4-4ae9-84f9-e49f2aad1064.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 10,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "ab708da6-1832-4f05-8561-e20026071f90",
+    "name": "Kışlık Çizgili Kemer Detaylı Beyaz Elbise",
+    "slug": "kislik-cizgili-kemer-detayli-beyaz-elbise-92860",
+    "populate": false,
+    "newSeason": false,
+    "category": "Elbise",
+    "subCategory": "",
+    "description": "<p>Şıklığı ve konforu bir araya getiren çizgili kemerli beyaz elbise, klasik tarzı modern dokunuşlarla buluşturuyor. Vücuda oturan fit kesimi ve bel kısmındaki tokalı kemeriyle zarif bir siluet oluşturur. Rahat örme kumaşı sayesinde hem günlük kullanım hem de ofis kombinleri için idealdir. Çizgili desen detayı elbiseye dinamizm katarken, yaka kısmı ve uzun kolları ile stilinizi tamamlar.</p>",
+    "price": 800,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Çizgili ",
+        "stockSize": [
+          {
+            "id": "690767c1-e43f-4daf-bd42-4c507bb926fc",
+            "size": "Standart",
+            "stock": 3
+          }
+        ],
+        "stockCode": "MSVWZB0E",
+        "images": [
+          "a5ad69c0-e766-4786-a5d0-574952d324b8.jpg",
+          "f3ceb66f-dd51-4cac-8dfe-9a1d57064124.jpg",
+          "36db9f73-6ea4-42a7-b5f1-d823800feaac.jpg",
+          "52935f57-e0c0-4d5b-b562-f739cee1fff1.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 3,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "2e5a135d-d9ff-476c-8e7e-879bff42eac9",
+    "name": "Ajurlu Önden Bağlamalı Krem Triko",
+    "slug": "ajurlu-onden-baglamali-krem-triko-57568",
+    "populate": false,
+    "newSeason": false,
+    "category": "Bluz",
+    "subCategory": "",
+    "description": "<p>Ajurlu ve önden bağlamalı krem triko bluz, romantik ve bohem stilin öne çıkan parçası. El işçiliği görünümlü dokusu ve ip detaylarıyla dikkat çeker. Yüksek bel pantolonlarla veya eteklerle kombinleyerek yaz aylarında tarzınızı tamamlayabilirsiniz. Hafif yapısı sayesinde gün boyu konfor sağlar.</p>",
+    "price": 800,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Krem",
+        "stockSize": [
+          {
+            "id": "49a668f6-242d-49d9-a8d8-d404ad4e9e45",
+            "size": "Standart",
+            "stock": 3
+          }
+        ],
+        "stockCode": "FLJ3I35Z",
+        "images": [
+          "60351c96-893a-4f8f-9971-4410f8862e97.jpg",
+          "df409628-3ea3-4dab-8459-ec4c1d86e368.jpg",
+          "26945cdb-f79b-4621-b60e-aaf908efec89.jpg",
+          "c616fd91-a958-4c7c-9706-ef6be01ce862.jpg",
+          "ab646801-6eef-4883-b47c-b5e5e4be3ade.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 3,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "088b5360-ce0b-498f-88f7-a80fcda10a29",
+    "name": "Siyah Çizgili Taş Düğmeli Bluz",
+    "slug": "siyah-cizgili-tas-dugmeli-bluz-40019",
+    "populate": false,
+    "newSeason": false,
+    "category": "Bluz",
+    "subCategory": "",
+    "description": "<p>Taş düğme detaylı çizgili beyaz bluz, zarif ve modern tasarımıyla günlük stilinizi tamamlar. Fitilli dokusu sayesinde vücuda oturur ve rahatlık sunar. Hem jean pantolonlarla hem de klasik altlarla mükemmel uyum sağlar.</p>",
+    "price": 300,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Çizgili ",
+        "stockSize": [
+          {
+            "id": "8028640c-629e-4071-b2df-57f6e1884198",
+            "size": "Standart",
+            "stock": 3
+          }
+        ],
+        "stockCode": "2V3U090I",
+        "images": [
+          "19228ead-727c-4560-894e-390f27372520.jpg",
+          "c4122618-30e8-4636-8ce6-59c765c3d65f.jpg",
+          "4c4f4f29-e452-456f-b3ff-188e1fcefdf7.jpg",
+          "147da0b5-fb63-4951-8696-515c81a9ad0f.jpg",
+          "72fe3b38-6a1d-421d-b992-b38b250ec744.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 3,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "c4a04334-06ba-4a39-9253-b051987fe90f",
+    "name": "Sırtı Açık Zincir Detaylı Midi Bordo Elbise",
+    "slug": "sirti-acik-zincir-detayli-midi-bordo-elbise-46226",
+    "populate": true,
+    "newSeason": false,
+    "category": "Elbise",
+    "subCategory": "",
+    "description": "",
+    "price": 1600,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Bordo",
+        "stockSize": [
+          {
+            "id": "1ce18f33-6a9a-4147-8883-2e649705aa33",
+            "size": "S",
+            "stock": 1
+          },
+          {
+            "id": "561c0aab-faf2-4260-84f7-96cd8de6f83f",
+            "size": "M",
+            "stock": 2
+          },
+          {
+            "id": "b2244675-7473-47d8-b0a7-c89a7935baae",
+            "size": "L",
+            "stock": 1
+          }
+        ],
+        "stockCode": "2U7OAO6Y",
+        "images": [
+          "a86af6e5-7818-4af0-9ab8-8cf6e1d01076.jpg",
+          "2a2d3775-01c3-4ef0-8fcf-b9205c8d89b8.jpg",
+          "537b6fb5-c776-4207-a20c-e0fb41b2d552.jpg",
+          "ea6f687f-2bcc-4f34-b913-5b0c79d7a6b3.jpg",
+          "43178b3a-bb5c-4b0a-b360-ba69733b0530.jpg",
+          "cc69a2be-8840-490a-b87e-e6e45f80a296.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 4,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "dc43d66e-49ff-4fee-bc51-529c2eb3cfdc",
+    "name": "Kısa Kollu Ajurlu Krem Bluz",
+    "slug": "-79919",
+    "populate": false,
+    "newSeason": false,
+    "category": "Bluz",
+    "subCategory": "",
+    "description": "<p><strong>Ajurlu Kısa Kollu Fırfırlı Kadın Bluz - Yazlık Şıklığın Vazgeçilmezi</strong></p><p>Yaz aylarının vazgeçilmez parçası olan bu ajurlu bluz, hafif yapısı ve nefes alan kumaşı sayesinde gün boyu rahatlık sunar. Omuz kısmındaki fırfır detayları, feminen bir dokunuş katarken, V yaka tasarımı zarafeti ön plana çıkarır. Jean pantolon, şort veya eteklerle kolayca kombinlenebilir. Günlük kullanımda şıklığınızı tamamlayacak bu parça, gardırobunuzun favorisi olacak.</p><p><strong>Ajurlu örgü tasarım</strong>, <strong>hava alan kumaş</strong>, <strong>şık fırfır detayları</strong> ve <strong>modern kesim</strong> ile göz doldurur.</p>",
+    "price": 600,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Krem",
+        "stockSize": [
+          {
+            "id": "391e54eb-04d7-41c6-b64e-b125d4c33db5",
+            "size": "Standart",
+            "stock": 4
+          }
+        ],
+        "stockCode": "DDEUBDES",
+        "images": [
+          "e98d857d-c17d-4c00-ae11-8d2212e9ca2d.jpg",
+          "46e943bb-bdc7-4148-88f9-ee987fe041c1.jpg",
+          "c705a199-39a0-4ebf-a0b7-c52c7a9f46f0.jpg",
+          "99bcc1d9-4f9c-4e32-9da6-73f635041253.jpg",
+          "ada7c069-e3bd-4bcf-ae30-c60a481a13b7.jpg",
+          "ea57e6ae-84a3-46ed-bd70-552b0bb6cbc0.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 4,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "04e72c1b-cfb2-4f12-8a2a-111611656052",
+    "name": "Yüksek Bel Flatolu Bej Pantolon",
+    "slug": "yuksek-bel-flatolu-bej-pantolon-71313",
+    "populate": true,
+    "newSeason": false,
+    "category": "Pantalon ",
+    "subCategory": "",
+    "description": "<p><strong>Ürün Açıklaması (renk belirtmeden)</strong></p><p>Ofisten hafta sonu buluşmalarına kadar konforu şıklıkla buluşturan bu yüksek bel pantolon, esnek ve tok dokulu kumaşı sayesinde gün boyu formunu korur. Düz paça yapısı, dizden bileğe hafif daralan silüetiyle modern bir görünüm sunarken önde yer alan stil dikişleri bacak boyunu optik olarak uzatır. Yan cepleri pratik kullanım sağlarken, fermuarlı-gizli kopçalı kapama ve beldeki minik pile detayları bel hattını zarifçe belirginleştirir. Balerin babetlerden stilettolara, blazer ceketlerden basic tişörtlere kadar pek çok parçayla zahmetsizce eşleşir; gardırobunuzun dört mevsim kurtarıcısı olmaya adaydır.</p><p></p><hr><p></p><p></p><p></p><ul class=\"list-disc ml-10\"><li><p>yüksek bel kumaş pantolon</p></li><li><p>kadın düz kesim pantolon</p></li><li><p>ofis kombin pantolon</p></li><li><p>rahat fit cigarette pantolon</p></li><li><p>şık klasik pantolon</p></li><li><p>Arzu Amber yeni sezon</p></li></ul><p></p>",
+    "price": 1600,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Bej",
+        "stockSize": [
+          {
+            "id": "27bd36b5-c09e-4e68-a2e7-4a35d3e56eec",
+            "size": "XS",
+            "stock": 1
+          },
+          {
+            "id": "f198c734-020b-4513-bad2-860396e0592b",
+            "size": "S",
+            "stock": 1
+          },
+          {
+            "id": "56815710-ebf3-4d17-90eb-56147ea65f7a",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "74a63637-5bb8-4fc9-902e-5e48242f7e1b",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "75af1429-9183-4dd7-a259-d04da7ac59f1",
+            "size": "XL",
+            "stock": 1
+          }
+        ],
+        "stockCode": "J4ISVLKF",
+        "images": [
+          "07970cf3-fa64-42a0-bcf6-9b7ba27b8d7e.jpg",
+          "c263013f-8383-4c2a-825c-86eb689acfbe.jpg",
+          "d92fbeb7-115e-4ba9-9292-3c148f916d22.jpg",
+          "526a696a-41ec-47ab-8fa3-b0731817d574.jpg",
+          "b9950ecc-04ec-4021-b893-4ace35295af6.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 5,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "042f72ad-39db-4450-86d3-2645f3975a49",
+    "name": "Yüksek Bel Düz Paça Püsküllü Serpme Taşlı Gri Kot Pantolon",
+    "slug": "yuksek-bel-duz-paca-puskullu-serpme-tasli-gri-kot-pantolon-97022",
+    "populate": false,
+    "newSeason": true,
+    "category": "Pantalon ",
+    "subCategory": "",
+    "description": "<p><strong>Taş Detaylı Yüksek Bel Kadın Kot Pantolon</strong></p><p></p><p>Modern tarzı ve rahat kalıbıyla öne çıkan bu kot pantolon, serpme taş detayları sayesinde şıklığı günlük giyime taşıyor. Yüksek bel yapısı belinizi kavrarken, düz kesimi vücut hatlarını zarifçe ortaya çıkarır. Paça kısmındaki püsküller, hareketli bir dokunuş sunarken tarzınıza özgünlük katar. Hem günlük kombinlerde hem de akşam şıklığında rahatlıkla tercih edilebilir. Elastik yapısı sayesinde gün boyu konfor sağlar.</p><p></p><p><em>taş detaylı kot pantolon</em>, <em>yüksek bel kadın jean</em>, <em>püsküllü paça pantolon</em>, <em>zarif kadın pantolon modelleri</em>, <em>şık günlük pantolon</em></p>",
+    "price": 2000,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Gri",
+        "stockSize": [
+          {
+            "id": "75326cc1-4086-44eb-92c4-c02fb921b2bc",
+            "size": "34",
+            "stock": 1
+          },
+          {
+            "id": "8bdb2a32-ae3a-4fb3-968f-a8a5b790ec92",
+            "size": "36",
+            "stock": 1
+          },
+          {
+            "id": "27467c42-d8d6-4a23-839b-fb45e9be3074",
+            "size": "38",
+            "stock": 1
+          },
+          {
+            "id": "9e3d827a-7589-4ea5-8102-5f17c8bf06cd",
+            "size": "40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "WMEBFWX7",
+        "images": [
+          "cad45a59-b1e7-41e5-bbaf-7997f4764969.jpg",
+          "f3be5ae2-1e39-4dd3-994b-20e6654ec9a8.jpg",
+          "121a5908-7684-4820-b3c0-2de0ab0f130c.jpg",
+          "0a88487f-fbe7-4e03-9a29-65ea7d5ae04d.jpg",
+          "6e2087b9-c954-427f-b223-e8acac83b27c.jpg",
+          "0f56e5f4-8dc2-4d3f-8b33-750f4a746eab.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 4,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "8a4c2e44-f8f7-42cb-94d0-bd13fc1c4cd3",
+    "name": "Krep Kumaş Pileli Siyah Pantolon",
+    "slug": "krep-kumas-pileli-siyah-pantolon-30197",
+    "populate": false,
+    "newSeason": true,
+    "category": "Pantalon ",
+    "subCategory": "",
+    "description": "<p><strong>Yüksek Bel Pileli Siyah Kumaş Pantolon</strong></p><p></p><p>Şıklığın ve rahatlığın buluştuğu bu siyah kumaş pantolon, pile detaylarıyla klasik tarzı modern bir dokunuşla sunuyor. Yüksek bel yapısı belinizi zarifçe sararken, düz kesimi sayesinde hem ofis kombinlerinizde hem de günlük stilinizde rahatlıkla kullanabilirsiniz. Alt kısmında yer alan ayarlanabilir bağcık detayı pantolona spor bir hava katıyor. Topuklu ayakkabı, gömlek veya crop bluzlarla kolayca kombinlenebilir. Gardırobunuzun vazgeçilmezi olacak bu model, hem konfor hem de stil arayan kadınlar için ideal bir tercih.</p>",
+    "price": 1750,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "43c43f4f-77ab-441f-98bd-db05cb7f990e",
+            "size": "XS",
+            "stock": 1
+          },
+          {
+            "id": "4c53d9b9-2452-4a91-9510-32efabf09b20",
+            "size": "S",
+            "stock": 2
+          },
+          {
+            "id": "c62acca9-248b-469c-ab91-a3c961ee3f87",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "9e818e3a-75c0-42bb-a1f3-b960328d0330",
+            "size": "L",
+            "stock": 1
+          }
+        ],
+        "stockCode": "NARALD92",
+        "images": [
+          "d068c9f3-466e-4a58-bfe3-575674f9abdf.jpg",
+          "42c44cb0-1572-4ac1-bef5-6c7efaa9ae95.jpg",
+          "dbdb5227-927c-43c5-afcd-73dd8f134552.jpg",
+          "95a15d25-dc60-4e22-8923-a4f0520c7612.jpg",
+          "37a44027-82f7-4a2b-924e-3e0d27867a77.jpg",
+          "711c14e6-e434-4caf-a21e-3cbe88db83ff.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 5,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "afdd5230-48b9-4988-9606-9a780bf0daea",
+    "name": "Bol Paça Mavi Jean Pantolon",
+    "slug": "bol-paca-mavi-jean-pantolon-74225",
+    "populate": false,
+    "newSeason": true,
+    "category": "Pantalon ",
+    "subCategory": "",
+    "description": "<p><strong>Kadın Geniş Paça Cepli Mavi Jean Pantolon - Günlük Şıklığın Anahtarı</strong></p><p></p><p>Yeni sezonun favorisi olan bu bol paça mavi jean pantolon, ön kısmındaki büyük ceplerle dikkat çekiyor. Rahat kalıbı sayesinde gün boyu konfor sağlar. Gerek sneaker gerek topuklu ayakkabılarla kolayca kombinlenebilir. Modern şehir stilini yansıtan bu pantolon, her dolapta olması gereken kurtarıcı bir parçadır.</p><p></p><p>kadın jean pantolon, bol paça kot pantolon, cepli mavi pantolon, rahat kesim denim, günlük kot pantolon kadın, geniş paça pantolon modeli</p>",
+    "price": 1530,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Mavi",
+        "stockSize": [
+          {
+            "id": "f686dbcd-f36b-4a5d-b98a-b47203749163",
+            "size": "34",
+            "stock": 1
+          },
+          {
+            "id": "b1fdfd9a-dd0e-4d8f-ac29-d9ed40ec138b",
+            "size": "36",
+            "stock": 1
+          },
+          {
+            "id": "9c1449fb-9911-4706-9637-084dc46d8422",
+            "size": "38",
+            "stock": 2
+          },
+          {
+            "id": "2e198b12-94ba-4850-abd4-ae7ae2dae90d",
+            "size": "40",
+            "stock": 1
+          },
+          {
+            "id": "ce30961d-858b-4be0-a996-09e38511776a",
+            "size": "42",
+            "stock": 1
+          }
+        ],
+        "stockCode": "EOB9F1QZ",
+        "images": [
+          "f91308ee-8431-4b4b-a9cf-3d580f376268.jpg",
+          "08e6ed99-566b-4b04-8c9f-54b7a1137478.jpg",
+          "a42b3d09-bb6f-4ad2-be78-37f9e4748f2a.jpg",
+          "d91c2f31-92f5-4bc5-a088-5ba4801f539f.jpg",
+          "94efc10a-8e31-4fd7-8e98-26c9962858af.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 6,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "716641b6-50db-4a03-a53e-60b9cf602f0d",
+    "name": "Bel Lastikli Çizgili Pantolon",
+    "slug": "bel-lastikli-cizgili-pantolon-96602",
+    "populate": false,
+    "newSeason": true,
+    "category": "Pantalon ",
+    "subCategory": "",
+    "description": "<p><strong>Kadın Çizgili Bağcıklı Pantolon - Günlük ve Rahat Kombinlerin Yıldızı</strong></p><p></p><p>Rahat kalıbı ve esnek yapısıyla öne çıkan bu çizgili kadın pantolon, hem spor hem de casual şıklık arayanlar için ideal bir parçadır. Ayarlanabilir bağcıklı beli sayesinde kullanım kolaylığı sunar. İnce dikey çizgileri sayesinde vücut hatlarını daha uzun ve ince gösterir. Günlük yürüyüşler, alışveriş veya tatil kombinleri için mükemmel seçimdir.</p><p></p><p></p><p>kadın çizgili pantolon, bağcıklı pantolon kadın, rahat yazlık pantolon, esnek kumaş pantolon, ince çizgili kadın pantolon, günlük kadın alt giyim</p>",
+    "price": 1300,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Çizgili ",
+        "stockSize": [
+          {
+            "id": "ce834ba1-7335-40a8-a6e4-a28595c5d7eb",
+            "size": "S",
+            "stock": 1
+          },
+          {
+            "id": "7d9500dc-924d-4091-a3ba-e2e40fd7f525",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "307dfaaf-a575-4d7c-b5c9-23eebc18e594",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "9d663944-5c5c-44db-b602-55b57ca621eb",
+            "size": "XL",
+            "stock": 1
+          }
+        ],
+        "stockCode": "ONZZNLQR",
+        "images": [
+          "60ac48a8-aa78-4b6c-9bd6-1ce139ef8d42.jpg",
+          "d0709e84-ea5f-4527-87dc-0e8e89eb492b.jpg",
+          "36d5722f-1683-4480-b5c3-019d4340a63a.jpg",
+          "e72fb388-adff-44ef-a030-3a6fd57ec16c.jpg",
+          "1e5d1c03-2ca9-4861-9800-dc13ff8f253d.jpg",
+          "96feb543-6b2f-4c44-b820-360c43ee91ff.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 4,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "79244653-0bc7-4329-a232-9895d3faab6d",
+    "name": "Bel Lastikli Pantolon",
+    "slug": "bel-lastikli-pantolon-72880",
+    "populate": false,
+    "newSeason": true,
+    "category": "Pantalon ",
+    "subCategory": "",
+    "description": "<p><strong>Rahat ve Şık Kadın Jogger Pantolon - Günlük Kombinler İçin Mükemmel Seçim</strong></p><p>Yüksek belli ve lastikli beli sayesinde konfor sunan bu jogger pantolon, günlük kullanımlarınızda hem tarz hem de rahatlık sağlar. Daralan paça kesimi ve cepli tasarımıyla modern bir görünüm sunar. Hafif ve esnek kumaşı ile hem sokak stiline hem de ev şıklığına uyum sağlar. Spor ayakkabılarla casual, topuklularla ise şık bir kombin oluşturabilirsiniz.</p><p></p><p></p><p>kadın jogger pantolon, rahat beyaz pantolon, lastikli pantolon kadın, günlük pantolon modelleri, paçası lastikli pantolon, yüksek bel kadın pantolon</p>",
+    "price": 350,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Mavi",
+        "stockSize": [
+          {
+            "id": "e80ac312-3f63-4dc7-8c0f-15f2a5ab0492",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "e1d019ea-cf1e-4531-9387-21bd1bca4993",
+            "size": "L",
+            "stock": 2
+          },
+          {
+            "id": "5f3ad745-1491-4a0b-bfa3-3e7eb506f166",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "56168e8e-8acf-4ea3-9767-02465e3c9528",
+            "size": "XXL",
+            "stock": 1
+          },
+          {
+            "id": "9f038507-4f7b-4dfc-8d12-8c6ebc34af9b",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "TI4LNSMI",
+        "images": [
+          "cfa4ff21-34a8-4a89-a21b-56a4f62527eb.jpg",
+          "69077911-15a5-485d-8c52-7bd0096fc26a.jpg",
+          "ed42edb9-5956-4a8a-a023-3c6942e8f6cc.jpg",
+          "0bef3775-08bb-4c7b-95db-808fd662ee07.jpg",
+          "1a31b5be-015e-4367-9a1a-f018d8ee113a.png"
+        ]
+      },
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "d1cfbe7e-6a3c-4ed2-9f0c-70cb87102cf6",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "27c48cb9-b574-4e66-b976-771040caa376",
+            "size": "L",
+            "stock": 2
+          },
+          {
+            "id": "7c8d4714-576e-4b31-9aba-3456e946f715",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "1d085870-5130-4a57-8e00-7e1c4acbe1c1",
+            "size": "XXL",
+            "stock": 1
+          },
+          {
+            "id": "95ff768b-460b-47fb-8994-74c6cf8af215",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "1337VULO",
+        "images": [
+          "04a5ea16-45ca-4346-94d2-4b9f6b3e0326.jpg",
+          "d401c8c0-8177-45ea-9f84-3af312ddef08.jpg",
+          "568a85c4-e7ba-4f1b-8e61-b8fcf21a69ad.jpg",
+          "bd632571-fe14-40ac-8bc9-eeabace004fb.jpg",
+          "1aedc069-3b45-4082-9082-9588f2d002d0.jpg",
+          "c2e84e5e-5657-484d-b870-b3b2c95b7f3d.png"
+        ]
+      },
+      {
+        "color": "Haki",
+        "stockSize": [
+          {
+            "id": "9f242e80-46ff-4cdc-affd-73aa04b0109e",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "966eaaa7-da7b-4d39-bb15-1169fcacfa33",
+            "size": "L",
+            "stock": 2
+          },
+          {
+            "id": "842ae868-6fc7-4435-a798-c07ac2750647",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "4d529ac7-9227-4c2c-aeb2-b3d941ca8c58",
+            "size": "XXL",
+            "stock": 1
+          },
+          {
+            "id": "452e8fa1-6d2c-48f3-81dd-4943255c590d",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "HY2V8UAJ",
+        "images": [
+          "723f1fd9-0869-4660-bf19-8f3941c726cf.jpg",
+          "e3d77401-5b97-4b76-bd1c-e4874cb3a9c6.jpg",
+          "58674fe2-c6b9-42a9-98f3-e2a2d8afbd65.jpg",
+          "bbaf0f6c-dca3-4bb5-8b87-fad18b253e1d.jpg",
+          "a78af6c8-99b3-4fdd-be6b-6499e4bcd3ad.jpg",
+          "d08cda94-8f6c-44f1-925d-106c6e83d4bd.png"
+        ]
+      },
+      {
+        "color": "Pembe",
+        "stockSize": [
+          {
+            "id": "d146b297-59ac-4258-9eee-770b6d0f5931",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "73b6dd24-53eb-4d70-b243-87a2128c5e7d",
+            "size": "L",
+            "stock": 2
+          },
+          {
+            "id": "26fb4063-4e8f-420f-9a38-f304da8bad3a",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "279870c5-aab6-4c6e-9ff9-5c7094b72269",
+            "size": "XXL",
+            "stock": 1
+          },
+          {
+            "id": "7db0d052-4f09-404c-b004-a1a780c1b792",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "I81VJAVK",
+        "images": [
+          "d0287d3f-74d5-4937-96a0-e06559d17597.jpg",
+          "a0052783-94bd-405c-aa30-8fd31de0f42f.jpg",
+          "403a84e6-f6c5-43d5-88f7-608a6919587f.jpg",
+          "574b8870-9d98-4257-9c40-f47ce92f623f.jpg",
+          "edad9d9c-4acf-4d1e-843b-4a5ae5ecf622.png"
+        ]
+      },
+      {
+        "color": "Krem",
+        "stockSize": [
+          {
+            "id": "a68109c3-7cb9-4b14-b89c-699649c3f611",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "4e0a242f-1975-4f3f-a9c8-6bef96ad87c4",
+            "size": "L",
+            "stock": 2
+          },
+          {
+            "id": "1f90a81c-9fa9-4c50-86b6-e7bf1c488beb",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "0aac4041-4cf5-4d94-8b1f-367435bbe838",
+            "size": "XXL",
+            "stock": 1
+          },
+          {
+            "id": "bda25ad5-2330-415a-beb7-618271b554db",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "R9I2Q8R1",
+        "images": [
+          "15228130-ff2c-473c-ae4b-9b90e9212c25.jpg",
+          "be0cafa6-68fd-4237-90eb-cc84f36dd0e7.jpg",
+          "1ae5777c-b025-4728-b0be-8c1feb973db8.jpg",
+          "19322d98-ed52-4dfa-95b9-cdc72f2943f9.jpg",
+          "4e1b9c5d-b2b4-4a23-b144-87a7ca10cbce.jpg",
+          "809c2518-295f-49e4-9137-717aa8c6745a.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 30,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "6fe7c5b2-4bb4-46c0-b06b-98dd7b9995f0",
+    "name": "Şal Desen Fisto Detay Beli Gipeli Sırt Dekolteli Yırtmaçlı Su Yeşili Elbise",
+    "slug": "sal-desen-fisto-detay-beli-gipeli-sirt-dekolteli-yirtmacli-su-yesili-elbise-54279",
+    "populate": false,
+    "newSeason": true,
+    "category": "Elbise",
+    "subCategory": "",
+    "description": "<p>Rahatlığı ve şıklığı bir araya getiren bu uzun elbise, yaz sezonunun vazgeçilmezi olacak. Gipeli bel detayı vücuda uyum sağlarken, sırt dekoltesi ve yırtmaç tasarımı feminen bir görünüm sunar. Hafif şal desenli kumaşıyla hem günlük hem özel gün kombinleri için idealdir. Fisto detayları, elbiseye zarif bir dokunuş katar. Topuklu ayakkabılarla kombinleyerek şıklığınızı tamamlayabilirsiniz.</p><p></p><p>şal desenli elbise, sırt dekolteli uzun elbise, yırtmaçlı yazlık elbise, gipeli elbise, su yeşili elbise, yazlık şık elbise, fisto detay elbise, kadın uzun elbise, salaş elbise, yaz kombini</p>",
+    "price": 1500,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Yeşil",
+        "stockSize": [
+          {
+            "id": "08f31e66-20e2-428e-be4c-e59e7e079625",
+            "size": "M",
+            "stock": 2
+          },
+          {
+            "id": "a44cb725-8020-4c0b-8612-957a71473276",
+            "size": "L",
+            "stock": 2
+          },
+          {
+            "id": "948db448-d008-47fe-8d38-f535ec2aed30",
+            "size": "S",
+            "stock": 2
+          }
+        ],
+        "stockCode": "P5530ZVY",
+        "images": [
+          "b6b695c1-c1a8-4f28-9559-b11065158d4f.jpg",
+          "6cbd4fa1-f47a-4d92-bde0-7eafd352f0d6.jpg",
+          "a4ebbef6-6bd4-48a3-9a69-dd568473ad6b.jpg",
+          "8adca041-4f4f-4417-bed3-93846181eaa2.jpg",
+          "dbdec4f1-b4f2-43db-8090-ed09836ba4ef.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 6,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "82739cb8-4f8f-467f-979f-a9989f6d5b84",
+    "name": "2'li Takım Bel Korse Detaylı Düğmeli Mürdüm Kloş Etek Büstiyer",
+    "slug": "2li-takim-bel-korse-detayli-dugmeli-murdum-klos-etek-bustiyer-13739",
+    "populate": false,
+    "newSeason": false,
+    "category": "Takım",
+    "subCategory": "",
+    "description": "<p>Modern tasarımı ve iddialı görünümüyle dikkat çeken bu iki parçalı takım, korseli beli ve kloş eteğiyle kadınsı siluetinizi zarifçe vurgular. Göğüs kısmındaki büstiyer detayı cesur ama şık bir duruş sunar. Özel günlerde, davetlerde ya da stilinizi yansıtmak istediğiniz anlarda tercih edebileceğiniz göz alıcı bir kombindir.</p><p>⸻</p><p></p><p>Kadın iki parçalı takım modelleri, korseli etekli takım, şık ve cesur büstiyerli kombinler, ArzuAmber koleksiyonlarında seni bekliyor. Özel günler için iddialı kadın takımlarını keşfetmek ve stiline cesaret katmak için hemen arzuamber.com’a göz at!</p>",
+    "price": 2000,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Bordo",
+        "stockSize": [
+          {
+            "id": "dba10641-56fd-43ce-b3cb-c67508b18b75",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "99171e9b-c696-4ed5-93d6-763d189eeef8",
+            "size": "L",
+            "stock": 1
+          }
+        ],
+        "stockCode": "2RCNBG6G",
+        "images": [
+          "1a163e5e-cfd8-436c-9f71-922ddf007d65.jpg",
+          "7f662076-80f1-4e17-82d3-f3ebfcb4b4f0.jpg",
+          "f116e9f2-9164-41c7-b17d-a6c2ae26389c.jpg",
+          "3fa283b1-3261-4773-a1ef-9eb49e668d23.jpg",
+          "e9954e33-fdc7-459e-af9b-ca7e77646e65.jpg",
+          "2d0381be-5aa7-4560-baaa-e5cf50761fc4.png"
+        ]
+      },
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "a9f2bb58-31b5-40eb-baef-ed394cc69226",
+            "size": "S",
+            "stock": 1
+          },
+          {
+            "id": "c4e41abf-f0b1-41a3-bed8-939634ce5d28",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "2dd5e08f-d43a-4ac0-b9d5-f5b5da9d75d8",
+            "size": "L",
+            "stock": 1
+          }
+        ],
+        "stockCode": "P1NJCRZ8",
+        "images": [
+          "5033df30-8bee-4744-a1cf-60ac944b828b.jpg",
+          "ad2fce87-9efd-4e39-a943-09bb69a883cf.jpg",
+          "5386251c-ad48-43bc-aabd-c1825a8342db.jpg",
+          "3875dc32-f66a-4006-b703-e417c5cc58db.jpg",
+          "cbef2e7a-0b84-4e36-a0a4-a7999eee1642.jpg",
+          "f1ce4afe-6f5c-492f-8072-4e67194fd5a2.png"
+        ]
+      }
+    ],
+    "purchasePrice": 530,
+    "discountPrice": 0,
+    "totalStock": 5,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "83bcef1e-2d4f-4fd3-b61f-878816e683d2",
+    "name": "Krep Kumaş Paça Düğmeli Pantolon",
+    "slug": "krep-kumas-paca-dugmeli-pantolon-24819",
+    "populate": true,
+    "newSeason": false,
+    "category": "Pantalon ",
+    "subCategory": "",
+    "description": "<p>Zarif kesimi ve modern tasarımıyla dikkat çeken bu pantolon, günlük şıklığınızı tamamlarken konforu da ön planda tutar. Bel kısmındaki düğme detayı ve paçalardaki minimal dokunuşlarla hem klasik hem de spor kombinlerde rahatça kullanılabilir. Günün her saatine uygun ideal bir seçenektir.</p><p></p><hr><p></p><p>Kadın yüksek bel pantolon, şık kesim rahat kalıp pantolon modelleri, günlük kombinlere uygun dar paça pantolon ArzuAmber’de. En yeni kadın pantolon koleksiyonu şimdi arzuamber.com’da seni bekliyor. Hemen sipariş ver, stilini tamamla!</p>",
+    "price": 1500,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Krem",
+        "stockSize": [
+          {
+            "id": "2a02e851-a16e-4db0-a3fa-0aba92215e54",
+            "size": "S",
+            "stock": 1
+          },
+          {
+            "id": "e057cf5a-641b-49f8-8b6c-beccb05aae25",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "a66617d2-fb2b-4a0d-80e0-010312cb70fc",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "c54d11bb-3b80-4e17-afb4-8e7e5fd9c9c6",
+            "size": "XL",
+            "stock": 1
+          }
+        ],
+        "stockCode": "5M5X1RXD",
+        "images": [
+          "73d8c238-c3e6-44b2-a2b8-8c657fe368bc.jpg",
+          "03fe9f05-2001-4c20-a704-aca2b740155b.jpg",
+          "88488202-ddc4-4568-b26a-5f09afcfac3e.jpg",
+          "dee07570-fa37-4e61-8854-bea171beafd7.jpg",
+          "829bcff9-b97b-44c5-b4b2-69a31f21a3db.jpg",
+          "b7bf69f6-ad04-4785-912b-5da9db696b69.png"
+        ]
+      },
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "806ae4a6-a9c2-4dac-9cb9-2ed3812ee83f",
+            "size": "S",
+            "stock": 1
+          },
+          {
+            "id": "0b979ada-b701-480b-ae5e-046302bcf8e5",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "8cfe3ceb-5585-4a15-b4fb-924bad07d221",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "5797cb6d-5f56-4416-b4d3-1a616a3828a4",
+            "size": "XL",
+            "stock": 1
+          }
+        ],
+        "stockCode": "561CBON8",
+        "images": [
+          "bcdf8ae4-7cbd-4e0d-8f51-243a95970b74.jpg",
+          "00c21544-1171-4cb2-bece-f9b8225263d2.png",
+          "e58d9c87-9184-45ae-a16a-eefc7562f925.jpg",
+          "0a36ea39-1eb6-42a0-9249-28a70881c26d.jpg",
+          "a3393c1b-30f5-41a9-8d2f-f18397044171.jpg",
+          "90129418-7428-42f4-aa42-44b0fcb74a79.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 8,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "fe0b11b4-caa3-4233-be67-c153a0fba3c9",
+    "name": "Kar Yıkama Beyaz Kot Etek ",
+    "slug": "kar-yikama-beyaz-kot-etek--94831",
+    "populate": false,
+    "newSeason": true,
+    "category": "Etek",
+    "subCategory": "",
+    "description": "<p>Şıklığın ve rahatlığın buluştuğu ArzuAmber kadın giyim koleksiyonuyla stilinizi öne çıkarın. Gündelik kombinlerden özel gün şıklığına kadar her tarza hitap eden bluz, tişört, atlet, gömlek, yelek ve etek modellerimizle gardırobunuzu yenileyin. Modern kesimler, kaliteli kumaşlar ve zarif detaylarla tasarlanan ürünlerimiz, hem konfor hem de şıklık arayan kadınlar için idealdir.</p><p></p><hr><p></p><p></p><p>ArzuAmber kadın bluz modelleri, tişört çeşitleri, günlük atletler, uzun kollu gömlekler, crop yelekler ve mini eteklerle tarzınızı konuşturun. En yeni moda trendlerini yansıtan kaliteli ve şık kadın giyim ürünleri ArzuAmber.com’da sizi bekliyor. Uygun fiyat ve hızlı teslimat avantajlarıyla hemen sipariş verin!</p>",
+    "price": 1500,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "369c14e0-ed30-4940-b861-706153db4f07",
+            "size": "M",
+            "stock": 2
+          },
+          {
+            "id": "6630e7c3-07d1-46d3-b0ba-216a4f2ccfcb",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "de5f1b10-2e63-4146-9d8c-88a744ae2ff0",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "b3565cfe-3359-4a4c-b08b-74bfcce0cc24",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "RPPBT54X",
+        "images": [
+          "ea7d4640-c59f-40f6-acd2-9792e32a29d1.jpg",
+          "f04a4bcb-70ed-48d4-81d8-e6c63af8470a.jpg",
+          "891ce339-5853-4b4f-a02d-851913f4cc24.jpg",
+          "ad2e06f7-1c07-49a4-842f-ac14e722b743.jpg",
+          "e1175376-93bf-4b64-91ec-0921cb9008a6.jpg",
+          "b403b3e1-1a11-407e-80c8-ea96fd7bb156.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 5,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "13a6b04f-a912-41b5-87d6-32770334a979",
+    "name": "Leopar Desenli Yelek",
+    "slug": "leopar-desenli-yelek-24584",
+    "populate": false,
+    "newSeason": false,
+    "category": "Yelek",
+    "subCategory": "",
+    "description": "<p>Cesur ve çarpıcı bir stil arayan kadınlar için özel olarak tasarlanmış bu yelek, modern kesimi ve dikkat çekici deseniyle öne çıkar. Düğmeli ön yüzü ve vücudu saran formuyla hem feminen hem de özgüvenli bir duruş sunar. Gömlek, tişört veya tek başına kullanarak stilinizi dilediğiniz gibi yansıtabilirsiniz. Şehirli ve iddialı kombinler için mükemmel bir parçadır.</p><p></p><hr><p></p><p></p><ul class=\"list-disc ml-10\"><li><p>Kadın yelek modelleri</p></li><li><p>Desenli kısa yelek</p></li><li><p>ArzuAmber modern kadın giyim</p></li><li><p>Şık düğmeli yelek</p></li><li><p>Crop yelek trendleri</p></li></ul><p></p>",
+    "price": 1000,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Leopar ",
+        "stockSize": [
+          {
+            "id": "58f96606-0b89-4262-8d3d-cec980b24fe0",
+            "size": "M",
+            "stock": 2
+          },
+          {
+            "id": "8f5eb1db-93ff-4562-b5cf-a73bd75d379f",
+            "size": "L",
+            "stock": 3
+          }
+        ],
+        "stockCode": "H83JPLWW",
+        "images": [
+          "71692152-b9ec-4259-aa26-fa7109cec459.jpg",
+          "60721bd0-45b6-4296-8b05-99b8748d0496.jpg",
+          "b1e88329-c52e-4bbb-87e8-984d7c14b31f.jpg",
+          "d7460f12-288c-4099-b2d6-202210faf9f1.jpg",
+          "615ad5be-3f09-4b70-af92-1f8e086afa95.jpg",
+          "7a67e46a-adb1-4b45-b3a4-de36801e7492.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 5,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "591c0896-d734-4f82-b385-4337fc15cc39",
+    "name": "Nakışlı Payetli Aerobin Beyaz Keten Gömlek",
+    "slug": "nakisli-payetli-aerobin-beyaz-keten-gomlek-58148",
+    "populate": true,
+    "newSeason": false,
+    "category": "Gömlek",
+    "subCategory": "Uzun Kollu",
+    "description": "<p>Modern detaylarla zenginleştirilmiş bu özel tasarım kadın gömlek, üzerindeki nakış ve payet işlemeleriyle sofistike bir stil sunar. Aerobin kumaş yapısı sayesinde hem hafif hem de nefes alabilir. Ofisten davetlere kadar her ortamda zarafetinizi yansıtmak için idealdir. Düğmeli yapısıyla kullanımı kolay ve şıklığı garantili.</p><p></p><hr><p></p><p></p><ul class=\"list-disc ml-10\"><li><p>Nakışlı kadın gömlek</p></li><li><p>Payet detaylı keten gömlek</p></li><li><p>ArzuAmber zarif kadın üst giyim</p></li><li><p>Uzun kollu işlemeli bluz modelleri</p></li><li><p>Modern şık kadın gömlek tasarımları</p></li></ul><p></p>",
+    "price": 1700,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "26ed564d-e895-42aa-b507-4a1d7be181a3",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "e9cc5650-7d8e-418a-bcef-fb2bebbe74e4",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "e1475cf0-53b6-4f5f-8786-9ce5ae121f6b",
+            "size": "XL",
+            "stock": 1
+          }
+        ],
+        "stockCode": "5UHGXZUM",
+        "images": [
+          "470d8ae3-ed4e-4335-851d-42ec92cbb0ef.jpg",
+          "aff79e97-3d4f-425f-b45c-ec8a1331b01a.jpg",
+          "3de83e4c-78ba-4162-9e1b-9cd17d95acf2.jpg",
+          "712d90a4-0d81-4dcf-98f1-9adf9787ad78.jpg",
+          "696867ea-f064-4974-9e85-499d4d79e6f6.jpg",
+          "ed5cfb35-34f5-4bcd-89a3-6cc24fee7aff.png"
+        ]
+      }
+    ],
+    "purchasePrice": 500,
+    "discountPrice": 0,
+    "totalStock": 3,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "25ef97fb-6a19-48ae-ab6a-b3a7bd4045eb",
+    "name": "Flamingo Motifli Uzun Kollu Beyaz Gömlek ",
+    "slug": "flamingo-motifli-uzun-kollu-beyaz-gomlek--62168",
+    "populate": false,
+    "newSeason": true,
+    "category": "Gömlek",
+    "subCategory": "Uzun Kollu",
+    "description": "<p>Doğadan ilham alan bu özel tasarım kadın gömlek, ön kısmındaki işleme detaylarıyla fark yaratıyor. Flamingo motifleriyle hareket kazandırılmış şık tasarım, hem günlük hem de özel anlarda tarzınızı yansıtmanız için ideal. Hafif ve rahat kumaşı sayesinde dört mevsim kombinlerinize uyum sağlar.</p><p></p><hr><p></p><p></p><p></p><ul class=\"list-disc ml-10\"><li><p>İşlemeli kadın gömlek</p></li><li><p>Flamingo desenli bluz</p></li><li><p>ArzuAmber özel tasarım gömlek</p></li><li><p>Kadın uzun kollu gömlek modelleri</p></li><li><p>Şık ve rahat kadın üst giyim</p></li></ul><p></p>",
+    "price": 1600,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "6b1cbbde-9e94-4c53-8f20-e258ebcb4669",
+            "size": "Oversize",
+            "stock": 4
+          }
+        ],
+        "stockCode": "5SV5SBRB",
+        "images": [
+          "5a7b3250-f3c0-4e99-9dc8-ce89211d08fb.jpg",
+          "4a174dce-cb6f-4798-a9ff-252740c3b73a.jpg",
+          "e8f910b9-8490-43f6-b0e8-5fb0a2181178.jpg",
+          "70b18df7-57de-4d8d-b85e-18e002ed3fe1.jpg",
+          "e9c6d8c8-aabc-41ca-8d64-b70b5d928753.png",
+          "5c7731d3-88ca-4d81-87fd-5f7db412874e.png",
+          "2a840c30-6d74-4591-b8f5-28b4668d2712.png",
+          "7b4f6b07-0155-4dae-8a9b-1ead78f4efdf.png",
+          "e933a3d8-3454-4aec-aa1b-0b98aec4724a.png"
+        ]
+      }
+    ],
+    "purchasePrice": 500,
+    "discountPrice": 0,
+    "totalStock": 4,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "95992be7-83ab-4285-a039-3988725ff076",
+    "name": "Desenli ve Tül Detaylı Abiye",
+    "slug": "desenli-ve-tul-detayli-abiye-21089",
+    "populate": false,
+    "newSeason": false,
+    "category": "Abiye",
+    "subCategory": "",
+    "description": "",
+    "price": 13000,
+    "lang": "tr",
+    "length": "Maxi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Mor",
+        "stockSize": [
+          {
+            "id": "6cefa87a-be6a-46b2-bdfd-99d6b9e0e8a5",
+            "size": "42",
+            "stock": 1
+          }
+        ],
+        "stockCode": "8A48ZHZX",
+        "images": [
+          "984e61a5-b3dc-48dd-8819-b36d4479c689.jpg",
+          "30b2bb5a-5c86-4e97-9955-35c37ab449b1.jpg",
+          "5ade417a-c728-4e69-aaf8-b561c5ecde5f.jpg"
+        ]
+      },
+      {
+        "color": "Pembe",
+        "stockSize": [
+          {
+            "id": "c9e33646-e231-48e2-9ef3-917733ae3a72",
+            "size": "44",
+            "stock": 1
+          }
+        ],
+        "stockCode": "U0R30JXG",
+        "images": [
+          "443a87bf-e827-40ca-83f1-5793ac4ebe55.jpg",
+          "1e64eea8-701d-48c2-8c43-77e1769a7d2b.jpg",
+          "52007510-b7d8-43ca-b7ba-e08c9d36cb1c.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 2,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "f0ace631-2540-44bf-89a3-ed83871593d1",
+    "name": "Çilek Desenli Uzun Kollu Şifon Pembe Gömlek",
+    "slug": "cilek-desenli-uzun-kollu-sifon-pembe-gomlek-82548",
+    "populate": true,
+    "newSeason": false,
+    "category": "Gömlek",
+    "subCategory": "Uzun Kollu",
+    "description": "<p>Modern çizgilerle hareket kazandırılmış bu desenli kadın gömlek, eğlenceli ve enerjik görünümüyle fark yaratıyor. Şifon dokusu sayesinde hafif ve dökümlü bir yapı sunarken, gömlek formu sayesinde hem rahat hem de şık bir stil oluşturur. Günlük kombinlerden davet şıklığına kadar geniş bir kullanım alanına sahiptir.</p><p></p><hr><p></p><p></p><p></p><ul class=\"list-disc ml-10\"><li><p>Desenli kadın gömlek</p></li><li><p>Şifon kadın bluz modelleri</p></li><li><p>Moda gömlek kadın</p></li><li><p>ArzuAmber bluz koleksiyonu</p></li><li><p>Günlük desenli kadın gömlek</p></li></ul><p></p>",
+    "price": 700,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Pembe",
+        "stockSize": [
+          {
+            "id": "9c4f1b0c-5b2e-441a-9e63-8b1c63aaa3ca",
+            "size": "Standart",
+            "stock": 2
+          }
+        ],
+        "stockCode": "73SMO02J",
+        "images": [
+          "231ed17e-13e5-4415-bd87-5006d1d49512.jpg",
+          "6f047b1d-663c-49ad-bfbd-9a5c51827234.jpg",
+          "a05020f4-91a8-4dd7-9a72-fefaa02d6d2e.jpg",
+          "538d3b9c-54cd-43e2-bfe8-b8bcd6bd1d10.jpg",
+          "4325206c-1986-47ad-b423-e25b7165b199.png"
+        ]
+      }
+    ],
+    "purchasePrice": 150,
+    "discountPrice": 0,
+    "totalStock": 2,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "43f71167-2116-4351-b0b9-42696e69c392",
+    "name": "Uzun Kollu Kalp Nakışlı Beyaz Gömlek",
+    "slug": "uzun-kollu-kalp-nakisli-beyaz-gomlek-37383",
+    "populate": false,
+    "newSeason": false,
+    "category": "Gömlek",
+    "subCategory": "Uzun Kollu",
+    "description": "",
+    "price": 750,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "ea10842d-6a72-4f0c-a0dc-577e0879a5b5",
+            "size": "M",
+            "stock": 1
+          }
+        ],
+        "stockCode": "11VFOI57",
+        "images": [
+          "2fdced22-d941-49ff-a5c2-a07c028c0078.jpg",
+          "7af265fa-d2a9-4d60-bbe6-9911582939fe.jpg",
+          "18925c01-0587-4ace-b9f5-ba3d8155e07d.jpg",
+          "d2a7c3d4-938c-4bd0-85f0-8383c4c2a733.jpg",
+          "49cd8d10-bc53-4e45-8413-ee2ab9eae296.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 1,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "d6fc02be-2979-4ece-b309-0777e7da6304",
+    "name": "Uzun Kollu Yakası Taşlı Beyaz Gömlek",
+    "slug": "uzun-kollu-yakasi-tasli-beyaz-gomlek-60312",
+    "populate": false,
+    "newSeason": false,
+    "category": "Gömlek",
+    "subCategory": "Uzun Kollu",
+    "description": "<p>Uzun Kollu Yakası Taşlı Beyaz Gömlek</p><p>Zarif tasarımıyla dikkat çeken bu kadın gömlek, inci ve taş detaylı yakasıyla klasik şıklığa modern bir dokunuş katıyor. Hafif ve nefes alabilen kumaşı sayesinde konforlu bir kullanım sunar. Düğmeli yapısıyla hem günlük kombinlerde hem de ofis stilinde rahatça kullanılabilir. Pantolon ya da eteklerle kolayca kombinlenerek stilinizi öne çıkarır.</p><p></p><ul class=\"list-disc ml-10\"><li><p>Taş detaylı kadın gömlek</p></li><li><p>İnci yakalı kadın bluz</p></li><li><p>Şık düğmeli kadın gömlek</p></li><li><p>Gömlek modelleri kadın ArzuAmber</p></li><li><p>Günlük ve ofis kombini için bluz</p></li></ul><p></p>",
+    "price": 1200,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "3d24f7d9-db6b-4cd6-9a99-630e80401281",
+            "size": "S",
+            "stock": 1
+          },
+          {
+            "id": "22ae0ba0-8e57-499a-abc3-b67b34656a7b",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "55d68e55-9da5-43fd-b0bf-2da216cff28a",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "adab8b71-9c89-457d-8fcb-097ebdfd27a2",
+            "size": "XL",
+            "stock": 1
+          }
+        ],
+        "stockCode": "VX65RFML",
+        "images": [
+          "6d65f303-8eea-481c-8fca-ffa49f257a09.jpg",
+          "48fb6864-f03a-4f13-a939-bc1654118f2c.jpg",
+          "0887adb3-d82d-4a8a-b434-5ee4d35552ae.jpg",
+          "01a82b9f-466f-4f05-aea4-6b6f70a4a6c9.jpg",
+          "1b4f6c45-c8ee-4db2-b33a-ac211aa3a3ad.jpg",
+          "1011c59e-14b5-4244-8b15-2cc85b37350b.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 4,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "61700701-604c-4d5d-b57d-0aeb37927686",
+    "name": "Pembe Taş ve Puantiyeli Abiye",
+    "slug": "pembe-tas-ve-puantiyeli-abiye-21270",
+    "populate": false,
+    "newSeason": false,
+    "category": "Abiye",
+    "subCategory": "",
+    "description": "",
+    "price": 12000,
+    "lang": "tr",
+    "length": "Maxi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Pembe",
+        "stockSize": [
+          {
+            "id": "7da4e6c1-f0de-4393-b0e3-745fa4daf6e1",
+            "size": "38",
+            "stock": 1
+          }
+        ],
+        "stockCode": "RBZIK2TY",
+        "images": [
+          "b0c19afa-a4e2-4961-9980-fd9e26b76c9b.jpg",
+          "d2ad0417-6720-4059-9234-cc13d3fe7421.jpg",
+          "62afe9f5-bda7-4b42-9b63-15b0a4257c99.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 1,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "2646d270-f71d-4ccc-b020-bfc79a21149c",
+    "name": "Desenli Lila Abiye",
+    "slug": "desenli-lila-abiye-98142",
+    "populate": false,
+    "newSeason": false,
+    "category": "Abiye",
+    "subCategory": "",
+    "description": "",
+    "price": 8000,
+    "lang": "tr",
+    "length": "Maxi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Lila",
+        "stockSize": [
+          {
+            "id": "bdd2f1ab-3a23-42f9-aa0d-f30f59acf001",
+            "size": "40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "8VVBQ9F3",
+        "images": [
+          "148d0fe8-ca67-4b3e-a448-158000556c62.jpg",
+          "f72f4bba-26c4-4b6e-bf52-c02e0d97b379.jpg",
+          "051d522b-ef9f-4ecf-a26e-71fc660cb663.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 1,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "dfeb2af6-f307-4abc-b23c-e4935706249f",
+    "name": "V Yaka Pamuklu Viskon T-shirt",
+    "slug": "-61937",
+    "populate": true,
+    "newSeason": false,
+    "category": "T-shirt",
+    "subCategory": "Kisa kollu",
+    "description": "<p>V yaka kadın tişörtü sade ve zarif tasarımıyla günlük ya da yarı-spor kombinler için mükemmel bir tercihtir. Yumuşak ve nefes alabilen kumaşı sayesinde gün boyu konfor sağlar. Vücuda oturan kesimi ve esnek yapısıyla şıklığı ve rahatlığı bir araya getirir. Etek veya pantolonlarla kolayca kombinlenebilir, özellikle yaz ayları için ideal bir parçadır.</p><p>⸻</p><p>SEO Etiketleri (ArzuAmber için):</p><p>\t•\tV yaka kadın tişört</p><p>\t•\tRahat pamuklu kadın tişört</p><p>\t•\tGünlük kullanıma uygun kadın tişört</p><p>\t•\tŞık ve sade tişört modeli</p><p>\t•\tArzuAmber kadın giyim online alışveriş</p><p></p>",
+    "price": 700,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Kirmizi",
+        "stockSize": [
+          {
+            "id": "418129ff-1c82-4d3b-a444-88df1e606bcc",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "178b23c4-147f-47ce-9871-50af5028bd08",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "b1e6396f-cb5c-4936-9e2b-5a20cf7abe08",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "297298dd-bfdd-4efa-bc6b-7c53da7fde2c",
+            "size": "XXL",
+            "stock": 1
+          },
+          {
+            "id": "fde77c98-bcfc-416a-8161-38033ce9cd93",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "F7F6A7O7",
+        "images": [
+          "97d9a5a1-b188-4e9a-98a8-017c3cc126cf.jpg",
+          "cc259920-73ae-42db-9c5f-26dc0cbbe558.jpg",
+          "75a4b625-6e15-40e8-9419-2d7b7698d8ae.jpg",
+          "f18f7690-6447-4797-aedb-563aac501500.jpg",
+          "f2a19022-748b-493c-9b4a-7e57ecc36341.png"
+        ]
+      },
+      {
+        "color": "Pembe",
+        "stockSize": [
+          {
+            "id": "4e900dc0-731d-443d-b88f-2c9f2eaf9f6e",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "32f3f784-1565-4fd2-90d9-a254a89b547c",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "ee6e393d-5bc2-4673-a5d3-5fc541e5f052",
+            "size": "XXL",
+            "stock": 1
+          }
+        ],
+        "stockCode": "DPJ449L6",
+        "images": [
+          "29f8d83a-3133-46e0-a5f8-e38da9a40b98.jpg",
+          "5ed82279-d4ab-46aa-a825-1ec9502f5365.jpg",
+          "13aeadea-70dd-4551-83a0-3d7d43652484.jpg",
+          "60e5fcb9-cecc-4fb4-9b9c-75fe3ec1dd34.jpg",
+          "b6ae3a55-a18b-49eb-90d5-cf35d9fb2941.png"
+        ]
+      },
+      {
+        "color": "Kahverengi",
+        "stockSize": [
+          {
+            "id": "ab16f1d7-56aa-4ecf-bad4-91ed667955ff",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "5c033a92-9c2b-4e18-be1b-4dec14852a95",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "b020c11e-194e-4d4e-bb1d-0b2c978c5059",
+            "size": "XXL",
+            "stock": 1
+          },
+          {
+            "id": "e0d26221-24bd-4870-b1f8-80dacd63384a",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "Z6WC1I36",
+        "images": [
+          "b1a82884-49e9-4dcc-8aec-7da3ce54b57e.jpg",
+          "a16f6ded-5034-4673-9e93-ccf39e15d35a.jpg",
+          "d34137bc-0f7f-4ac7-abd0-cdb1c0bb4c0e.jpg",
+          "6a23e2ff-2cbc-4659-8514-331697c84db1.jpg",
+          "db6206b5-5f98-4cb1-ab96-ee831d41a7e5.png"
+        ]
+      },
+      {
+        "color": "Turuncu",
+        "stockSize": [
+          {
+            "id": "e44359ef-d01d-42bf-a301-2a36cd661b89",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "9d1a7274-4066-4db9-a04a-6ae5a6ce2fb8",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "a6db1562-1f18-4b69-8370-65b952c77f11",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "b996758d-92e7-422b-83b9-a351bfeca6b3",
+            "size": "XXL",
+            "stock": 1
+          },
+          {
+            "id": "220b904d-cd71-4d5a-8f30-c9885fb73f41",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "T9KEYTD7",
+        "images": [
+          "eed5f8a3-6112-4d49-b590-6fbab941c7f1.jpg",
+          "22e3acce-474d-4dce-a102-fb824fe8aa94.jpg",
+          "546779bb-5dd2-4d98-bbdc-208ec3af6714.jpg",
+          "e6a76902-6fb5-4a40-99d5-d64a3cd122f4.jpg",
+          "f7ad6bec-eaec-4a6e-84f3-0de2fcd2759f.png"
+        ]
+      },
+      {
+        "color": "Mor",
+        "stockSize": [
+          {
+            "id": "b0f75791-e0dd-44fb-8549-0f849e27aec5",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "596dc8ec-7e6b-4c5c-b89f-67a21033825e",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "a52b99ee-368d-4e99-86cd-1ce6106f2b1f",
+            "size": "XXL",
+            "stock": 1
+          },
+          {
+            "id": "e3842e86-5947-4630-810b-ec13c81f5b89",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "YDAHNECO",
+        "images": [
+          "4259b8bd-9519-41c6-9590-d987301310de.jpg",
+          "c6f13985-fab4-4eeb-903e-7ce12560e655.jpg",
+          "b3493fa5-81a4-42b1-9119-4e2acabb4937.jpg",
+          "b0f13469-efa6-439d-b877-b7b2075a7c5e.jpg",
+          "2d0fbfb3-4bc5-472d-b6cf-b675ec1a934f.png"
+        ]
+      },
+      {
+        "color": "Yeşil",
+        "stockSize": [
+          {
+            "id": "6b791543-72b4-4c1c-ac7e-416fd2d3e3ac",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "784af230-f361-4f44-8f54-878f85599783",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "c18fbc82-9b26-4c82-a85b-c23c8a1e5c62",
+            "size": "XXL",
+            "stock": 1
+          },
+          {
+            "id": "f8810e98-ab44-4716-a7be-2a23648f9469",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "7QCG2QFB",
+        "images": [
+          "580e5000-ad54-4ca9-a2af-2d39aa044bb2.jpg",
+          "3d2e6213-5123-49c0-b2e6-275014c069e9.jpg",
+          "c9fc9ae2-6c7a-45bc-b143-75d67806e7cf.jpg",
+          "a57e7a55-49ff-4a72-9945-6997d835746b.jpg",
+          "7cd77d33-42fa-47e5-a678-a7066b931305.png"
+        ]
+      },
+      {
+        "color": "Mavi",
+        "stockSize": [
+          {
+            "id": "cb1757e7-675f-4fe3-bb87-60e0cfcd8930",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "d950e10f-0933-426b-a51c-67eed4bb6507",
+            "size": "XXL",
+            "stock": 1
+          },
+          {
+            "id": "fad361b9-5028-4826-b879-4076ab8ed68c",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "7INO1C7Y",
+        "images": [
+          "f3739476-aeed-42e6-94b1-c135f40168c6.jpg",
+          "8f967dbb-8ee6-4dd3-8185-ae51ae8faaef.jpg",
+          "fb85c50f-2f69-4114-867d-4ca5267a8f4b.jpg",
+          "17264776-9686-4cb8-af91-dc0144327bfc.png",
+          "aafddf40-fbe7-4fb4-a465-4ba9c266e8f5.jpg"
+        ]
+      },
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "9cdf6cd1-d123-466c-a3f9-88f1abc937c7",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "e28f1615-4284-458a-b99c-0b01a2bd0fa5",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "e08fd6fe-d8a9-474b-a42d-5d1d36d3707b",
+            "size": "XL",
+            "stock": 1
+          },
+          {
+            "id": "34afa50c-7a9d-432a-83ba-0b6978beded7",
+            "size": "XXL",
+            "stock": 1
+          }
+        ],
+        "stockCode": "5EIACGW1",
+        "images": [
+          "20036c3c-6835-49be-b5d9-7f02bd772bdd.jpg",
+          "c8ae1272-6946-43a4-ae25-e2eaa5ae04b2.jpg",
+          "12d056d7-802b-4e2e-b40f-1cf4e12b6e9d.jpg",
+          "f01d4937-cb63-48da-a812-50946d26b444.jpg",
+          "a1dbeeb4-bdb4-4c74-973d-69b2e7f52432.png"
+        ]
+      },
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "a5b6ccd9-f2df-4a32-a559-4d6c5a2e2291",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "e0f0ce81-2dec-4092-8168-25d8020ef5e9",
+            "size": "XXL",
+            "stock": 1
+          },
+          {
+            "id": "b9b32bcf-b8f9-48ef-bdff-e657dafc6b52",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "ORKM31VR",
+        "images": [
+          "ea2d7c86-35b3-47e4-8033-f7cd996f8914.jpg",
+          "94ea45d0-84f9-4aac-b518-21af95aefbbe.jpg",
+          "6c4dad33-b0c1-4976-bcbc-c9dede59dbc4.jpg",
+          "56dde9e6-ac63-4244-9435-7365ace2ed59.jpg",
+          "4b79adc8-0999-4e3f-bfda-de7c30cf75bd.png"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 35,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "e770087c-7928-4ac5-9752-21004d28099e",
+    "name": "Tül ve Taş Detaylı Siyah Abiye",
+    "slug": "tul-ve-tas-detayli-siyah-abiye-93799",
+    "populate": false,
+    "newSeason": false,
+    "category": "Abiye",
+    "subCategory": "",
+    "description": "",
+    "price": 13000,
+    "lang": "tr",
+    "length": "Mini",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "f999fba0-1c73-4a25-a5fb-ad23a48ed906",
+            "size": "40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "9AT8I4DL",
+        "images": [
+          "e2d9e3af-3d88-4ad5-9d58-f1ef1e94687a.jpg",
+          "5641bf30-de21-4b9b-9054-cdfd1f9b388a.jpg",
+          "7cc4bf2e-02ca-4fdf-8870-fcb5060d20e7.jpg"
+        ]
+      },
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "40d8bd3c-9cb5-4f8d-ac02-ae9151da8fd2",
+            "size": "42",
+            "stock": 1
+          }
+        ],
+        "stockCode": "ND6RH0CX",
+        "images": [
+          "fe55186f-bfa2-49ba-8c39-594d25b63bfe.jpg",
+          "e156834d-ccc6-4f88-95f4-b79f55c8d11a.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 2,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "89aa8b32-d14f-4675-942c-62537dd8933c",
+    "name": "Uzun Kollu Kadın Bluz",
+    "slug": "uzun-kollu-kadin-bluz-81211",
+    "populate": false,
+    "newSeason": false,
+    "category": "Bluz",
+    "subCategory": "Uzun kollu",
+    "description": "<p><strong>Ürün Açıklaması – ArzuAmber</strong></p><p>Günlük şıklık ve sade zarafeti bir araya getiren bu uzun kollu kadın bluz modeli, esnek ve yumuşak kumaşı sayesinde gün boyu rahatlık sunar. Vücuda oturan kalıbıyla hem modern hem de klasik kombinler için idealdir. Jean pantolon, etek veya klasik kumaş pantolonlarla kolayca uyum sağlar. Mevsim geçişlerinde veya serin havalarda şık ve konforlu bir alternatif olarak öne çıkar.</p><p></p><p><strong>ArzuAmber kadın giyim koleksiyonunun</strong> vazgeçilmez parçalarından biri olan bu uzun kollu bluz; hem <strong>siyah</strong>, hem <strong>pembe</strong>, hem de <strong>bej tonlarıyla</strong> her stile hitap eder.</p><p></p><hr><p></p><p></p><p>uzun kollu bluz, kadın bluz modelleri, günlük bluz, ArzuAmber kadın giyim, şık bluz, mevsimlik bluz, vücuda oturan bluz, sade bluz modelleri</p>",
+    "price": 300,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Yeşil",
+        "stockSize": [
+          {
+            "id": "03d2ca9a-741b-4bc1-ade6-4218e68f0284",
+            "size": "Standart",
+            "stock": 2
+          }
+        ],
+        "stockCode": "KGTFNRYQ",
+        "images": [
+          "9eedbec3-2b6b-4206-8af5-1fd98e336883.jpg",
+          "625ba5ed-5f4b-4d1b-a184-749541fea965.jpg",
+          "32b5476d-a6df-4be9-8f83-62e6990d447c.jpg",
+          "175191ca-fdcc-4d85-ba75-c0c897542ea1.jpg",
+          "2e4d9474-0435-4b90-a96b-e17807ef1ea9.jpg",
+          "f38e6f7d-046c-45fa-8f90-897c8637446a.png"
+        ]
+      },
+      {
+        "color": "Krem",
+        "stockSize": [
+          {
+            "id": "dd1439c9-e118-486e-a8a7-29a81c37cb98",
+            "size": "Standart",
+            "stock": 3
+          }
+        ],
+        "stockCode": "WSHBHPXT",
+        "images": [
+          "5d31ce9a-85d2-4f1f-ba81-feec3a02e2b4.jpg",
+          "9b872867-008b-4fcb-b684-7b6eec1eba0a.jpg",
+          "1bf940e4-1a26-4100-b07d-c043a94f8628.jpg",
+          "565a19df-2e5b-468e-a3e0-c1662c52f693.jpg",
+          "917c91f8-e8d4-4632-b6d3-745c389be89a.jpg",
+          "09adb1cc-bc1b-4aa8-931c-ded97b63fc6a.png"
+        ]
+      },
+      {
+        "color": "Pembe",
+        "stockSize": [
+          {
+            "id": "4ccbed70-becb-40ca-856f-80bec72e79c5",
+            "size": "Standart",
+            "stock": 2
+          }
+        ],
+        "stockCode": "TIRBZIEK",
+        "images": [
+          "b0f4a399-6028-4989-a693-7d37ee5d672d.jpg",
+          "4f7ae904-fb2d-4451-92b6-bf1982949f6b.jpg",
+          "2fa012da-5ff2-433b-88fa-966fee9186b8.jpg",
+          "57410fc3-e7ea-4d7a-b1b9-33e1f3d0f869.jpg",
+          "9db1213e-ea6f-43ee-a25a-b2fea3daa18e.jpg",
+          "306114c2-1fca-4f63-adbd-c62600ee52df.png"
+        ]
+      },
+      {
+        "color": "Mavi",
+        "stockSize": [
+          {
+            "id": "beb3f4d9-1d63-43c7-a310-3548131e71d9",
+            "size": "Standart",
+            "stock": 2
+          }
+        ],
+        "stockCode": "RA37CN7V",
+        "images": [
+          "0454fb41-0db0-481a-bcaf-1cbcc1384692.jpg",
+          "bd9f3e71-cb51-4a09-a778-1e74c98bfc8e.jpg",
+          "9510d2b9-ab55-461e-b8ab-e23732ad3fdf.jpg",
+          "10d093b9-8756-4b33-a26b-ed1401b9541f.jpg",
+          "b683f78d-2afe-41db-b5c4-a6ccfcfd0448.jpg",
+          "3853fd9b-944d-47c0-af74-e396cee73378.png"
+        ]
+      },
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "08cad0fd-e4ef-4183-bff2-8c60c4411e74",
+            "size": "Standart",
+            "stock": 1
+          }
+        ],
+        "stockCode": "725YC4KX",
+        "images": [
+          "f1487cab-13ed-49ce-bfd6-2ffe157f04e8.jpg",
+          "32380942-dbdc-4d7e-9261-ab58668118bc.jpg",
+          "33b13d53-8a16-470d-b8a9-e5291dc1cd42.jpg",
+          "a65d9499-648d-4c8e-8a8b-098980838b61.jpg",
+          "4ec4d11b-1dca-493f-8efe-79d4cc00b74d.png"
+        ]
+      }
+    ],
+    "purchasePrice": 95,
+    "discountPrice": 0,
+    "totalStock": 10,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "712769b8-043c-4681-8ee4-19d0f63f68e2",
+    "name": "Tül ve Desen Detaylı Siyah Abiye",
+    "slug": "tul-ve-desen-detayli-siyah-abiye-82692",
+    "populate": false,
+    "newSeason": false,
+    "category": "Abiye",
+    "subCategory": "",
+    "description": "",
+    "price": 12500,
+    "lang": "tr",
+    "length": "Maxi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "e0b6c7f7-da07-4d5b-a18d-5b9161f6a0a1",
+            "size": "40",
+            "stock": 1
+          },
+          {
+            "id": "2d5f8eed-b861-4c58-b6b3-41bbfab973e6",
+            "size": "38",
+            "stock": 1
+          }
+        ],
+        "stockCode": "JDKC66U9",
+        "images": [
+          "dbd798b9-1e45-4791-9172-ef53d36fd277.jpg",
+          "ea6a9002-ea57-4f1f-b9bf-4fb449f7cd65.jpg",
+          "a9e58e06-e445-4578-aebb-2f90461294ca.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 2,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "976f72a4-2ba3-4e3e-9165-83af2cd438ff",
+    "name": "Taş Detaylı Koyu Pembe Abiye",
+    "slug": "tas-detayli-koyu-pembe-abiye-60276",
+    "populate": false,
+    "newSeason": false,
+    "category": "Abiye",
+    "subCategory": "",
+    "description": "",
+    "price": 8000,
+    "lang": "tr",
+    "length": "Maxi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Pembe",
+        "stockSize": [
+          {
+            "id": "8d21c57e-6b21-43b9-9d53-817391d3c6b5",
+            "size": "40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "YJ1RMK83",
+        "images": [
+          "bf3f8e4d-986f-4937-94be-12de147ddaba.jpg",
+          "3481554f-7bb6-4cba-9b75-544a7d47700f.jpg",
+          "c9339b9a-9ba3-4364-a3e2-fbe20dc9a81c.jpg",
+          "1bd92f7c-1010-4912-912c-2eea9b9b6bc7.jpg"
+        ]
+      },
+      {
+        "color": "Sarı",
+        "stockSize": [
+          {
+            "id": "6aa7390b-0f64-4716-bb51-fcd01057389b",
+            "size": "42",
+            "stock": 1
+          }
+        ],
+        "stockCode": "RI6BWVQO",
+        "images": [
+          "cdc3cf5e-30e8-45bb-b07a-c21c09fa0294.jpg",
+          "056ef38d-bcae-4d17-b14f-74885bee8c36.jpg",
+          "6dc0fd5a-0948-4388-a4e8-f1635c984fda.jpg"
+        ]
+      },
+      {
+        "color": "Turuncu",
+        "stockSize": [
+          {
+            "id": "2f58bb8a-36ba-47e9-9f47-d88128e1127e",
+            "size": "40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "QN190AI7",
+        "images": [
+          "89822eb6-2dde-4557-8bfb-50b24fd6d6b1.jpg",
+          "e0e9187a-bb71-4a0f-9da2-46f5a31c2681.jpg",
+          "8273f745-dcc6-4b27-8bce-7e708f4b3ca7.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 3,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "e037b568-b0fb-4b5f-9e4e-6d0933d8c169",
+    "name": "Desen Detaylı Pembe Abiye",
+    "slug": "desen-detayli-pembe-abiye-72560",
+    "populate": false,
+    "newSeason": false,
+    "category": "Abiye",
+    "subCategory": "",
+    "description": "",
+    "price": 12500,
+    "lang": "tr",
+    "length": "Maxi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Pembe",
+        "stockSize": [
+          {
+            "id": "6c88227f-d6bb-4ccc-8cb2-ddc4fc569679",
+            "size": "40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "QQH6TPZ4",
+        "images": [
+          "7491554f-60bd-4393-962f-8b193b68aaa0.jpg",
+          "adb3365d-a174-4117-8800-206ad7bed042.jpg",
+          "1b4eb817-17e6-4425-a62d-b9490186a075.jpg"
+        ]
+      },
+      {
+        "color": "Lila",
+        "stockSize": [
+          {
+            "id": "6a088af8-8b7f-474d-9b18-a1a7045115d5",
+            "size": "38",
+            "stock": 1
+          }
+        ],
+        "stockCode": "9CT5KMCM",
+        "images": [
+          "06ec8e96-c2e8-4a91-a019-8ddf73517f0f.jpg",
+          "4a7e3ddf-cd63-429e-ad60-d78efd5e25d8.jpg",
+          "61434927-b1df-40d1-9d34-8e566376aa7f.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 2,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "7c6da39f-e159-4c49-92a7-45577113ba43",
+    "name": "Tül ve Taş Detaylı Mor Abiye",
+    "slug": "tul-ve-tas-detayli-mor-abiye-89739",
+    "populate": false,
+    "newSeason": false,
+    "category": "Abiye",
+    "subCategory": "",
+    "description": "",
+    "price": 9500,
+    "lang": "tr",
+    "length": "Maxi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Mor",
+        "stockSize": [
+          {
+            "id": "b3b23f55-6059-4059-aa45-69aa0cf83d6f",
+            "size": "38",
+            "stock": 1
+          }
+        ],
+        "stockCode": "U8RO62WK",
+        "images": [
+          "22f8cd83-d322-41e9-8e68-bcb213e23d9d.jpg",
+          "5a43bcee-c03a-4888-b85e-9d02bdf34bdf.jpg",
+          "809ec819-fbc8-46b5-a85a-9f44121a7f4a.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 1,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "07d0e009-db87-49a5-b1c7-bdf30e8a3543",
+    "name": "Uzun Kollu Göğüs Tokalı Haki Bluz",
+    "slug": "uzun-kollu-gogus-tokali-haki-bluz-75331",
+    "populate": true,
+    "newSeason": false,
+    "category": "Bluz",
+    "subCategory": "Uzun kollu",
+    "description": "<p></p><h3><strong>Bluz Detaylı Göğüs Tokalı Uzun Kollu – Yeşil</strong></h3><p></p><p></p><p>Göğüs kısmında dikkat çekici tokalı tasarımı ve şık kesimiyle öne çıkan bu uzun kollu yeşil bluz, hem feminen hem cesur bir görünüm sunar. Esnek kumaşı sayesinde vücuda mükemmel şekilde oturur ve konfor sağlar. Özel davetlerde, akşam yemeğinde veya şık kombinlerde rahatlıkla tercih edilebilir.</p><p></p><p>🟢 <strong>Ürün Özellikleri:</strong></p><p></p><ul class=\"list-disc ml-10\"><li><p>Renk: Haki Yeşil</p></li><li><p>Kumaş: Esnek ve hafif</p></li><li><p>Detay: Göğüs ortasında metal toka, ön ve alt kesim açıklıkları</p></li><li><p>Kol Tipi: Uzun kollu</p></li><li><p>Kalıp: Vücuda oturan slim fit</p></li><li><p>Kombin Önerisi: Mini etekler ve topuklu ayakkabılarla harika uyum sağlar.</p></li></ul><p></p><p></p><p>🛍️ ArzuAmber markasının özel tasarımlarıyla tarzını öne çıkar. Bu ürün, <strong>ArzuAmber bluz koleksiyonu</strong> içinde en çok ilgi gören modellerdendir.</p><p></p><p>yeşil bluz, tokalı bluz, göğüs dekolteli bluz, uzun kollu kadın bluz, ArzuAmber bluz modelleri, kadın giyim Türkiye</p>",
+    "price": 1050,
+    "lang": "tr",
+    "length": "Mini",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Haki",
+        "stockSize": [
+          {
+            "id": "191b4eb6-8395-4fc5-95c2-7d1e70f96db3",
+            "size": "M",
+            "stock": 2
+          },
+          {
+            "id": "c053c0f1-e2ef-4624-aaa9-51af73c1cc74",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "1053f1f8-8939-4aea-8db7-d30dceea8436",
+            "size": "S",
+            "stock": 2
+          }
+        ],
+        "stockCode": "ZFRL276Y",
+        "images": [
+          "007c4bb1-88f1-45a9-8d98-5ec543e580c4.jpg",
+          "06de7ab6-1039-4f59-aa91-509e6462e071.jpg",
+          "14be421d-8bb8-443f-b5ba-8dd2c356137b.jpg",
+          "3d84e025-b47d-49bc-a7ae-8202c3d49d5d.jpg",
+          "88715fa8-51a3-4435-9764-9a18bdcd4502.png"
+        ]
+      }
+    ],
+    "purchasePrice": 300,
+    "discountPrice": 0,
+    "totalStock": 5,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "ea99b945-2060-4a19-9b34-d58124ed6e32",
+    "name": "Tül ve Parlak Kumaş Detaylı Bej Abiye",
+    "slug": "tul-ve-parlak-kumas-detayli-bej-abiye-24919",
+    "populate": false,
+    "newSeason": false,
+    "category": "Abiye",
+    "subCategory": "",
+    "description": "",
+    "price": 11500,
+    "lang": "tr",
+    "length": "Maxi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Bej",
+        "stockSize": [
+          {
+            "id": "3d91a130-e734-46f2-9c29-40b8e154b538",
+            "size": "38/40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "S9ICTCEW",
+        "images": [
+          "6a0888c2-f768-4868-8f34-c84e20f45515.jpg",
+          "ae167f7a-c86a-44a2-b6a0-7db0e63c5071.jpg",
+          "09d576e4-17b5-4460-97ab-9cdb0ea83d44.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 1,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "313ea2c8-b377-4c3e-acc3-1855a947aff3",
+    "name": "File Detay Kaşkorse Atlet",
+    "slug": "file-detay-kaskorse-atlet-24526",
+    "populate": false,
+    "newSeason": true,
+    "category": "Atlet",
+    "subCategory": "",
+    "description": "<p></p><h3><strong>File Detaylı Kadın Atlet – ArzuAmber</strong></h3><p></p><p></p><p>Göz alıcı siyah rengi ve göğüs üstü file detayıyla bu kadın atleti, hem spor hem şık kombinler için ideal bir parça haline getiriyor. Esnek ve vücuda oturan yapısıyla gün boyu konfor sağlarken, şık file tasarımı sayesinde basic bir parça olmaktan çıkıyor. İster günlük kombinlerde, ister yaz akşamlarında ceket altı olarak rahatça kullanabilirsiniz.</p><p></p><p>🔸 Renk: Siyah</p><p>🔸 Kumaş: Esnek ve rahat dokulu</p><p>🔸 Detay: Göğüs üstü file tasarım</p><p>🔸 Kalıp: Vücuda oturan</p><p>🔸 Kullanım: Günlük, spor şık, yazlık</p><p></p><p>🖤 <strong>ArzuAmber kalitesiyle tasarlandı – Şıklık ve konfor bir arada!</strong></p><p></p><hr><p></p><p></p><h3><strong>✅&nbsp;</strong></h3><h3><strong>Beyaz File Detaylı Kadın Atlet – ArzuAmber</strong></h3><p></p><p></p><p>Minimal çizgileri ve göğüs bölgesindeki zarif file detayıyla beyaz atlet, yaz kombinlerinin yıldızı olmaya aday. Yumuşak dokulu kumaşıyla terletmez ve teninizi rahatsız etmez. Altına etek, şort ya da pantolonla kombinlenerek tarzınızı kolayca tamamlamanızı sağlar.</p><p></p><p>🔸 Renk: Beyaz</p><p>🔸 Kumaş: Yumuşak esnek dokulu</p><p>🔸 Öne çıkan detay: Fileli göğüs üstü tasarım</p><p>🔸 Stil: Basic ama dikkat çekici</p><p>🔸 Kullanım: Günlük yaşam, yazlık kombinler, tatil stili</p><p></p><p>🤍 <strong>ArzuAmber.com’un zarif detaylarla zenginleştirdiği atlet koleksiyonundan özel bir parça!</strong></p>",
+    "price": 700,
+    "lang": "tr",
+    "length": "Midi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "64fbf46a-c540-4247-b674-599de41f5002",
+            "size": "S",
+            "stock": 2
+          },
+          {
+            "id": "0494670f-92ae-415b-96ac-0f29476ee3c9",
+            "size": "M",
+            "stock": 1
+          }
+        ],
+        "stockCode": "2B8HQBTX",
+        "images": [
+          "3021e85f-adb7-4310-80d2-79800dd8aa9f.jpg",
+          "d03781b2-e31e-40c7-9039-86171bc85e78.jpg",
+          "6eab227d-9e80-4ee0-a18f-eaea665a215c.jpg",
+          "14da6664-10db-4d7b-93b9-13cdb130384b.jpg",
+          "afe4fd9f-91c7-4eb6-b932-2eb9ed268b28.jpg",
+          "4c5de4f6-757b-46a3-b59b-19df16bb92e6.png"
+        ]
+      },
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "c729eb68-eac9-40f8-99a5-4baf31a23a32",
+            "size": "S",
+            "stock": 2
+          },
+          {
+            "id": "749bd40f-7f2f-49d2-b66a-a4f5dceaeb3f",
+            "size": "M",
+            "stock": 1
+          }
+        ],
+        "stockCode": "6E3MRDCA",
+        "images": [
+          "917d97d5-3cf6-4757-888c-e1ec9437f76a.jpg",
+          "e9cb670a-f8bf-4bf7-8792-9cf4eecbf767.jpg",
+          "c9118a3d-4c9e-47e6-8770-14c2f9d1ecc2.jpg",
+          "53c0b911-7db1-414f-9920-a4f3dfe5f9ae.jpg",
+          "1f9a72e5-4d1e-418c-98f7-54fde756258d.png"
+        ]
+      }
+    ],
+    "purchasePrice": 120,
+    "discountPrice": 0,
+    "totalStock": 6,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "7bd069ad-7b6a-4da8-8385-5120149742f9",
+    "name": "Tül ve Pul Detaylı Koyu Fuşya Abiye",
+    "slug": "tul-ve-pul-detayli-koyu-fusya-abiye-34343",
+    "populate": false,
+    "newSeason": false,
+    "category": "Abiye",
+    "subCategory": "",
+    "description": "",
+    "price": 12000,
+    "lang": "tr",
+    "length": "Maxi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Koyu Fuşya",
+        "stockSize": [
+          {
+            "id": "a38fd8e7-4f99-4f6b-9891-139a699d2b7c",
+            "size": "40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "W523OJZL",
+        "images": [
+          "1ec4943e-cfd1-4e7d-a1a9-a5861de89128.jpg",
+          "cea96033-1108-4517-96e8-a6621280b39b.jpg",
+          "4e057a65-a0e0-422b-b7d0-0f87f8e52c19.jpg"
+        ]
+      },
+      {
+        "color": "Lacivert",
+        "stockSize": [
+          {
+            "id": "de6307ec-1717-44b9-92cb-7be125c478c9",
+            "size": "40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "GJ4SC2J7",
+        "images": [
+          "322b7f45-c506-47c0-bb7f-f6069c7f477b.jpg",
+          "460a8c3e-b246-4141-9a86-f5024f909825.jpg",
+          "f9c502a2-b13f-4baf-bb3a-fe95c91b192c.jpg",
+          "550a29e4-dc1a-4120-9455-5c46574f6cc8.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 2,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "20c5ffea-f6bb-4da4-bfd1-632c30f79411",
+    "name": "Amore Baskılı Taşlı T-shirt",
+    "slug": "amore-baskili-tasli-t-shirt-51606",
+    "populate": true,
+    "newSeason": false,
+    "category": "T-shirt",
+    "subCategory": "",
+    "description": "<p></p><h3><strong>Amore Baskılı Taş Detaylı  Tişört</strong></h3><p></p><p></p><p>Göz alıcı bordo rengiyle dikkat çeken bu tişört, “AMORE” yazısı ve kalp formundaki taş işlemeleriyle stilinizi parlatıyor. Pamuklu yapısı sayesinde gün boyu konfor sunarken, modern kesimiyle hem spor hem de şık kombinler için idealdir. ArzuAmber koleksiyonunun sevilen parçalarından biri olan bu tişört, jean pantolonlardan pileli eteklere kadar pek çok parçayla uyum sağlar.</p><p><strong>ArzuAmber tişört modelleri</strong> arasında özel bir yere sahip bu tasarımı gardırobunuza ekleyin ve tarzınızı yansıtın!</p><p></p><p>🔍bordo taşlı tişört, amore yazılı tişört, ArzuAmber tişört, yazlık tişört modelleri, şık kadın tişörtü</p>",
+    "price": 950,
+    "lang": "tr",
+    "length": "Midi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Bordo",
+        "stockSize": [
+          {
+            "id": "8a569ccc-e241-4c33-8a4a-cd8bd31b3e33",
+            "size": "S-M",
+            "stock": 1
+          },
+          {
+            "id": "25af6aac-a236-4900-a26d-f0fa0b1bfd3d",
+            "size": "M-L",
+            "stock": 1
+          },
+          {
+            "id": "d8d768b0-03dd-4e4b-925a-ad4fea0ec5bf",
+            "size": "L-XL",
+            "stock": 1
+          }
+        ],
+        "stockCode": "2EAM6SMC",
+        "images": [
+          "a8a4de81-8744-4764-b7c8-f307695be028.jpg",
+          "d60dc712-ce31-41f8-92a3-a6d55fb82d1d.jpg",
+          "56ebe79b-0e8a-499a-acf4-79a91033caec.jpg",
+          "db66b05a-b7e9-4a41-a0a9-3ec90987fa6c.jpg",
+          "03028d75-9f13-4f39-83f6-7806dadb6932.png"
+        ]
+      },
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "6a43f8ff-2878-4355-aba6-1b3d77c2669a",
+            "size": "S-M",
+            "stock": 1
+          },
+          {
+            "id": "ce32f812-48a8-4c81-8abe-7169a18d69b4",
+            "size": "M-L",
+            "stock": 1
+          },
+          {
+            "id": "cd2e7292-4772-45e0-88e3-50edd279ec4b",
+            "size": "L-XL",
+            "stock": 1
+          }
+        ],
+        "stockCode": "EGDDP3LC",
+        "images": [
+          "af62b129-c397-45c4-bbfa-14dc7efae3eb.jpg",
+          "640a1a90-2c38-4f87-9d65-9379b2add0d8.jpg",
+          "642deae5-6708-4c92-b746-b9d3e72c526d.jpg",
+          "88ca3567-d125-4de4-ab6a-631ec31f49c4.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 230,
+    "discountPrice": 0,
+    "totalStock": 6,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "81052538-7171-47c1-a430-c6d4df42db66",
+    "name": "Likralı V Yaka Çizgili Taşlı Siyah Crop Bluz",
+    "slug": "likrali-v-yaka-cizgili-tasli-siyah-crop-bluz-73160",
+    "populate": false,
+    "newSeason": true,
+    "category": "",
+    "subCategory": "",
+    "description": "<p>Tarzına ışıltı kat! Bu siyah crop bluz, likralı yapısıyla gün boyu rahatlık sunarken, V yaka kesimi ve alt kısmındaki çizgili taş detaylarıyla şıklığını bir adım öne taşıyor. Hem spor hem de şık kombinlerin vazgeçilmezi olacak bu parça, gardırobunun favorilerinden biri olmaya aday.</p><p></p><p><strong>Öne Çıkan Özellikler:</strong></p><p></p><ul class=\"list-disc ml-10\"><li><p>Esnek ve likralı kumaş</p></li><li><p>Modern V yaka tasarımı</p></li><li><p>Alt kısmında çizgili taş detaylar</p></li><li><p>Vücuda oturan crop kesim</p></li><li><p>Geniş ve konforlu askılar</p></li><li><p>Hem gündüz hem gece kullanımına uygun</p></li></ul><p></p>",
+    "price": 720,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "44b30b85-ba11-4b82-99e8-2ac78925dca3",
+            "size": "Standart",
+            "stock": 4
+          }
+        ],
+        "stockCode": "QY10JSNM",
+        "images": [
+          "ade05d5b-1881-4463-b701-230a169e10f1.jpg",
+          "af54dae9-4a18-4545-a397-c1129cad5857.jpg",
+          "418d4153-bc88-4052-b6e7-1ef67d2d8879.jpg",
+          "f724bf73-47fd-4dff-b7ef-77f99d5b7933.jpg",
+          "8796daee-6fa8-478e-b9c9-35e855a64fdd.png"
+        ]
+      }
+    ],
+    "purchasePrice": 120,
+    "discountPrice": 0,
+    "totalStock": 4,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "ec99d293-5f0e-4001-bd1b-5508567d2562",
+    "name": "Taş Detaylı Fıstık Yeşili Abiye",
+    "slug": "tas-detayli-fistik-yesili-abiye-50424",
+    "populate": false,
+    "newSeason": false,
+    "category": "Abiye",
+    "subCategory": "",
+    "description": "",
+    "price": 11000,
+    "lang": "tr",
+    "length": "Maxi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Fıstık Yeşili",
+        "stockSize": [
+          {
+            "id": "5f069e78-322d-41b5-a419-05188ea49547",
+            "size": "40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "H43BM78H",
+        "images": [
+          "a17811b3-0e8f-440b-8d0c-3882840aef3e.jpg",
+          "c018c9fb-b365-4426-90fb-3cbd3e623e19.jpg",
+          "f0351ee8-c948-4ddc-868e-ea219be525e7.JPG"
+        ]
+      },
+      {
+        "color": "Kahverengi",
+        "stockSize": [
+          {
+            "id": "dc9a9ae4-7f8f-46a3-b35e-c248ac2befe2",
+            "size": "36",
+            "stock": 1
+          }
+        ],
+        "stockCode": "DAEFNYT0",
+        "images": [
+          "b579e60d-462d-40df-a6cc-9e4f257bb73d.jpg",
+          "ae80ca46-91d5-43ba-b580-148cd94b4ae6.jpg",
+          "004480c4-546a-4e0f-aca5-a0543b260c96.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 2,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "4f807fce-48f7-4df7-86b7-1f7e8f88a71d",
+    "name": "Askılı Taş Detaylı Esnek Crop Bluz",
+    "slug": "askili-tas-detayli-esnek-crop-bluz-19057",
+    "populate": false,
+    "newSeason": true,
+    "category": "Bluz",
+    "subCategory": "",
+    "description": "<p></p><h3><strong>Askılı Taş Detaylı Esnek Crop Bluz – Mavi &amp; Siyah</strong></h3><p></p><p></p><p>Işıltılı detayları ve zarif kesimiyle göz kamaştıran bir stil! Bu esnek askılı crop bluz, üzerindeki inci taş süslemeleriyle gündüzden geceye tüm kombinlerin yıldızı olmaya aday. Vücuda tam oturan yapısıyla hem rahat hem etkileyici bir görünüm sunar.</p><p></p><p>💙 Mavi renk ile canlı ve enerjik bir stil yakalayın</p><p>🖤 Siyah renk ile klasik ve şık bir duruş sergileyin</p><p></p><p>✨ Esnek kumaşı sayesinde konforlu bir kullanım sunar</p><p>✨ Şort, etek veya yüksek bel pantolonlarla kolayca kombinlenebilir</p><p>✨ Yaz buluşmaları, davetler veya tatil kombinleri için ideal</p><p></p><p>taş detaylı crop bluz, askılı yazlık bluz, siyah crop bluz, mavi yazlık üst, esnek kadın bluz, Arzu Amber bluz modelleri</p>",
+    "price": 700,
+    "lang": "tr",
+    "length": "Midi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Mavi",
+        "stockSize": [
+          {
+            "id": "df0132d6-7cd5-41d0-9898-4f3b30b359b8",
+            "size": "Standart",
+            "stock": 5
+          }
+        ],
+        "stockCode": "UC0XYM08",
+        "images": [
+          "5a993826-a84a-4500-b466-8dede9f52eba.jpg",
+          "6792e536-d6be-48ae-842e-ef6f56d44db6.jpg",
+          "ac0b3cc5-1416-4266-a6e5-5b7b32e85b1e.jpg",
+          "199a444c-b8b9-4db4-b0ad-54fb3f61862c.jpg",
+          "d98134ca-add5-4f87-a523-06286e626a9f.png"
+        ]
+      },
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "cfd4f19a-b688-4b74-b4dc-e31e10a7ddf7",
+            "size": "Standart",
+            "stock": 5
+          }
+        ],
+        "stockCode": "IQOQ7GYX",
+        "images": [
+          "4d8ed7fc-db40-41fa-991d-fc8f653498c4.jpg",
+          "2286b9cc-2d1b-4a35-8567-98a90712da54.jpg",
+          "6401e117-2476-4c34-abc1-b7a6ccd7f289.jpg",
+          "12769158-8ee7-4af2-b27d-35415c302115.jpg",
+          "a803dbad-dc8b-4919-b022-70b1e5ed1104.png"
+        ]
+      }
+    ],
+    "purchasePrice": 120,
+    "discountPrice": 0,
+    "totalStock": 10,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "77e48a0e-afd3-43cc-ad98-d0c2918a65fd",
+    "name": "Kalp Nakışlı Atlet",
+    "slug": "kalp-nakisli-atlet-49603",
+    "populate": true,
+    "newSeason": false,
+    "category": "Atlet",
+    "subCategory": "",
+    "description": "<p></p><h3><strong>Kalp Nakışlı Ribana Askılı Atlet – 3 Renk Seçeneğiyle</strong></h3><p></p><p></p><p>Yaz stilinize sevimli bir dokunuş katın! Kalp nakışlarıyla süslenmiş bu ribana atlet modeli, esnek yapısı ve yumuşak dokusuyla gün boyu konfor sağlar. Hem şık hem spor kombinler için ideal bir parçadır.</p><p></p><p>💚 Haki renk ile doğal ve rahat bir hava yakalayın</p><p>🤍 Krem renk ile sade ve zarif görünüm oluşturun</p><p>💗 Pembe renk ile enerjik ve tatlı bir tarz yaratın</p><p></p><p>✨ Günlük kullanım, sahil yürüyüşü ya da spor sonrası kombinler için mükemmeldir.</p><p>✨ Şort, etek veya jogger pantolonlarla kolayca uyum sağlar</p><p></p><p>kalp nakışlı atlet, yazlık kadın atlet, ribana askılı bluz, esnek yazlık üst, pembe askılı atlet, krem atlet, haki atlet, Arzu Amber kadın üst</p>",
+    "price": 250,
+    "lang": "tr",
+    "length": "Midi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Pembe",
+        "stockSize": [
+          {
+            "id": "7a9deeb5-3d0f-4be0-93b7-59fac61709e3",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "5bede4d8-cb28-46cb-b551-6df9b3f94cd4",
+            "size": "S",
+            "stock": 2
+          }
+        ],
+        "stockCode": "VBRV2HHU",
+        "images": [
+          "afca32c7-ae6b-4176-9901-f899276ab057.jpg",
+          "026644e2-5946-4563-833f-4cadb3e8a6df.jpg",
+          "34bd72d6-c5cb-4f10-8932-ca9c6f46d050.jpg",
+          "c53923f2-d716-4a7a-94ad-ebd5510c8036.jpg",
+          "d80ec9f1-c230-4fce-aa51-88dc30b51ead.png"
+        ]
+      },
+      {
+        "color": "Krem",
+        "stockSize": [
+          {
+            "id": "63dd7930-a9d5-42d9-a0a2-331fdd492180",
+            "size": "M",
+            "stock": 2
+          },
+          {
+            "id": "f8e02792-bec8-4a1d-8b1e-8f3541d06609",
+            "size": "L",
+            "stock": 1
+          },
+          {
+            "id": "05be3f96-32e7-4bd2-8bb8-cae9707d2e31",
+            "size": "S",
+            "stock": 1
+          }
+        ],
+        "stockCode": "LGJGCB49",
+        "images": [
+          "0a8ccaf1-ad72-4264-bca6-99e63a3f75c4.jpg",
+          "7ae285a6-72fa-4ee8-9781-3f597cb4a2d0.jpg",
+          "f82aa136-659b-4e20-921a-62654eebd45d.jpg",
+          "deda383c-f914-465b-8bb5-8ba2d0f55ffc.jpg",
+          "f686e21b-fcac-4d20-8a9b-0c44db0199f0.png"
+        ]
+      },
+      {
+        "color": "Yeşil",
+        "stockSize": [
+          {
+            "id": "711d1d5f-66b0-4ad7-84ce-b8bf884c0ceb",
+            "size": "M",
+            "stock": 2
+          },
+          {
+            "id": "8c23f753-e918-4393-875e-d6d0e9dcb37e",
+            "size": "S",
+            "stock": 2
+          }
+        ],
+        "stockCode": "UP5Y1LX9",
+        "images": [
+          "e4461034-e740-4074-b1cb-dbb9e5f6c44e.jpg",
+          "aaf110a1-ceec-4c85-9211-b7fcfdc93ac5.jpg",
+          "c2755d49-0be3-4e33-bc23-ecee25be77bb.jpg",
+          "8f835f1c-23e0-48cb-a65a-f0e7c11209d4.jpg",
+          "f33abda8-7311-4275-a71d-ab9f07d36d76.jpg",
+          "037ccef0-7b70-4d01-b0b1-d4186f031974.png"
+        ]
+      }
+    ],
+    "purchasePrice": 85,
+    "discountPrice": 0,
+    "totalStock": 11,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "5a0ba2af-8c2b-4c30-aaf1-0c3e3d64ddf9",
+    "name": "Tüy ve Taş Detaylı Abiye",
+    "slug": "tuy-ve-tas-detayli-abiye-81804",
+    "populate": false,
+    "newSeason": false,
+    "category": "Abiye",
+    "subCategory": "",
+    "description": "",
+    "price": 13000,
+    "lang": "tr",
+    "length": "Maxi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Mavi",
+        "stockSize": [
+          {
+            "id": "6ddc8bdd-bac4-46d5-aa8a-2c9dbadf3e93",
+            "size": "40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "95DAH0V3",
+        "images": [
+          "7e6bf2b7-ae76-4c9a-a9d0-39c31e6868ec.jpg",
+          "43abe1a1-0ca9-4d86-a7d5-b870b894a36f.jpg"
+        ]
+      },
+      {
+        "color": "Gri",
+        "stockSize": [
+          {
+            "id": "a012c023-7488-414b-82b5-0c28cd9d3037",
+            "size": "40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "F08ZFMWZ",
+        "images": [
+          "934089fd-0325-4539-829a-6eaa377c655f.jpg",
+          "e2e635fc-13fc-4223-a81f-93b9558e00c6.jpg",
+          "9c90b55f-c072-4737-94f2-a94a14625b84.jpg"
+        ]
+      },
+      {
+        "color": "Pembe",
+        "stockSize": [
+          {
+            "id": "cdd3bd36-1944-4259-be04-436a4c0bb0d8",
+            "size": "40",
+            "stock": 1
+          }
+        ],
+        "stockCode": "ZHGOSTAY",
+        "images": [
+          "e26f484f-686d-4960-8c17-f84e24c8124c.jpg",
+          "191f6a5d-4821-43bf-bd01-2bcd9aa47a55.jpg",
+          "2ee0ca41-41df-46ca-8b11-4f1429022c19.jpg"
+        ]
+      },
+      {
+        "color": "Yeşil",
+        "stockSize": [
+          {
+            "id": "157f67df-ad6d-4e54-b075-681af806996a",
+            "size": "38",
+            "stock": 1
+          }
+        ],
+        "stockCode": "RSIQ1WHT",
+        "images": [
+          "c26bdec8-78df-4ed9-a8a0-c495e30e064a.jpg",
+          "867fe2d2-d77c-443d-9c43-f87f5f5cfe46.jpg",
+          "c6f3f064-97b8-47f7-ad36-f854fe15196c.jpg"
+        ]
+      }
+    ],
+    "purchasePrice": 0,
+    "discountPrice": 0,
+    "totalStock": 4,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "cd690f28-8a34-4999-a1ce-9fd42876ee18",
+    "name": "Taş Detaylı Kahverengi Crop Bluz",
+    "slug": "tas-detayli-kahverengi-crop-bluz-42250",
+    "populate": false,
+    "newSeason": true,
+    "category": "Bluz",
+    "subCategory": "",
+    "description": "<p></p><h3><strong>Taş Detaylı Kahverengi Askılı Crop Bluz</strong></h3><p></p><p></p><p>Zarafetin ve şıklığın buluşma noktası! Vücudu saran fit kesimi ve inci taş detaylarıyla dikkat çeken bu kahverengi askılı crop bluz, yaz kombinlerinizin vazgeçilmezi olacak. Dalgalı etek ucu ve esnek kumaşı ile hem rahatlık hem tarz bir arada.</p><p></p><p>🌞 Yüksek bel pantolon, etek veya şortlarla mükemmel uyum sağlar.</p><p>✨ Günlük kullanım, akşam gezmeleri veya tatil kombinleri için ideal!<br><br>taş detaylı crop bluz, kahverengi askılı bluz, yazlık kadın bluz, esnek crop üst, Arzu Amber bluz modelleri, inci süslemeli bluz</p>",
+    "price": 600,
+    "lang": "tr",
+    "length": "Midi",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Kahverengi",
+        "stockSize": [
+          {
+            "id": "2b634350-823f-47f1-b36a-2332cdc9fa90",
+            "size": "Standart",
+            "stock": 5
+          }
+        ],
+        "stockCode": "O9CXG28I",
+        "images": [
+          "be2420b7-eea4-480f-9980-bdcdd064faaa.jpg",
+          "d41c31a4-d4b2-46f9-84c4-207f1405bce4.jpg",
+          "97efbefc-9678-4077-aa11-77258fb66a41.jpg",
+          "8c6719c4-85d6-4ccd-8609-f5a412d2e507.jpg",
+          "4e36e2dc-e981-4072-9a83-635e10f2fbfd.png"
+        ]
+      }
+    ],
+    "purchasePrice": 120,
+    "discountPrice": 0,
+    "totalStock": 5,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "4f7fb3a0-21b9-4da4-9ffb-c26153b99698",
+    "name": "Göğüs Üstü Ajurlu Bluz",
+    "slug": "gogus-ustu-ajurlu-bluz-86174",
+    "populate": true,
+    "newSeason": false,
+    "category": "Bluz",
+    "subCategory": "",
+    "description": "<p></p><h3><strong>Göğüs Üstü Ajurlu Bluz </strong></h3><p>🔹 <strong>Bluz Detayı:</strong></p><p>Zarif ajur detaylarıyla süslenmiş bu bluz, hem siyah hem beyaz renk seçenekleriyle gardırobunuza şıklık katacak. Kolay kombinlenebilir yapısı ve nefes alan kumaşı sayesinde yazın favorisi olmaya aday!</p><p>💡 <strong>Renk Seçenekleri:</strong></p><p></p><ul class=\"list-disc ml-10\"><li><p>Bluz: Siyah &amp; Beyaz</p></li></ul><p></p><p>🎯 <strong>Kullanım Alanları:</strong></p><p>Günlük kullanım, ofis stili, hafta sonu gezmeleri veya arkadaş buluşmaları için mükemmel bir kombin!</p><p><br>jurlu bluz, beyaz bluz, siyah bluz, yazlık kadın bluz, çizgili pantolon, bağcıklı pantolon, rahat yazlık kombin, Arzu Amber bluz, Arzu Amber pantolon</p>",
+    "price": 450,
+    "lang": "tr",
+    "length": "",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "0db541c4-df0c-463f-8943-09017f69608b",
+            "size": "Standart",
+            "stock": 5
+          }
+        ],
+        "stockCode": "2FS72QGN",
+        "images": [
+          "69c03f9b-9026-4387-9345-6bbacbdcb7a9.jpg",
+          "cc107448-cb56-4355-a294-5b08b7e83d7b.jpg",
+          "a63c1a78-ef37-4d74-912f-22386c4b2574.jpg",
+          "97b671d5-470e-4b9a-a1a5-ffec327074f6.jpg",
+          "90290b87-a00c-4d81-bba7-b7f80776d910.jpg",
+          "6d7b2924-88c3-4ff7-9559-0654503fc287.png"
+        ]
+      },
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "2a30a984-367c-4057-ac63-59673a834c95",
+            "size": "Standart",
+            "stock": 5
+          }
+        ],
+        "stockCode": "M91ECJZ6",
+        "images": [
+          "9e7dbb26-2de0-4ab3-8eeb-0cdb6f76cf5e.jpg",
+          "a630c2e3-a2d8-456d-a356-ad2c22c18c97.jpg",
+          "e738060c-ee0f-456a-84d4-fefa818c3d1f.jpg",
+          "6db30675-1873-4d83-989a-d0e8ac659765.jpg",
+          "eb7f2123-bdcd-4bc2-a9c9-76b1e0f14fd6.png"
+        ]
+      }
+    ],
+    "purchasePrice": 120,
+    "discountPrice": 0,
+    "totalStock": 10,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "f168c4ff-4942-4826-9d35-5fe4694381a4",
+    "name": "Belden İp Bağlamalı Lastikli Cepli Şort Etek",
+    "slug": "belden-ip-baglamali-lastikli-cepli-sort-etek-61872",
+    "populate": false,
+    "newSeason": true,
+    "category": "Etek",
+    "subCategory": "",
+    "description": "<p></p><h3><strong>Belden Bağlamalı Cepli Şort Etek – Siyah &amp; Beyaz Renk Seçenekleriyle</strong><br>Günlük şıklığı ve rahatlığı bir arada sunan cepli şort etek modeliyle tanışın! Bel kısmındaki ip bağlama detayı ve pratik cepleri sayesinde hem spor hem de feminen bir stil yaratabilirsiniz. Hafif yapısıyla yaz aylarında vazgeçilmeziniz olacak.</h3><p></p><p>🖤 Siyah seçeneği ile klasik ve güçlü bir tarz yakalayın.</p><p>🤍 Beyaz seçeneği ile ferah ve enerjik bir yaz kombini oluşturun.</p><p></p><p>✨ Tişört, atlet veya crop üstlerle kolayca kombinlenebilir.</p><p>✨ Tatil, şehir gezisi, kafe buluşmaları için ideal bir tercihtir.<br><br>cepli şort etek, beyaz şort etek, siyah şort etek, yazlık kadın şort, bağcıklı şort etek, rahat günlük kombin, Arzu Amber etek</p>",
+    "price": 955,
+    "lang": "tr",
+    "length": "Mini",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Sıyah",
+        "stockSize": [
+          {
+            "id": "f92c78e5-5c52-456e-b8c0-12eadae24cce",
+            "size": "S",
+            "stock": 1
+          },
+          {
+            "id": "4efe23a1-1f59-4e05-9e50-2089250837e7",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "e5bc10ee-f4b7-49d1-8b0c-0663d922426f",
+            "size": "L",
+            "stock": 1
+          }
+        ],
+        "stockCode": "BTO86J50",
+        "images": [
+          "03a99b6d-1576-4fb3-9dde-62b51a2e9609.jpg",
+          "84766727-55d6-4330-92d2-0c1f318a947b.jpg",
+          "485a6773-40c0-44db-8a54-5d9c0892f509.jpg",
+          "29bd7ddf-29a6-498b-ba46-92b1b4b2f757.jpg",
+          "8edf6971-6ae7-491f-9cd6-ed945fd68061.jpg",
+          "d51ee6d4-154d-4190-bda6-8f2ef1251ef8.png"
+        ]
+      },
+      {
+        "color": "Beyaz",
+        "stockSize": [
+          {
+            "id": "deb5a587-330e-45ff-97c8-8bf9f836f067",
+            "size": "S",
+            "stock": 1
+          },
+          {
+            "id": "6fc045e8-07ce-4b27-9cee-433d9130e18a",
+            "size": "M",
+            "stock": 1
+          },
+          {
+            "id": "70b65305-3751-4e6e-86ef-d3711342aa5a",
+            "size": "L",
+            "stock": 1
+          }
+        ],
+        "stockCode": "9NM19TLU",
+        "images": [
+          "dc16622d-fbfa-46bd-b3a3-59965db6aa8b.jpg",
+          "a0ef48e6-7f3a-4a0b-ac38-33f13a86e8a7.jpg",
+          "3a27c6f5-a7d3-47b0-b957-0bf100172dac.jpg",
+          "0ba8f9d0-6d4c-43a9-97ea-c3c70b1824e3.jpg",
+          "8aa114b4-96f2-44b1-83cd-70f0a26635f1.jpg",
+          "a4d171ef-0c55-40b3-ac58-38d5414258c2.png"
+        ]
+      }
+    ],
+    "purchasePrice": 355,
+    "discountPrice": 0,
+    "totalStock": 6,
+    "comments": [],
+    "rates": []
+  },
+  {
+    "id": "dd165f39-ae98-4e89-b0f4-2760ea167032",
+    "name": "Pileli Yüksek Bel Mini Etek",
+    "slug": "pileli-etek-36433",
+    "populate": false,
+    "newSeason": true,
+    "category": "Etek",
+    "subCategory": "",
+    "description": "<p><strong>Pileli Yüksek Bel Mini Etek - Krem Renk</strong></p><p></p><p>Zarif ve feminen bir görünüm arayanlar için özel tasarlandı! Yüksek bel kesimiyle belinizi vurgularken, pileli detayları sayesinde hareketli ve dinamik bir stil sunar. Yumuşak ve hafif kumaşı sayesinde yaz aylarında ferah bir kullanım sağlar. Gömlek, tişört ya da crop bluzlarla kolayca kombinleyebilirsiniz.</p><p></p><p>✨ Günlük kullanım, buluşmalar veya özel davetler için ideal bir parçadır.</p><p>✨ Krem rengiyle her renge uyum sağlar, gardırobunuzun yıldızı olmaya aday!<br><br>mini etek, pileli etek, krem etek, yazlık etek, yüksek bel etek, kadın etek modelleri, Arzu Amber etek</p>",
+    "price": 500,
+    "lang": "tr",
+    "length": "Mini",
+    "isActive": true,
+    "colorSize": [
+      {
+        "color": "Krem",
+        "stockSize": [
+          {
+            "id": "c591565b-42bb-486e-9abd-03ad5ccba62a",
+            "size": "M",
+            "stock": 1
+          }
+        ],
+        "stockCode": "J7V97EIK",
+        "images": [
+          "07f123b8-8cd6-4899-82d5-c915073f1e9e.jpg",
+          "c732af7a-3de3-46de-a985-457c3a87d98d.jpg",
+          "2175a853-99b8-43dc-b964-3c246d1569b7.jpg",
+          "9e180e0c-77c5-4c8e-88dc-e8e055f154b9.jpg",
+          "17249042-defc-48e1-96d1-095ba4bcae76.jpg",
+          "937c881d-8a13-484a-b83f-7252de12f852.png"
+        ]
+      }
+    ],
+    "purchasePrice": 175,
+    "discountPrice": 0,
+    "totalStock": 1,
+    "comments": [],
+    "rates": []
+  }
+]
