@@ -33,7 +33,7 @@ open class Product(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    open var category: Category,
+    open var category: Category? = null,
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "product_subcategories", joinColumns = [JoinColumn(name = "product_fk")],

@@ -1,137 +1,114 @@
 [
   {
-    "kategori": "Erkek Moda",
-    "alt_kategoriler": [
-      "Ayakkabı", "Kıyafet", "El ve Omuz Çantası", "Aksesuarlar", "Spor Giyim",
-      "Jean", "Pantolon", "Şort", "T-shirt", "Gömlek", "Sweatshirt", "Triko",
-      "Dış Giyim", "İç Giyim", "Çorap", "Ev Giyim", "Plaj Giyim", "Takım Elbise",
-      "Takı", "Saat", "Çanta"
-    ]
-  },
-  {
-    "kategori": "Kadın Moda",
-    "alt_kategoriler": [
-      "Ayakkabı", "Kıyafet", "Çanta", "Aksesuar", "Elbise", "İç Giyim", "Dış Giyim",
-      "Spor Giyim", "Jean", "Pantolon", "Etek", "Bluz", "Gömlek", "T-shirt", "Triko",
-      "Sweatshirt", "Plaj Giyim", "Pijama", "Çorap", "Takı", "Saat"
-    ]
-  },
-  {
-    "kategori": "Çocuk & Bebek Moda",
-    "alt_kategoriler": [
-      "Kız Çocuk: Ayakkabı, Kıyafet, Çanta, Dış Giyim, Aksesuar, Elbise, T-Shirt",
-      "Erkek Çocuk: Ayakkabı, Kıyafet, Dış Giyim, T-shirt, Pantolon, Spor Giyim"
-    ]
-  },
-  {
-    "kategori": "Elektronik",
-    "alt_kategoriler": [
-      "Bilgisayar", "Cep Telefonu ve Aksesuar", "Televizyon ve Ev Sinema Sistemleri",
-      "Tabletler", "Kulaklıklar", "Ses Sistemi", "Akıllı Saat", "Kamera & Fotoğraf Makinesi",
-      "Taşınabilir Hoparlörler", "Elektrikli Ev ve Mutfak Aletleri", "Oto ve Araç Elektronik",
-      "Pil & Pil Şarj Aleti"
-    ]
-  },
-  {
-    "kategori": "Ev & Yaşam",
-    "alt_kategoriler": [
-      "Ev Dekorasyonu", "Ev Tekstil & Uyku Setleri", "Elektrikli Süpürgeler", "Ütüler",
-      "Tablolar", "Aydınlatma", "LED Ampuller", "Nevresimler", "Depo ve Ev Düzenleme",
-      "Banyo", "Çalışma Masası & Sandalyeler", "Mobilyalar", "Temizlik Aletleri"
-    ]
-  },
-  {
-    "kategori": "Kişisel Bakım & Kozmetik",
-    "alt_kategoriler": [
-      "Makyaj", "Cilt Bakım", "Saç Bakım", "Diş Bakım", "Vücut Bakım ve Banyo Ürünleri",
-      "Tıraş Epilasyon & Ağda", "Pedler & Hijyen Ürünleri", "Makyaj Fırçaları ve Aksesuarları"
-    ]
-  },
-  {
-    "kategori": "Kitap",
-    "alt_kategoriler": [
-      "Edebiyat", "Yabancı Dilde Kitaplar", "Çocuk Kitapları", "Siyaset & Felsefe", "Tarih",
-      "Ders Kitapları", "İş ve Ekonomi", "Çizgi Romanlar & Manga", "Bilgisayar & İnternet",
-      "Bilim Kurgu & Fantastik", "Din & Maneviyat", "Bilim, Doğa & Matematik",
-      "Biyografiler & Anılar", "Yiyecekler & Şarap", "Mühendislik", "Güzel Sanatlar & Fotoğraf",
-      "Ev Bahçe & Hobi", "Gizem Gerilim & Şüphe", "Sağlık, Fitness & Beslenme",
-      "Mizah & Eğlence"
-    ]
-  },
-  {
-    "kategori": "Spor & Outdoor",
-    "alt_kategoriler": [
-      "Kamp & Doğa Yürüyüşü", "Sıvı Alımı", "Fitness & Egzersiz", "Spor Ayakkabı",
-      "Spor & Outdoor Giyim", "Koşu", "Çadırlar", "Kamp Mutfak Gereçleri", "Sırt Çantaları",
-      "Uyku Tulumları", "Işıklar & Fenerler", "Balıkçılık", "Basketbol", "Futbol",
-      "Kış Sporları", "Su Sporları", "Tenis", "Avcılık", "Dövüş Sanatları",
-      "Bisiklet & Ekipmanları"
-    ]
-  },
-  {
-    "kategori": "Yapı Market",
-    "alt_kategoriler": [
-      "Elektrikli Aletler & El Aletleri", "Matkaplar", "Bahçe El Aletleri", "Alet Takımları",
-      "Hırdavat", "Mutfak ve Banyo Armatürleri", "Alet Çantaları", "Elektrik Malzemeleri",
-      "Güvenlik & Koruma"
-    ]
-  },
-  {
-    "kategori": "Ofis & Kırtasiye",
-    "alt_kategoriler": [
-      "Kalemler & Yazı Malzemeleri", "Ajandalar", "Defter & Kağıt Ürünleri", "Ofis Malzemeleri",
-      "Okul & Eğitim Malzemeleri", "Resim & El işi Malzemeleri", "Ofis Elektroniği",
-      "Mobilya & Aydınlatma", "Yazıcı & Tarayıcılar", "Teknik Çizim Ürünleri"
-    ]
-  },
-  {
-    "kategori": "Otomativ",
-    "alt_kategoriler": [
-      "Navigasyon Cihazları", "Aksesuarlar", "Koltuklar ve Aksesuarlar", "Lastikler & Jantlar",
-      "Oto Parçaları", "Elektronik Ürünler", "Bakım Ürünleri", "Motosiklet Aksesuarları & Parçaları"
-    ]
-  },
-  {
-    "kategori": "Telefon",
-    "alt_kategoriler": [
-      "Cep Telefonları", "Kılıflar ve Kapaklar", "Powerbank", "Ekran Koruyucular",
-      "Kulaklıklar", "Şarj Aletleri", "Oto Tutucular"
-    ]
-  },
-  {
-    "kategori": "Bilgisayar",
-    "alt_kategoriler": [
-      "Dizüstü Bilgisayarlar", "Masaüstü Bilgisayarlar", "Tabletler", "Monitörler",
-      "Oyun Bilgisayarları", "Video Oyunu & Konsol", "Bilgisayar Bileşenleri", "Bilgisayar Aksesuarları",
-      "Veri Depolama"
-    ]
-  },
-  {
-    "kategori": "Müzik Ekipmaları & Ensturmanlar",
-    "alt_kategoriler": [
-      "Davullar & Perküsyonlar", "DJ & VJ Ekipmanları", "Genel Müzik Aksesuarları",
-      "Gitarlar, Baslar & Ekipmanlar", "Kayıt Ekipmanları", "Mikrofonlar",
-      "Klavyeler & Piyanolar", "Synthesizer, Sampler & Dijital Enstrümanlar",
-      "Üflemeli Enstrümanlar", "Yaylı Çalgılar"
-    ]
-  },
-  {
-    "kategori": "Mutfak",
-    "alt_kategoriler": [
-      "Küçük Mutfak Aletleri", "Çay ve Kahve", "Blender, Mikser & Mutfak Robotları",
-      "Tost Makineleri", "Tencereler & Tavalar", "Sofra Eşyaları", "Yemek Takımları",
-      "Su Isıtıcılar & Çay Makineleri", "Kahve Makineleri", "Filtre Kahve Makineleri",
-      "Türk Kahvesi Makineleri", "Espresso & Kapuçino Makineleri", "Mutfak Aletleri & Araçlar",
-      "Mikrodalga Fırınlar", "Fırına Dayanıklı Mutfak Eşyaları", "Mutfak Saklama & Düzenleme",
-      "Ankastre Fırınlar", "Buzdolapları", "Davlumbazlar", "Mini Buzdolapları",
-      "Beyaz Eşya Parça ve Aksesuarlar"
-    ]
-  },
-  {
-    "kategori": "Video Oyunları & Konsol",
-    "alt_kategoriler": [
-      "PlayStation", "PlayStation Konsolları", "Nintendo Switch", "Sanal Gerçeklik",
-      "PC Oyunları", "Xbox One"
+    "name": "Kadın",
+    "slug": "kadin",
+    "subCategories": [
+      {
+        "name": "Giyim",
+        "slug": "giyim",
+        "children": [
+          { "name": "Tişört", "slug": "tisort" },
+          { "name": "Gömlek", "slug": "gomlek" },
+          { "name": "Elbise", "slug": "elbise" },
+          { "name": "Pantolon", "slug": "pantolon" },
+          { "name": "Etek", "slug": "etek" },
+          { "name": "Ceket", "slug": "ceket" },
+          { "name": "Kazak", "slug": "kazak" },
+          { "name": "Yelek", "slug": "yelek" },
+          { "name": "Mont", "slug": "mont" },
+          { "name": "Sweatshirt", "slug": "sweatshirt" },
+          { "name": "Bluz", "slug": "bluz" },
+          { "name": "Takım", "slug": "takim" },
+          { "name": "Trençkot", "slug": "trenckot" },
+          { "name": "Hırka", "slug": "hirka" },
+          { "name": "Polar", "slug": "polar" }
+        ]
+      },
+      {
+        "name": "Ayakkabı",
+        "slug": "ayakkabi",
+        "children": [
+          { "name": "Spor Ayakkabı", "slug": "spor-ayakkabi" },
+          { "name": "Günlük Ayakkabı", "slug": "gunluk-ayakkabi" },
+          { "name": "Topuklu Ayakkabı", "slug": "topuklu-ayakkabi" },
+          { "name": "Sandalet", "slug": "sandalet" },
+          { "name": "Terlik", "slug": "terlik" },
+          { "name": "Klasik Ayakkabı", "slug": "klasik-ayakkabi" },
+          { "name": "Bot", "slug": "bot" },
+          { "name": "Çizme", "slug": "cizme" }
+        ]
+      },
+      {
+        "name": "Çanta",
+        "slug": "canta",
+        "children": [
+          { "name": "Sırt Çantası", "slug": "sirt-cantasi" },
+          { "name": "Laptop Çantası", "slug": "laptop-cantasi" },
+          { "name": "Spor Çanta", "slug": "spor-canta" },
+          { "name": "Kol Çantası", "slug": "kol-cantasi" },
+          { "name": "Portföy & Omuz Çantası", "slug": "portfoy-omuz-cantasi" },
+          { "name": "El Çantası", "slug": "el-cantasi" },
+          { "name": "Bel Çantası", "slug": "bel-cantasi" },
+          { "name": "Cüzdan", "slug": "cuzdan" }
+        ]
+      },
+      {
+        "name": "Saat & Aksesuar",
+        "slug": "saat-aksesuar",
+        "children": [
+          { "name": "Saat", "slug": "saat" },
+          { "name": "Güneş Gözlüğü", "slug": "gunes-gozlugu" },
+          { "name": "Kolye", "slug": "kolye" },
+          { "name": "Küpe", "slug": "kupe" },
+          { "name": "Yüzük", "slug": "yuzuk" },
+          { "name": "Bileklik", "slug": "bileklik" },
+          { "name": "Bilezik", "slug": "bilezik" }
+        ]
+      },
+      {
+        "name": "Spor & Outdoor",
+        "slug": "spor-outdoor",
+        "children": [
+          { "name": "Eşofman", "slug": "esofman" },
+          { "name": "Spor Ayakkabı", "slug": "spor-ayakkabi" },
+          { "name": "Tişört", "slug": "tisort" },
+          { "name": "Spor Sütyeni", "slug": "spor-sutyeni" },
+          { "name": "Spor Tayt", "slug": "spor-tayt" },
+          { "name": "Outdoor Mont", "slug": "outdoor-mont" },
+          { "name": "Spor Ceket", "slug": "spor-ceket" },
+          { "name": "Outdoor Bot", "slug": "outdoor-bot" },
+          { "name": "Spor Çanta", "slug": "spor-canta" },
+          { "name": "Sporcu Ekipmanları", "slug": "sporcu-ekipmanlari" },
+          { "name": "Eldiven", "slug": "eldiven" },
+          { "name": "Sporcu Sütyeni", "slug": "sporcu-sutyeni" },
+          { "name": "Sporcu Taytı", "slug": "sporcu-tayti" },
+          { "name": "Polar", "slug": "polar" }
+        ]
+      },
+      {
+        "name": "Kişisel Bakım",
+        "slug": "kisisel-bakim",
+        "children": [
+          { "name": "Parfüm", "slug": "parfum" },
+          { "name": "Cilt Sağlığı", "slug": "cilt-sagligi" },
+          { "name": "Tıraş Ürünleri", "slug": "tiras-urunleri" },
+          { "name": "Tırnak Bakımı", "slug": "tirnak-bakimi" },
+          { "name": "DermoKozmetik", "slug": "dermokozmetik" }
+        ]
+      },
+      {
+        "name": "İç Giyim",
+        "slug": "ic-giyim",
+        "children": [
+          { "name": "Büstiyer", "slug": "bustiyer" },
+          { "name": "Sütyen", "slug": "sutyen" },
+          { "name": "Atlet", "slug": "atlet" },
+          { "name": "Pijama", "slug": "pijama" },
+          { "name": "Şort", "slug": "sort" },
+          { "name": "Gecelik", "slug": "gecelik" },
+          { "name": "İçlik", "slug": "iclik" }
+        ]
+      }
     ]
   }
 ]

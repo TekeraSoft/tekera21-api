@@ -46,12 +46,26 @@ CREATE TABLE basket_item_attributes
     value          VARCHAR(255)
 );
 
+CREATE TABLE buyer
+(
+    id              UUID NOT NULL,
+    created_at      TIMESTAMP WITHOUT TIME ZONE,
+    updated_at      TIMESTAMP WITHOUT TIME ZONE,
+    name            VARCHAR(255),
+    surname         VARCHAR(255),
+    email           VARCHAR(255),
+    gsm_number      VARCHAR(255),
+    identity_number VARCHAR(255),
+    CONSTRAINT pk_buyer PRIMARY KEY (id)
+);
+
 CREATE TABLE category
 (
     id         UUID NOT NULL,
     created_at TIMESTAMP WITHOUT TIME ZONE,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
     name       VARCHAR(255),
+    slug       VARCHAR(255),
     image      VARCHAR(255),
     CONSTRAINT pk_category PRIMARY KEY (id)
 );
@@ -181,6 +195,26 @@ CREATE TABLE fabrics
     CONSTRAINT "pk_fabrıcs" PRIMARY KEY (id)
 );
 
+CREATE TABLE fashion_collection
+(
+    id              UUID    NOT NULL,
+    created_at      TIMESTAMP WITHOUT TIME ZONE,
+    updated_at      TIMESTAMP WITHOUT TIME ZONE,
+    collection_name VARCHAR(255),
+    slug            VARCHAR(255),
+    image           VARCHAR(255),
+    description     TEXT,
+    is_active       BOOLEAN NOT NULL,
+    CONSTRAINT "pk_fashıoncollectıon" PRIMARY KEY (id)
+);
+
+CREATE TABLE fashion_collection_products
+(
+    fashion_collection_id UUID NOT NULL,
+    product_id            UUID NOT NULL,
+    CONSTRAINT "pk_fashıon_collectıon_products" PRIMARY KEY (fashion_collection_id, product_id)
+);
+
 CREATE TABLE guest
 (
     id                      UUID NOT NULL,
@@ -213,15 +247,45 @@ CREATE TABLE guest_orders
     orders_id UUID NOT NULL
 );
 
+CREATE TABLE news
+(
+    id         UUID    NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+    head       VARCHAR(255),
+    sub_title  VARCHAR(255),
+    image      VARCHAR(255),
+    body       TEXT,
+    is_active  BOOLEAN NOT NULL,
+    CONSTRAINT pk_news PRIMARY KEY (id)
+);
+
 CREATE TABLE orders
 (
-    id           UUID NOT NULL,
-    created_at   TIMESTAMP WITHOUT TIME ZONE,
-    updated_at   TIMESTAMP WITHOUT TIME ZONE,
-    user_id      UUID,
-    guest_id     UUID,
-    company_id   UUID,
-    payment_type SMALLINT,
+    id                      UUID NOT NULL,
+    created_at              TIMESTAMP WITHOUT TIME ZONE,
+    updated_at              TIMESTAMP WITHOUT TIME ZONE,
+    buyer_id                UUID,
+    total_price             DECIMAL,
+    shipping_price          DECIMAL,
+    payment_type            SMALLINT,
+    payment_status          SMALLINT,
+    shipping_company        VARCHAR(255),
+    company_id              UUID,
+    shipping_city           VARCHAR(255),
+    shipping_street         VARCHAR(255),
+    shipping_postal_code    VARCHAR(255),
+    shipping_build_no       VARCHAR(255),
+    shipping_door_number    VARCHAR(255),
+    shipping_detail_address VARCHAR(255),
+    shipping_country        VARCHAR(255),
+    billing_city            VARCHAR(255),
+    billing_street          VARCHAR(255),
+    billing_postal_code     VARCHAR(255),
+    billing_build_no        VARCHAR(255),
+    billing_door_number     VARCHAR(255),
+    billing_detail_address  VARCHAR(255),
+    billing_country         VARCHAR(255),
     CONSTRAINT pk_orders PRIMARY KEY (id)
 );
 
@@ -266,6 +330,7 @@ CREATE TABLE products
     company_id    UUID,
     product_type  VARCHAR(255),
     rate          DOUBLE PRECISION NOT NULL,
+    video_url     VARCHAR(255),
     is_active     BOOLEAN          NOT NULL,
     CONSTRAINT pk_products PRIMARY KEY (id)
 );
@@ -282,8 +347,10 @@ CREATE TABLE sub_category
     created_at  TIMESTAMP WITHOUT TIME ZONE,
     updated_at  TIMESTAMP WITHOUT TIME ZONE,
     name        VARCHAR(255),
+    slug        VARCHAR(255),
     image       VARCHAR(255),
     category_id UUID,
+    parent_id   UUID,
     CONSTRAINT pk_subcategory PRIMARY KEY (id)
 );
 
@@ -298,6 +365,16 @@ CREATE TABLE target_pictures
     default_content VARCHAR(255),
     special_content VARCHAR(255),
     CONSTRAINT "pk_target_pıctures" PRIMARY KEY (id)
+);
+
+CREATE TABLE themes
+(
+    id         UUID NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+    name       VARCHAR(255),
+    image      VARCHAR(255),
+    CONSTRAINT pk_themes PRIMARY KEY (id)
 );
 
 CREATE TABLE user_fav_products
@@ -358,6 +435,7 @@ CREATE TABLE variations
     model_code VARCHAR(255),
     color      VARCHAR(255),
     product_id UUID,
+    position   INTEGER,
     CONSTRAINT "pk_varıatıons" PRIMARY KEY (id)
 );
 
@@ -379,6 +457,9 @@ ALTER TABLE guest_orders
 ALTER TABLE orders_basket_items
     ADD CONSTRAINT "uc_orders_basket_ıtems_basketıtems" UNIQUE (basket_items_id);
 
+ALTER TABLE orders
+    ADD CONSTRAINT uc_orders_buyer UNIQUE (buyer_id);
+
 ALTER TABLE products_comments
     ADD CONSTRAINT uc_products_comments_comments UNIQUE (comments_id);
 
@@ -392,13 +473,10 @@ ALTER TABLE digital_fashion_sub_category
     ADD CONSTRAINT FK_DIGITALFASHIONSUBCATEGORY_ON_DIGITAL_FASHION_CATEGORY FOREIGN KEY (digital_fashion_category_id) REFERENCES digital_fashion_category (id);
 
 ALTER TABLE orders
+    ADD CONSTRAINT FK_ORDERS_ON_BUYER FOREIGN KEY (buyer_id) REFERENCES buyer (id);
+
+ALTER TABLE orders
     ADD CONSTRAINT FK_ORDERS_ON_COMPANY FOREIGN KEY (company_id) REFERENCES companies (id);
-
-ALTER TABLE orders
-    ADD CONSTRAINT FK_ORDERS_ON_GUEST FOREIGN KEY (guest_id) REFERENCES guest (id);
-
-ALTER TABLE orders
-    ADD CONSTRAINT FK_ORDERS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
 
 ALTER TABLE products
     ADD CONSTRAINT FK_PRODUCTS_ON_CATEGORY FOREIGN KEY (category_id) REFERENCES category (id);
@@ -408,6 +486,9 @@ ALTER TABLE products
 
 ALTER TABLE sub_category
     ADD CONSTRAINT FK_SUBCATEGORY_ON_CATEGORY FOREIGN KEY (category_id) REFERENCES category (id);
+
+ALTER TABLE sub_category
+    ADD CONSTRAINT FK_SUBCATEGORY_ON_PARENT FOREIGN KEY (parent_id) REFERENCES sub_category (id);
 
 ALTER TABLE users
     ADD CONSTRAINT FK_USERS_ON_COMPANY FOREIGN KEY (company_id) REFERENCES companies (id);
@@ -453,6 +534,12 @@ ALTER TABLE companies_users
 
 ALTER TABLE companies_users
     ADD CONSTRAINT fk_comuse_on_user FOREIGN KEY (users_id) REFERENCES users (id);
+
+ALTER TABLE fashion_collection_products
+    ADD CONSTRAINT "fk_fascolpro_on_fashıon_collectıon" FOREIGN KEY (fashion_collection_id) REFERENCES fashion_collection (id);
+
+ALTER TABLE fashion_collection_products
+    ADD CONSTRAINT fk_fascolpro_on_product FOREIGN KEY (product_id) REFERENCES products (id);
 
 ALTER TABLE guest_orders
     ADD CONSTRAINT fk_gueord_on_guest FOREIGN KEY (guest_id) REFERENCES guest (id);

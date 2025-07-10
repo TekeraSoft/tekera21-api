@@ -36,7 +36,7 @@ data class ProductDto(
                 from.code,
                 from.videoUrl,
                 from.brandName,
-                from.category.let { AdminCategoryDto(it.id,it.name, it.slug,it.image) },
+                from.category?.let { AdminCategoryDto(it.id,it.name, it.slug,it.image) },
                 from.subCategories.map { AdminSubCategoryDto(it.id, it.name, it.slug ,it.image) }.toList(),
                 from.company.let {
                     ProductCompanyDto(it.id,it.name,it.logo, it.rate ) },
