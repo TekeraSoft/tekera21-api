@@ -34,15 +34,22 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
-    @GetMapping("/findCompanyReturnProducts/{companyId}")
-    public ResponseEntity<Page<ProductListDto>> findCompanyReturnProducts(@PathVariable String companyId,
+    @GetMapping("/findCompanyReturnProducts")
+    public ResponseEntity<Page<ProductListDto>> findCompanyReturnProducts(@RequestParam String companyId,
                                                                           Pageable pageable) {
         return ResponseEntity.ok(productService.findCompanyReturnProducts(companyId,pageable));
     }
 
-    @GetMapping("/findCompanyReturnProduct/{companyId}/{slug}")
-    public ResponseEntity<ProductDto> findCompanyReturnProduct(@PathVariable String companyId,
-                                                               @PathVariable String slug) {
+    @GetMapping("/findCompanyPopularOrNewSeasonProducts")
+    public ResponseEntity<Page<ProductListDto>> findCompanySeasonProduct(@RequestParam String companyId,
+                                                                          @RequestParam String tag,
+                                                                          Pageable pageable) {
+        return ResponseEntity.ok(productService.findCompanyPopularOrNewSeasonProducts(companyId,tag,pageable));
+    }
+
+    @GetMapping("/findCompanyReturnProductDetail")
+    public ResponseEntity<ProductDto> findCompanyReturnProduct(@RequestParam String companyId,
+                                                               @RequestParam String slug) {
         return ResponseEntity.ok(productService.findCompanyReturnProduct(companyId, slug));
     }
 

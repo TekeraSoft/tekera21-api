@@ -328,6 +328,11 @@ public class ProductService {
         );
     }
 
+    public Page<ProductListDto> findCompanyPopularOrNewSeasonProducts(String  companyId, String tag, Pageable pageable) {
+        return productRepository.findPopularOrNewSeasonProducts(UUID.fromString(companyId), tag, pageable)
+                .map(ProductListDto::toDto);
+    }
+
     public Page<ProductListDto> findAllListProduct(Pageable pageable) {
         return productRepository.findActiveProducts(pageable).map(ProductListDto::toDto);
     }
