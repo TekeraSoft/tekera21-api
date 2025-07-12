@@ -1,8 +1,14 @@
 package com.tekerasoft.tekeramarketplace.service;
 
+import com.tekerasoft.tekeramarketplace.model.entity.Company;
 import io.minio.*;
 import io.minio.errors.*;
+import io.minio.http.Method;
+import io.minio.messages.Item;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -17,6 +25,9 @@ public class FileService {
 
     @Value("${spring.minio.bucket-name}")
     private String bucketName;
+
+    @Value("${spring.minio.url}")
+    private String minioUrl;
 
     private final MinioClient minioClient;
 
@@ -37,16 +48,15 @@ public class FileService {
                 fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
             }
             String fileName = slug + "-clr_"+ color + fileExtension;
-            String companyNameConvert = companyName.toLowerCase().replaceAll("\\s+", "_");
             InputStream inputStream = file.getInputStream();
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                     .bucket(bucketName)
-                    .object("/products/" + companyNameConvert + "/" + fileName)
+                    .object("/products/" + companyName + "/" + fileName)
                     .contentType(file.getContentType())
                     .stream(inputStream, file.getSize(), -1)
                     .build();
             minioClient.putObject(putObjectArgs);
-            return "/products/"+companyNameConvert+"/"+fileName;
+            return "/products/"+companyName+"/"+fileName;
         } catch (Exception e) {
             throw new RuntimeException("MinIO upload error: " + e.getMessage(), e);
         }
@@ -180,5 +190,42 @@ public class FileService {
        } catch (Exception e) {
            throw new RuntimeException("MinIO upload error: " + e.getMessage(), e);
        }
+    }
+
+    public Page<String> listUserMedia(String companyName, Pageable pageable) throws Exception {
+        String prefix = "products/" + companyName + "/";
+        List<String> allMedia = new ArrayList<>();
+
+        Iterable<Result<Item>> results = minioClient.listObjects(
+                ListObjectsArgs.builder()
+                        .bucket(bucketName)
+                        .prefix(prefix)
+                        .recursive(true)
+                        .build());
+
+        for (Result<Item> result : results) {
+            Item item = result.get();
+            String objectName = item.objectName();
+            allMedia.add(objectName);
+        }
+
+        // Sayfalama hesaplama
+        int total = allMedia.size();
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), total);
+        List<String> pageContent = allMedia.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, total);
+    }
+
+    public String generatePresignedUploadUrl(String objectName, String contentType) throws Exception {
+        return minioClient.getPresignedObjectUrl(
+                GetPresignedObjectUrlArgs.builder()
+                        .method(Method.PUT)
+                        .bucket(bucketName)
+                        .object(objectName)
+                        .expiry(15 * 60) // 15 dakika geçerli
+                        .build()
+        );
     }
 }

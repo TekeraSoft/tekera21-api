@@ -5,6 +5,7 @@ import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateProductRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.UpdateProductRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.service.CompanyService;
 import com.tekerasoft.tekeramarketplace.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,9 +24,11 @@ import java.util.List;
 @Tag(name = "Products", description = "Product management APIs")
 public class CompanyController {
     private final ProductService productService;
+    private final CompanyService companyService;
 
-    public CompanyController(ProductService productService) {
+    public CompanyController(ProductService productService, CompanyService companyService) {
         this.productService = productService;
+        this.companyService = companyService;
     }
 
     @Operation(summary = "Company create product action")
@@ -52,6 +55,11 @@ public class CompanyController {
     @GetMapping("/getProductById")
     public ResponseEntity<ProductDto> getProductById(@RequestParam String productId) {
         return ResponseEntity.ok(productService.getCustomerProduct(productId));
+    }
+
+    @GetMapping("/seller-gallery")
+    public ResponseEntity<Page<String>> sellerGallery(@RequestParam String companyId, Pageable pageable) throws Exception {
+        return ResponseEntity.ok(companyService.getAllCompanyMedia(companyId,pageable));
     }
 
 }
