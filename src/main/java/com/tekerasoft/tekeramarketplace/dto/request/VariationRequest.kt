@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.dto.request
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.tekerasoft.tekeramarketplace.dto.AttributeDto
 import com.tekerasoft.tekeramarketplace.model.entity.Attribute
@@ -20,4 +21,8 @@ data class VariationRequest(
 
     @JsonProperty("attributes")
     val attributes: List<CreateAttributeRequest>,
+
+    @JsonProperty("subCategories")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val imageUrls: List<String>? = null,
 )

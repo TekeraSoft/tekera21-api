@@ -156,6 +156,11 @@ public class CompanyService {
         }
     }
 
+    public Page<String> getAllCompanyMedia(String id, Pageable pageable) throws Exception {
+        Company company = companyRepository.findById(UUID.fromString(id)).orElseThrow(() -> new NotFoundException("Company not found: " + id));
+        return fileService.listUserMedia(company.getSlug(),pageable);
+    }
+
     public Page<CompanyAdminDto> getAllCompanies(Pageable pageable) {
         return companyRepository.findActiveCompanies(pageable).map(CompanyAdminDto::toDto);
     }

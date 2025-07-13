@@ -105,6 +105,12 @@ public class ProductService {
 
                 List<String> imgUrls = new ArrayList<>();
 
+// 1. Galeriden seçilen görseller
+                if (varReq.getImageUrls() != null) {
+                    imgUrls.addAll(varReq.getImageUrls());
+                }
+
+// 2. Yeni yüklenen görseller
                 for (MultipartFile image : images) {
                     Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
                     if (parsed == null) continue;
@@ -117,7 +123,7 @@ public class ProductService {
 
                         String imageUrl = fileService.productFileUpload(
                                 image,
-                                company.getName(),
+                                company.getSlug(),
                                 SlugGenerator.generateSlug(req.getName()),
                                 imageColor
                         );
@@ -125,6 +131,7 @@ public class ProductService {
                     }
                 }
 
+// Hem galeriden seçilen hem de yeni yüklenen görseller aynı listede
                 var.setImages(imgUrls);
                 variations.add(var);
             }
@@ -226,7 +233,7 @@ public class ProductService {
 
                             String imageUrl = fileService.productFileUpload(
                                     image,
-                                    product.getCompany().getName(),
+                                    product.getCompany().getSlug(),
                                     SlugGenerator.generateSlug(req.getName()),
                                     imageColor
                             );
@@ -382,5 +389,6 @@ public class ProductService {
             throw new RuntimeException("Error updating product", e);
         }
     }
+
 
 }

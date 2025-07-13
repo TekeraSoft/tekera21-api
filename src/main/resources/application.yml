@@ -58,6 +58,7 @@ spring:
     api: http://localhost:3009/generate
     #api: http://mind-generator:3009/generate
 
+
 server:
   tomcat:
     max-http-form-post-size: 524288000   # 500MB
