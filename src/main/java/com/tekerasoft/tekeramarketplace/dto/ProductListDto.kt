@@ -10,7 +10,7 @@ data class ProductListDto(
     val id: UUID?,
     val name: String,
     val slug: String,
-    val code: String,
+    val code: String?,
     val videoUrl: String?,
     val category: AdminCategoryDto?,
     val subCategories: List<AdminSubCategoryDto>?,

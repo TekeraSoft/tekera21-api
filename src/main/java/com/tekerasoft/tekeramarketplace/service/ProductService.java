@@ -51,7 +51,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ApiResponse<?> create(CreateProductRequest req, MultipartFile video ,List<MultipartFile> images) {
+    public ApiResponse<?> create(CreateProductRequest req ,List<MultipartFile> images) {
         try {
             Product product = new Product();
             product.setName(req.getName());
@@ -136,22 +136,25 @@ public class ProductService {
                 variations.add(var);
             }
             product.setVariations(variations);
-            if(!video.isEmpty()) {
-                String videoUrl = resizeProductVideo.resizeProductVideo(video,company.getName());
-                product.setVideoUrl(videoUrl);
+            if(req.getVideoUrl().startsWith("/temp")) {
+                String newPath = req.getVideoUrl().replace("temp/", "products/");
+                fileService.copyObject(req.getVideoUrl(), newPath);
+                product.setVideoUrl(newPath);
+                fileService.deleteInFolderFile(req.getVideoUrl());
+            }else {
+                product.setVideoUrl(req.getVideoUrl());
             }
+            product.setVideoUrl(req.getVideoUrl());
             productRepository.save(product);
 
             return new ApiResponse<>("Product Created", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
             throw new RuntimeException("Error creating product", e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
     @Transactional
-    public ApiResponse<?> update(UpdateProductRequest req, MultipartFile video ,List<MultipartFile> images) {
+    public ApiResponse<?> update(UpdateProductRequest req ,List<MultipartFile> images) {
         try {
             Product product = productRepository.findById(UUID.fromString(req.getId()))
                     .orElseThrow(() -> new NotFoundException("Product not found: " + req.getId()));
@@ -263,9 +266,15 @@ public class ProductService {
                     }
                 }
             }
-            if(!video.isEmpty()) {
-                String videoUrl = resizeProductVideo.resizeProductVideo(video,product.getCompany().getName());
-                product.setVideoUrl(videoUrl);
+            if(req.getVideoUrl() != null) {
+                if(req.getVideoUrl().startsWith("temp")) {
+                    String newPath = req.getVideoUrl().replace("temp/", "products/"+product.getCompany().getSlug()+"/");
+                    fileService.copyObject(req.getVideoUrl(), newPath);
+                    product.setVideoUrl(newPath);
+                    fileService.deleteInFolderFile(req.getVideoUrl());
+                }else {
+                    product.setVideoUrl(req.getVideoUrl());
+                }
             } else {
                 product.setVideoUrl(null);
             }
@@ -274,8 +283,6 @@ public class ProductService {
 
         } catch (RuntimeException e) {
             throw new RuntimeException("Error updating product", e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

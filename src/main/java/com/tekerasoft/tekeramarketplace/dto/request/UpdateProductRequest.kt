@@ -20,6 +20,10 @@ data class UpdateProductRequest(
     @JsonProperty("brandName")
     val brandName: String,
 
+    @JsonProperty("videoUrl")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val videoUrl: String? = null,
+
     @JsonProperty("description")
     val description: String,
 

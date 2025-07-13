@@ -72,8 +72,5 @@ public class KafkaConsumer {
         }
     }
 
-//    @KafkaListener(topics = "resize-product-video", groupId = "tekeraGroup")
-//    public void processResizeProductVideo(MultipartFile video, String productId) throws IOException {
-//
-//    }
+
 }

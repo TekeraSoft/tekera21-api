@@ -5,10 +5,14 @@ import io.minio.*;
 import io.minio.errors.*;
 import io.minio.http.Method;
 import io.minio.messages.Item;
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,9 +20,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class FileService {
@@ -30,6 +38,7 @@ public class FileService {
     private String minioUrl;
 
     private final MinioClient minioClient;
+    private static Logger logger = LoggerFactory.getLogger(FileService.class);
 
     public FileService(MinioClient minioClient) {
         this.minioClient = minioClient;
@@ -218,14 +227,62 @@ public class FileService {
         return new PageImpl<>(pageContent, pageable, total);
     }
 
-    public String generatePresignedUploadUrl(String objectName, String contentType) throws Exception {
-        return minioClient.getPresignedObjectUrl(
-                GetPresignedObjectUrlArgs.builder()
-                        .method(Method.PUT)
-                        .bucket(bucketName)
-                        .object(objectName)
-                        .expiry(15 * 60) // 15 dakika geçerli
-                        .build()
-        );
+    public String generatePresignedUploadUrl(String objectName) {
+        try {
+            return minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .bucket(bucketName)
+                            .object("temp/" + objectName)
+                            .method(Method.PUT)
+                            .expiry(8, TimeUnit.MINUTES)
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Presigned URL oluşturulamadı", e);
+        }
+    }
+
+    @Scheduled(cron = "0 0/30 * * * *")
+    public void cleanOldTempVideos() {
+        Iterable<Result<Item>> items = minioClient.listObjects(ListObjectsArgs.builder()
+                .bucket(bucketName)
+                .prefix("temp/")
+                .recursive(true)
+                .build());
+
+        items.forEach(itemResult -> {
+            try {
+                Item item = itemResult.get();
+                Instant lastModified = item.lastModified().toInstant();
+                System.out.println(lastModified);
+                if (lastModified.isBefore(Instant.now().minus(30, ChronoUnit.MINUTES))) {
+                    minioClient.removeObject(RemoveObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(item.objectName())
+                            .build());
+                }
+            } catch (Exception e) {
+                logger.warn("Failed to delete temp file: {}", e.getMessage());
+            }
+        });
+    }
+
+    public void copyObject(String sourcePath, String destinationPath) {
+        try {
+            CopySource source = CopySource.builder()
+                    .bucket(bucketName)
+                    .object(sourcePath)
+                    .build();
+
+            CopyObjectArgs args = CopyObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(destinationPath)
+                    .source(source)
+                    .build();
+
+            minioClient.copyObject(args);
+        } catch (Exception e) {
+            logger.error("Copy object error: {}", e.getMessage(), e);
+        }
     }
 }

@@ -6,6 +6,7 @@ import com.tekerasoft.tekeramarketplace.dto.request.CreateProductRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.UpdateProductRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.service.CompanyService;
+import com.tekerasoft.tekeramarketplace.service.FileService;
 import com.tekerasoft.tekeramarketplace.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,26 +26,26 @@ import java.util.List;
 public class CompanyController {
     private final ProductService productService;
     private final CompanyService companyService;
+    private final FileService fileService;
 
-    public CompanyController(ProductService productService, CompanyService companyService) {
+    public CompanyController(ProductService productService, CompanyService companyService, FileService fileService) {
         this.productService = productService;
         this.companyService = companyService;
+        this.fileService = fileService;
     }
 
     @Operation(summary = "Company create product action")
     @PostMapping(value = "/createProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> createProduct(@Valid @RequestPart("data") CreateProductRequest req,
-                                                 @RequestPart(value = "video", required = false) MultipartFile video,
                                                  @RequestPart(value = "images") List<MultipartFile> images)
     {
-        return productService.create(req,video,images);
+        return productService.create(req,images);
     }
 
     @PutMapping(value = "/updateProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> updateProduct(@RequestPart("data") UpdateProductRequest req,
-                                        @RequestPart(value = "video", required = false)  MultipartFile video,
                                         @RequestPart(value = "images", required = false) List<MultipartFile> images){
-        return productService.update(req,video,images);
+        return productService.update(req,images);
     }
 
     @GetMapping("/findCompanyReturnProducts/{companyId}")
@@ -57,9 +58,14 @@ public class CompanyController {
         return ResponseEntity.ok(productService.getCustomerProduct(productId));
     }
 
-    @GetMapping("/seller-gallery")
+    @GetMapping("/sellerGallery")
     public ResponseEntity<Page<String>> sellerGallery(@RequestParam String companyId, Pageable pageable) throws Exception {
         return ResponseEntity.ok(companyService.getAllCompanyMedia(companyId,pageable));
+    }
+
+    @GetMapping("/getPresignedUrl")
+    public ResponseEntity<String>  getPresignedUrl(@RequestParam String objectName) {
+        return ResponseEntity.ok(fileService.generatePresignedUploadUrl(objectName));
     }
 
 }
