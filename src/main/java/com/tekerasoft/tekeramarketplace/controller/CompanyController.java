@@ -8,6 +8,7 @@ import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.service.CompanyService;
 import com.tekerasoft.tekeramarketplace.service.FileService;
 import com.tekerasoft.tekeramarketplace.service.ProductService;
+import com.tekerasoft.tekeramarketplace.service.VariationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -27,11 +28,13 @@ public class CompanyController {
     private final ProductService productService;
     private final CompanyService companyService;
     private final FileService fileService;
+    private final VariationService variationService;
 
-    public CompanyController(ProductService productService, CompanyService companyService, FileService fileService) {
+    public CompanyController(ProductService productService, CompanyService companyService, FileService fileService, VariationService variationService) {
         this.productService = productService;
         this.companyService = companyService;
         this.fileService = fileService;
+        this.variationService = variationService;
     }
 
     @Operation(summary = "Company create product action")
@@ -66,6 +69,11 @@ public class CompanyController {
     @GetMapping("/getPresignedUrl")
     public ResponseEntity<String>  getPresignedUrl(@RequestParam String objectName) {
         return ResponseEntity.ok(fileService.generatePresignedUploadUrl(objectName));
+    }
+
+    @DeleteMapping("/deleteImageFromVariation")
+    public ResponseEntity<ApiResponse<?>> deleteImageFromVariation(@RequestParam String path) {
+        return ResponseEntity.ok(variationService.delteImageFromVariant(path));
     }
 
 }

@@ -1,10 +1,8 @@
 package com.tekerasoft.tekeramarketplace.utils;
 
-import com.tekerasoft.tekeramarketplace.model.entity.Product;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.ProductRepository;
 import com.tekerasoft.tekeramarketplace.service.FileService;
 import org.bytedeco.ffmpeg.global.avcodec;
-import org.bytedeco.javacv.FFmpegFrameFilter;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;

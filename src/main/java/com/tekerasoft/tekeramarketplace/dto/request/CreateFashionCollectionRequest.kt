@@ -12,4 +12,6 @@ open class CreateFashionCollectionRequest(
     val image: MultipartFile? = null,
     @JsonProperty("description")
     val description: String? = null,
+    @JsonProperty("companyId")
+    val companyId: String,
 )

@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.dto.request
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class VariationUpdateRequest (
@@ -8,6 +9,10 @@ data class VariationUpdateRequest (
 
     @JsonProperty("modelName")
     val modelName: String,
+
+    @JsonProperty("imageUrls")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val imageUrls: List<String>? = null,
 
     @JsonProperty("modelCode")
     val modelCode: String,

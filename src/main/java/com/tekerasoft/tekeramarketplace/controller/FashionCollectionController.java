@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.controller;
 
 import com.tekerasoft.tekeramarketplace.dto.FashionCollectionDto;
+import com.tekerasoft.tekeramarketplace.dto.FashionCollectionListDto;
 import com.tekerasoft.tekeramarketplace.service.FashionCollectionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,8 +24,14 @@ public class FashionCollectionController {
     }
 
     @GetMapping("/getAllFashionCollection")
-    public ResponseEntity<Page<FashionCollectionDto>> getAllFashionCollection(Pageable pageable) {
+    public ResponseEntity<Page<FashionCollectionListDto>> getAllFashionCollection(Pageable pageable) {
         return ResponseEntity.ok(fashionCollectionService.getAllFashionCollection(pageable));
+    }
+
+    @GetMapping("getFashionCollectionsByCompany")
+    public ResponseEntity<Page<FashionCollectionListDto>>  getFashionCollectionsByCompany(@RequestParam String companyId,
+                                                                                      Pageable pageable) {
+        return ResponseEntity.ok(fashionCollectionService.getFashionCollectionsByCompany(companyId, pageable));
     }
 
     @GetMapping("/getFashionCollection")

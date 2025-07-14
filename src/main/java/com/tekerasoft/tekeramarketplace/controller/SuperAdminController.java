@@ -123,7 +123,7 @@ public class SuperAdminController {
     }
 
     @GetMapping("/getAllFashionCollection")
-    public ResponseEntity<Page<FashionCollectionDto>>  getAllFashionCollection(Pageable pageable) {
+    public ResponseEntity<Page<FashionCollectionListDto>>  getAllFashionCollection(Pageable pageable) {
         return ResponseEntity.ok(fashionCollectionService.getAllFashionCollection(pageable));
     }
 

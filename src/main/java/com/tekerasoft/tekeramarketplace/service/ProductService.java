@@ -51,7 +51,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ApiResponse<?> create(CreateProductRequest req ,List<MultipartFile> images) {
+    public ApiResponse<?> create(CreateProductRequest req, List<MultipartFile> images) {
         try {
             Product product = new Product();
             product.setName(req.getName());
@@ -66,7 +66,8 @@ public class ProductService {
             product.setActive(true);
 
             // Company
-            Company company = companyRepository.findById(UUID.fromString(req.getCompanyId())).orElseThrow();
+            Company company = companyRepository.findById(UUID.fromString(req.getCompanyId()))
+                    .orElseThrow(() -> new RuntimeException("Company not found"));
             product.setCompany(company);
 
             // Category
@@ -74,7 +75,7 @@ public class ProductService {
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             product.setCategory(category);
 
-            // SubCategory
+            // SubCategories
             Set<SubCategory> subCategories = req.getSubCategories().stream()
                     .map(id -> subCategoryRepository.findById(UUID.fromString(id))
                             .orElseThrow(() -> new RuntimeException("SubCategory not found: " + id)))
@@ -90,7 +91,7 @@ public class ProductService {
                 var.setProduct(product);
                 var.setColor(varReq.getColor());
 
-                // Variation attributes
+                // Attributes
                 List<Attribute> variationAttributes = varReq.getAttributes().stream()
                         .map(attr -> new Attribute(
                                 attr.getPrice(),
@@ -103,51 +104,61 @@ public class ProductService {
                         )).collect(Collectors.toList());
                 var.setAttributes(variationAttributes);
 
-                List<String> imgUrls = new ArrayList<>();
+                // Görseller (galeri + multipart)
+                List<String> finalImageUrls = new ArrayList<>();
 
-// 1. Galeriden seçilen görseller
-                if (varReq.getImageUrls() != null) {
-                    imgUrls.addAll(varReq.getImageUrls());
+                // 1. Galeriden seçilen görseller
+                if (varReq.getImageUrls() != null && !varReq.getImageUrls().isEmpty()) {
+                    finalImageUrls.addAll(varReq.getImageUrls());
                 }
 
-// 2. Yeni yüklenen görseller
-                for (MultipartFile image : images) {
-                    Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
-                    if (parsed == null) continue;
+                // 2. Multipart olarak yüklenen görseller
+                if (images != null && !images.isEmpty()) {
+                    for (MultipartFile image : images) {
+                        Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
+                        if (parsed == null) continue;
 
-                    String imageModelCode = parsed.get("modelCode");
-                    String imageColor = parsed.get("color");
+                        String imageModelCode = parsed.get("modelCode");
+                        String imageColor = parsed.get("color");
 
-                    if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
-                            && varReq.getColor().contains(imageColor)) {
+                        if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
+                                && varReq.getColor().contains(imageColor)) {
 
-                        String imageUrl = fileService.productFileUpload(
-                                image,
-                                company.getSlug(),
-                                SlugGenerator.generateSlug(req.getName()),
-                                imageColor
-                        );
-                        imgUrls.add(imageUrl);
+                            String imageUrl = fileService.productFileUpload(
+                                    image,
+                                    company.getSlug(),
+                                    SlugGenerator.generateSlug(req.getName()),
+                                    imageColor
+                            );
+                            finalImageUrls.add(imageUrl);
+                        }
                     }
                 }
 
-// Hem galeriden seçilen hem de yeni yüklenen görseller aynı listede
-                var.setImages(imgUrls);
+                // Varyasyona görselleri ata
+                var.setImages(finalImageUrls);
+
                 variations.add(var);
             }
+
             product.setVariations(variations);
-            if(req.getVideoUrl().startsWith("/temp")) {
-                String newPath = req.getVideoUrl().replace("temp/", "products/");
-                fileService.copyObject(req.getVideoUrl(), newPath);
-                product.setVideoUrl(newPath);
-                fileService.deleteInFolderFile(req.getVideoUrl());
-            }else {
-                product.setVideoUrl(req.getVideoUrl());
+
+            // Video
+            if (req.getVideoUrl() != null) {
+                if (req.getVideoUrl().startsWith("/temp")) {
+                    String newPath = req.getVideoUrl().replace("temp/", "products/");
+                    fileService.copyObject(req.getVideoUrl(), newPath);
+                    product.setVideoUrl(newPath);
+                    fileService.deleteInFolderFile(req.getVideoUrl());
+                } else {
+                    product.setVideoUrl(req.getVideoUrl());
+                }
             }
-            product.setVideoUrl(req.getVideoUrl());
+
             productRepository.save(product);
 
             return new ApiResponse<>("Product Created", HttpStatus.CREATED.value());
+
         } catch (RuntimeException e) {
             throw new RuntimeException("Error creating product", e);
         }
@@ -186,16 +197,12 @@ public class ProductService {
 
             for (VariationUpdateRequest varReq : req.getVariants()) {
 
-                Variation var;
-                if (varReq.getId() != null && !varReq.getId().isEmpty()) {
-                    // Mevcut varyasyon
-                    var = variationRepository.findById(UUID.fromString(varReq.getId()))
-                            .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
+                Variation var = variationRepository.findById(UUID.fromString(varReq.getId()))
+                        .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
 
-                    // Attribute listesini sıfırla
-                    var.getAttributes().clear();
+                if (varReq.getId() != null && !varReq.getId().isEmpty()) {
+                    var.getAttributes().clear(); // mevcut attributelar sıfırlanıyor
                 } else {
-                    // Yeni varyasyon
                     var = new Variation();
                     var.setAttributes(new ArrayList<>());
                 }
@@ -206,7 +213,8 @@ public class ProductService {
                 var.setModelCode(varReq.getModelCode());
                 var.setColor(varReq.getColor());
 
-                // ---------- Attribute'lar ----------
+                // Attribute'lar
+                Variation finalVar = var;
                 List<Attribute> variationAttributes = varReq.getAttributes().stream()
                         .map(attr -> new Attribute(
                                 attr.getPrice(),
@@ -215,15 +223,23 @@ public class ProductService {
                                 attr.getSku(),
                                 attr.getBarcode(),
                                 attr.getAttributeDetails(),
-                                var
+                                finalVar
                         ))
                         .collect(Collectors.toList());
                 var.getAttributes().addAll(variationAttributes);
 
-                // ---------- Görseller ----------
-                if (images != null && !images.isEmpty()) {
-                    List<String> imgUrls = new ArrayList<>(var.getImages() == null ? List.of() : var.getImages());
+                // Görselleri birleştir (gelen url'ler + yüklenen dosyalar)
+                Set<String> combinedImages = new LinkedHashSet<>(); // sırayı korur, tekrarları engeller
 
+                if (var.getImages() != null) {
+                    combinedImages.addAll(var.getImages()); // mevcut görseller
+                }
+
+                if (varReq.getImageUrls() != null) {
+                    combinedImages.addAll(varReq.getImageUrls()); // gelen görsel URL'leri
+                }
+
+                if (images != null && !images.isEmpty()) {
                     for (MultipartFile image : images) {
                         Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
                         if (parsed == null) continue;
@@ -240,13 +256,13 @@ public class ProductService {
                                     SlugGenerator.generateSlug(req.getName()),
                                     imageColor
                             );
-                            imgUrls.add(imageUrl);
+                            combinedImages.add(imageUrl);
                         }
                     }
-                    var.setImages(imgUrls);
                 }
 
-                // Sırası korunacak listeye ekle
+                var.setImages(new ArrayList<>(combinedImages));
+
                 orderedVariations.add(var);
             }
 
@@ -396,6 +412,5 @@ public class ProductService {
             throw new RuntimeException("Error updating product", e);
         }
     }
-
 
 }

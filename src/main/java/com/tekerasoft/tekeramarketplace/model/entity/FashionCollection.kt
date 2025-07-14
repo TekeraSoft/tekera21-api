@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.JoinTable
 import jakarta.persistence.ManyToMany
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 
 @Entity
@@ -25,6 +26,10 @@ open class FashionCollection(
 
     @Column(columnDefinition = "TEXT")
     open var description: String? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="company_id")
+    open var company: Company? = null,
 
     open var isActive: Boolean = true,
 

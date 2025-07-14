@@ -116,6 +116,11 @@ public class CompanyService {
         }
     }
 
+    public Company getCompanyById(String id) {
+        return companyRepository.findById(UUID.fromString(id)).orElseThrow(() ->
+                new NotFoundException("Company not found: " + id));
+    }
+
     public ApiResponse<?> deleteCompany(String id) {
         Company company = companyRepository.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Company not found")

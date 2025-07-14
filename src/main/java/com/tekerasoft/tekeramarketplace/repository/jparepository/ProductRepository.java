@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.repository.jparepository;
 
 import com.tekerasoft.tekeramarketplace.model.entity.Product;
+import com.tekerasoft.tekeramarketplace.model.entity.Variation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,6 +33,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
 
     @Query("SELECT p FROM Product p WHERE p.isActive = true AND p.company.id = :companyId AND p.slug = :slug")
     Optional<Product> findActiveProductByCompanyIdAndSlug(@Param("companyId") UUID companyId, @Param("slug") String slug);
+
 
     @Query("""
    SELECT DISTINCT p
