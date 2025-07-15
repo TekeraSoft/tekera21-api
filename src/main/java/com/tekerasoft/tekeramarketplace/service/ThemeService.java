@@ -33,8 +33,10 @@ public class ThemeService {
             }
                 Theme theme = new Theme();
                 theme.setName(req.getName());
-                String themeImagePath = fileService.folderFileUpload(req.getImage(), "theme-images");
-                theme.setImage(themeImagePath);
+                if(req.getImage() != null && !req.getImage().isEmpty()) {
+                    String themeImagePath = fileService.folderFileUpload(req.getImage(), "theme-images");
+                    theme.setImage(themeImagePath);
+                }
             themeRepository.save(theme);
             return new ApiResponse<>("Themes Created", HttpStatus.CREATED.value());
     }

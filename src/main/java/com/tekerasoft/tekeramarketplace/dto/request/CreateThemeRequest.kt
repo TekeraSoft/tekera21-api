@@ -12,7 +12,6 @@ data class CreateThemeRequest(
     @JsonProperty("name")
     val name: String,
 
-    @field:NotNull(message = "Theme image cannot be blank")
     @JsonProperty("image")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     val image: MultipartFile? = null,

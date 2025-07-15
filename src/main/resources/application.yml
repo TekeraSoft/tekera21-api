@@ -58,6 +58,11 @@ spring:
     api: http://localhost:3009/generate
     #api: http://mind-generator:3009/generate
 
+  jwt:
+    secret_keys: "RDDCT6me8cETAsAiABsYc0FwzLlu4CcNJWMBV8OdGt8Qrt2hleK1W/p/9K8kJuaNcqnsVgZ6PvfR2QcshYBGBqH3MJVekOHlQoyM9VspWkYFNovzBn/QOPiHyLGsaDhB/KIUleVCaMJK3YktQavVvGsFbld1QYXqnkeLZ9jb5tw="
+    expiration: 604800000
+    refresh-token:
+      expiration: 604800000
 
 server:
   tomcat:

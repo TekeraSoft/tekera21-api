@@ -98,8 +98,9 @@ public class SuperAdminController {
             @RequestParam(required = false) String size,
             @RequestParam(required = false) List<String> tags,
             @RequestParam(required = false) String style,
+            @RequestParam(required = false) String subCategoryName,
             Pageable pageable) {
-        return  ResponseEntity.ok(productService.filterAdminProduct(color,size,tags,style, pageable));
+        return  ResponseEntity.ok(productService.filterAdminProduct(color,size,tags,style,subCategoryName, pageable));
     }
 
     @PostMapping(value ="/createTheme", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

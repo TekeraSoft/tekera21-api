@@ -2,6 +2,7 @@ package com.tekerasoft.tekeramarketplace.controller;
 
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
+import com.tekerasoft.tekeramarketplace.dto.ProductUiDto;
 import com.tekerasoft.tekeramarketplace.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +21,8 @@ public class ProductController {
     }
 
     @GetMapping("/getAllProduct")
-    public ResponseEntity<Page<ProductListDto>> getAllProduct(Pageable pageable) {
-        return ResponseEntity.ok(productService.findAllListProduct(pageable));
+    public ResponseEntity<Page<ProductUiDto>> getAllProduct(Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllLProduct(pageable));
     }
 
     @GetMapping("/getProductBySlug")
@@ -41,7 +42,7 @@ public class ProductController {
     }
 
     @GetMapping("/findCompanyPopularOrNewSeasonProducts")
-    public ResponseEntity<Page<ProductListDto>> findCompanySeasonProduct(@RequestParam String companyId,
+    public ResponseEntity<Page<ProductUiDto>> findCompanySeasonProduct(@RequestParam String companyId,
                                                                           @RequestParam String tag,
                                                                           Pageable pageable) {
         return ResponseEntity.ok(productService.findCompanyPopularOrNewSeasonProducts(companyId,tag,pageable));
@@ -54,19 +55,14 @@ public class ProductController {
     }
 
     @GetMapping("/filterProduct")
-    public ResponseEntity<Page<ProductListDto>> filterProduct(
+    public ResponseEntity<Page<ProductUiDto>> filterProduct(
             @RequestParam(required = false) String color,
             @RequestParam(required = false) String clothSize,
             @RequestParam(required = false) List<String> tags,
             @RequestParam(required = false) String style,
+            @RequestParam(required = false) String subCategoryName,
             Pageable pageable) {
-        return  ResponseEntity.ok(productService.filterProduct(color,clothSize,tags,style, pageable));
+        return  ResponseEntity.ok(productService.filterProduct(color,clothSize,tags,style,subCategoryName,pageable));
     }
-
-//    @GetMapping("/filterProduct")
-//    public ResponseEntity<Page<ProductListDto>> filterProduct(@RequestBody FilterProductRequest req, Pageable pageable)
-//    {
-//        return ResponseEntity.ok(productService.filterProducts(req,pageable));
-//    }
 
 }

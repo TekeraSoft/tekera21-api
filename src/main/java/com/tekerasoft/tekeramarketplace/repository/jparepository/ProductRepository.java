@@ -42,7 +42,9 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
      JOIN v.attributes a
      JOIN a.attributeDetails ad
      JOIN p.tags t
+     JOIN p.subCategories sc
     WHERE p.isActive = TRUE
+      AND (:subCategoryName IS NULL OR sc.name = :subCategoryName)
       AND (:color IS NULL OR v.color = :color)
       AND (:size  IS NULL OR (ad.key = 'size'  AND ad.value = :size))
       AND (:style IS NULL OR (ad.key = 'style' AND ad.value = :style))
@@ -52,8 +54,12 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
                                    @Param("size")   String size,
                                    @Param("tags") List<String> tags,  // <‑‑ List!
                                    @Param("style")  String style,
+                                   @Param("subCategoryName") String subCategoryName,
                                    Pageable pageable);
 
     Optional<Product> findBySlug(String slug);
+
+    @Query("SELECT p FROM Product p JOIN p.subCategories sc WHERE sc.name = :name")
+    Page<Product> findProductBySubCategory(@Param("name") String name, Pageable pageable);
 
 }

@@ -14,7 +14,7 @@ data class ProductListDto(
     val videoUrl: String?,
     val category: AdminCategoryDto?,
     val subCategories: List<AdminSubCategoryDto>?,
-    val brandName: String,
+    val brandName: String?,
     val description: String?,
     val variations: List<VariationDto>,
     val currencyType: CurrencyType,
@@ -54,7 +54,7 @@ data class ProductListDto(
                     )
                 },
                 from.currencyType,
-                from?.tags,
+                from.tags,
                 from.productType,
                 from.attributes.map { AttributeDetail(it.key, it.value) },
                 from.rate,

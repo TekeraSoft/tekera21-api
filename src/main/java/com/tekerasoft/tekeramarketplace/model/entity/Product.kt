@@ -26,7 +26,7 @@ open class Product(
     open var name: String,
     open var slug: String,
     open var code: String? = null,
-    open var brandName: String,
+    open var brandName: String? = null,
 
     @Column(columnDefinition = "TEXT")
     open var description: String? = null,

@@ -12,7 +12,7 @@ data class ProductDto(
     val slug: String,
     val code: String?,
     val videoUrl: String?,
-    val brandName: String,
+    val brandName: String?,
     val category: AdminCategoryDto?,
     val subCategories: List<AdminSubCategoryDto>,
     val company: ProductCompanyDto,

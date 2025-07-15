@@ -18,7 +18,14 @@ data class CategoryDto(
                 category.name,
                 category.slug,
                 category.image,
-                category.subCategories.map { SubCategoryDto(it.id,it.name, it.image) }
+                category.subCategories.map {
+                    SubCategoryDto(
+                        it.id,
+                        it.name,
+                        it.image,
+                        it.children.map { SubCategoryDto.toDto(it) }.toMutableList(),
+                    )
+                },
             )
         }
     }

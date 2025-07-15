@@ -11,11 +11,13 @@ data class ProductUiDto(
     val id: UUID?,
     val name: String,
     val slug: String,
-    val brandName: String,
+    val brandName: String?,
     val variations: List<VariationUiDto>,
     val currencyType: CurrencyType,
+    val videoUrl: String?,
     val tags: List<String>?,
     val price: BigDecimal?,
+    val discountPrice: BigDecimal?,
     val rate: Double,
 ) {
     companion object {
@@ -35,10 +37,11 @@ data class ProductUiDto(
                         it.images.firstOrNull()?.let { listOf(it) } ?: emptyList())
                 },
                 product.currencyType,
+                product.videoUrl,
                 product.tags,
                 product.variations.firstOrNull()?.attributes?.firstOrNull()?.price,
+                product.variations.firstOrNull()?.attributes?.firstOrNull()?.discountPrice,
                 product.rate
-
             )
         }
     }

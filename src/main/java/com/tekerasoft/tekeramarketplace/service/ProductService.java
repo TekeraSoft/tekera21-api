@@ -2,6 +2,7 @@ package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
+import com.tekerasoft.tekeramarketplace.dto.ProductUiDto;
 import com.tekerasoft.tekeramarketplace.dto.request.*;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
@@ -358,35 +359,44 @@ public class ProductService {
         );
     }
 
-    public Page<ProductListDto> findCompanyPopularOrNewSeasonProducts(String  companyId, String tag, Pageable pageable) {
+    public Page<ProductUiDto> findCompanyPopularOrNewSeasonProducts(String  companyId, String tag, Pageable pageable) {
         return productRepository.findPopularOrNewSeasonProducts(UUID.fromString(companyId), tag, pageable)
-                .map(ProductListDto::toDto);
+                .map(ProductUiDto::toProductUiDto);
     }
 
-    public Page<ProductListDto> findAllListProduct(Pageable pageable) {
-        return productRepository.findActiveProducts(pageable).map(ProductListDto::toDto);
+    public Page<ProductUiDto> getAllLProduct(Pageable pageable) {
+        return productRepository.findActiveProducts(pageable).map(ProductUiDto::toProductUiDto);
     }
 
     public Page<ProductDto> findAllAdminProduct(Pageable pageable) {
         return productRepository.findAll(pageable).map(ProductDto::toDto);
     }
 
-    public Page<ProductListDto> filterProduct(String color,String clothSize, List<String> tags,String style,
+    public Page<ProductUiDto> filterProduct(String color,String clothSize, List<String> tags,String style,
+                                              String subCategoryName,
                                               Pageable pageable) {
 
         color = (color == null || color.isEmpty() ? null : color);
         clothSize = (clothSize == null || clothSize.isEmpty() ? null : clothSize);
         tags = (tags == null || tags.isEmpty() ? null : tags);
         style = (style == null || style.isEmpty() ? null : style);
+        subCategoryName = (subCategoryName == null || subCategoryName.isEmpty() ? null : subCategoryName);
 
-        return productRepository.findByQueryField(color, clothSize, tags, style, pageable)
-                .map(ProductListDto::toDto);
+        return productRepository.findByQueryField(color, clothSize, tags, style,subCategoryName, pageable)
+                .map(ProductUiDto::toProductUiDto);
     }
 
-    public Page<ProductDto> filterAdminProduct(String color,String size, List<String> tags,String style ,
+    public Page<ProductDto> filterAdminProduct(String color,String clothSize, List<String> tags,String style,
+                                               String subCategoryName,
                                                Pageable pageable) {
 
-        return productRepository.findByQueryField(color, size, tags, style, pageable)
+        color = (color == null || color.isEmpty() ? null : color);
+        clothSize = (clothSize == null || clothSize.isEmpty() ? null : clothSize);
+        tags = (tags == null || tags.isEmpty() ? null : tags);
+        style = (style == null || style.isEmpty() ? null : style);
+        subCategoryName = (subCategoryName == null || subCategoryName.isEmpty() ? null : subCategoryName);
+
+        return productRepository.findByQueryField(color, clothSize, tags, style,subCategoryName, pageable)
                 .map(ProductDto::toDto);
     }
 
@@ -413,4 +423,7 @@ public class ProductService {
         }
     }
 
+    public Page<ProductUiDto> getProductsBySubCategory(String subName,Pageable pageable) {
+        return productRepository.findProductBySubCategory(subName,pageable).map(ProductUiDto::toProductUiDto);
+    }
 }

@@ -6,7 +6,7 @@ import java.util.UUID
 data class ThemeDto(
     val id: UUID?,
     val name: String,
-    val image: String,
+    val image: String?,
 ) {
     companion object {
         @JvmStatic
