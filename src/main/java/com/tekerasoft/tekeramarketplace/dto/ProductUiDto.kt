@@ -1,9 +1,7 @@
 package com.tekerasoft.tekeramarketplace.dto
 
-import com.tekerasoft.tekeramarketplace.model.entity.AttributeDetail
 import com.tekerasoft.tekeramarketplace.model.entity.CurrencyType
 import com.tekerasoft.tekeramarketplace.model.entity.Product
-import com.tekerasoft.tekeramarketplace.model.entity.ProductType
 import java.math.BigDecimal
 import java.util.UUID
 
@@ -12,6 +10,8 @@ data class ProductUiDto(
     val name: String,
     val slug: String,
     val brandName: String?,
+    val category: String?,
+    val subCategories: List<SubCategoryDto>?,
     val variations: List<VariationUiDto>,
     val currencyType: CurrencyType,
     val videoUrl: String?,
@@ -28,6 +28,8 @@ data class ProductUiDto(
                 product.name,
                 product.slug,
                 product.brandName,
+                product.category?.name,
+                product.subCategories?.map { it -> SubCategoryDto.toDto(it) },
                 product.variations.map { it ->
                     VariationUiDto(
                         it.id,

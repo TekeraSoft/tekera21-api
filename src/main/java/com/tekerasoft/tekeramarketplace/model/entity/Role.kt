@@ -1,6 +1,8 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
-enum class Role {
+import org.springframework.security.core.GrantedAuthority
+
+enum class Role : GrantedAuthority {
     SUPER_ADMIN,
     ADMIN,
     MODERATOR,
@@ -12,5 +14,8 @@ enum class Role {
     COMPANY_ADMIN,
     COMPANY_EMPLOYEE,
     CUSTOMER,
-    COURIER
+    COURIER;
+
+    @Override
+    override fun getAuthority(): String = name
 }

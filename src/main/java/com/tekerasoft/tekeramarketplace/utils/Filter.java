@@ -128,7 +128,7 @@ public class Filter extends OncePerRequestFilter {
 
         // Java 8 Stream API kullanarak daha modern bir yaklaşım
         Optional<String> token = Arrays.stream(cookies)
-                .filter(cookie -> "next-auth.session-token".equals(cookie.getName()) || "__Secure-next-auth.session-token".equals(cookie.getName()))
+                .filter(cookie -> "session-token".equals(cookie.getName()))
                 .map(Cookie::getValue)
                 .findFirst();
 

@@ -51,6 +51,8 @@ open class Product(
     @JoinColumn(name = "company_id")
     open var company: Company,
 
+    open var shippingPreparationDays: Int? = 0,
+
     @ElementCollection
     @CollectionTable(name= "product_tags", joinColumns = [JoinColumn(name = "product_fk")])
     open var tags: List<String>? = mutableListOf(),

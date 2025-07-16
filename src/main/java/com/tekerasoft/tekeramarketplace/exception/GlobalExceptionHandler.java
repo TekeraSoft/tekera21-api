@@ -44,6 +44,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ApiResponse<>(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
     }
 
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<Object> handleUserException(UserException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+
     @ExceptionHandler(CompanyException.class)
     public ResponseEntity<Object> handleCompanyException(CompanyException ex) {
         logger.error("CompanyException occurred: {}", ex.getMessage());

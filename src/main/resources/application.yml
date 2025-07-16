@@ -59,7 +59,7 @@ spring:
     #api: http://mind-generator:3009/generate
 
   jwt:
-    secret_keys: "RDDCT6me8cETAsAiABsYc0FwzLlu4CcNJWMBV8OdGt8Qrt2hleK1W/p/9K8kJuaNcqnsVgZ6PvfR2QcshYBGBqH3MJVekOHlQoyM9VspWkYFNovzBn/QOPiHyLGsaDhB/KIUleVCaMJK3YktQavVvGsFbld1QYXqnkeLZ9jb5tw="
+    secret_keys: "VGhpcy1pcy1hLXN1cGVyLXNlY3JldC1zZWNyZXQta2V5LXdpdGgtNjRieXRlcy1sb25nZXItdGhhbi15b3UtZXhwZWN0Cg=="
     expiration: 604800000
     refresh-token:
       expiration: 604800000

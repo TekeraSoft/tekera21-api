@@ -40,6 +40,7 @@ public class JwtService {
     private Date extractExpiration(String token) {
         Claims claims = Jwts
                 .parser()
+                .verifyWith(getSignKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
@@ -53,6 +54,7 @@ public class JwtService {
     public String extractRole(String token) {
         Claims claims = Jwts
                 .parser()
+                .verifyWith(getSignKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
@@ -62,6 +64,7 @@ public class JwtService {
     public String extractUser(String token) {
         Claims claims = Jwts
                 .parser()
+                .verifyWith(getSignKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
@@ -73,11 +76,12 @@ public class JwtService {
                 .subject(userName)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSignKey())
+                .signWith(getSignKey(), Jwts.SIG.HS512)
                 .compact();
     }
 
     private SecretKey getSignKey() {
-        return Jwts.SIG.HS512.key().build();
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes); // HS512 kullanmak için yeterli uzunlukta olmalı!
     }
 }

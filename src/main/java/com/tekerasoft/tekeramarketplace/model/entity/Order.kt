@@ -8,8 +8,8 @@ import java.math.BigDecimal
 open class Order(
 
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(name="buyer_id")
-    open var buyer: Buyer,
+    @JoinColumn(name="user_id")
+    open var user: User,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var basketItems: MutableList<BasketItem>,
@@ -36,7 +36,7 @@ open class Order(
     AttributeOverride(name = "detailAddress", column = Column(name = "billing_detail_address")),
     AttributeOverride(name = "country",  column = Column(name = "billing_country"))
     )
-    open var billingAddress: Address,
+    open var billingAddress: Address? = null,
 
     open var totalPrice : BigDecimal,
 
@@ -44,9 +44,11 @@ open class Order(
 
     open var paymentType: PaymentType? = null,
 
-    open var paymentStatus: PaymentStatus,
+    open var paymentStatus: PaymentStatus? = null,
 
-    open var shippingCompany: String,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="shipping_company_id")
+    open var shippingCompany: ShippingCompany,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")

@@ -11,6 +11,7 @@ open class Company(
     open var logo: String,
     open var email: String,
     open var gsmNumber: String,
+    open var estimatedDeliveryTime: String,
     open var alternativePhoneNumber: String,
     open var supportPhoneNumber: String,
 
@@ -49,6 +50,14 @@ open class Company(
     @CollectionTable(name= "company_document_paths",
         joinColumns = [JoinColumn(name = "company_id")])
     open var identityDocumentPaths: List<CompanyDocument>,
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "company_shipping_companies",
+        joinColumns = [JoinColumn(name = "company_id")],
+        inverseJoinColumns = [JoinColumn(name = "shipping_company_id")]
+    )
+    open var shippingCompanies: MutableSet<ShippingCompany> = mutableSetOf(),
 
     @OneToMany(fetch = FetchType.LAZY)
     open var orders: MutableList<Order> = mutableListOf(),
