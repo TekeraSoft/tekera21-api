@@ -7,35 +7,21 @@ import java.math.BigDecimal
 @Table(name = "orders")
 open class Order(
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
-    open var user: User,
+    open var user: User? = null,
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "guest_id")
+    open var buyer: Buyer,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var basketItems: MutableList<BasketItem>,
 
-    @Embedded
-    @AttributeOverrides(
-        AttributeOverride(name = "buildNo", column = Column(name = "shipping_build_no")),
-        AttributeOverride(name = "city",     column = Column(name = "shipping_city")),
-        AttributeOverride(name = "street",   column = Column(name = "shipping_street")),
-        AttributeOverride(name = "postalCode", column = Column(name = "shipping_postal_code")),
-        AttributeOverride(name = "doorNumber", column = Column(name = "shipping_door_number")),
-        AttributeOverride(name = "detailAddress", column = Column(name = "shipping_detail_address")),
-        AttributeOverride(name = "country",  column = Column(name = "shipping_country"))
-    )
+    @OneToOne(fetch = FetchType.LAZY)
     open var shippingAddress: Address,
 
-    @Embedded
-    @AttributeOverrides(
-    AttributeOverride(name = "buildNo", column = Column(name = "billing_build_no")),
-    AttributeOverride(name = "city",     column = Column(name = "billing_city")),
-    AttributeOverride(name = "street",   column = Column(name = "billing_street")),
-    AttributeOverride(name = "postalCode", column = Column(name = "billing_postal_code")),
-    AttributeOverride(name = "doorNumber", column = Column(name = "billing_door_number")),
-    AttributeOverride(name = "detailAddress", column = Column(name = "billing_detail_address")),
-    AttributeOverride(name = "country",  column = Column(name = "billing_country"))
-    )
+    @OneToOne(fetch = FetchType.LAZY)
     open var billingAddress: Address? = null,
 
     open var totalPrice : BigDecimal,

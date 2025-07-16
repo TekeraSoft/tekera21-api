@@ -40,8 +40,7 @@ open class User (
     @CollectionTable(name = "user_topics", joinColumns = [JoinColumn(name = "user_id")])
     open var relatedTopics: MutableSet<String>? = mutableSetOf(),
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name="user_address", joinColumns = [JoinColumn(name = "user_id")])
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var address: MutableList<Address>? = mutableListOf(),
 
     @ElementCollection(fetch = FetchType.LAZY)

@@ -2,8 +2,9 @@ package com.tekerasoft.tekeramarketplace.model.entity
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.persistence.Embeddable
+import jakarta.persistence.Entity
 
-@Embeddable
+@Entity
 open class Address (
     @JsonProperty("city")
     open var city: String,
@@ -19,4 +20,4 @@ open class Address (
     open var detailAddress: String,
     @JsonProperty("country")
     open var country: String,
-)
+): BaseEntity()

@@ -1,3 +1,18 @@
+CREATE TABLE address
+(
+    id             UUID NOT NULL,
+    created_at     TIMESTAMP WITHOUT TIME ZONE,
+    updated_at     TIMESTAMP WITHOUT TIME ZONE,
+    city           VARCHAR(255),
+    street         VARCHAR(255),
+    postal_code    VARCHAR(255),
+    build_no       VARCHAR(255),
+    door_number    VARCHAR(255),
+    detail_address VARCHAR(255),
+    country        VARCHAR(255),
+    CONSTRAINT pk_address PRIMARY KEY (id)
+);
+
 CREATE TABLE attributes
 (
     id             UUID    NOT NULL,
@@ -48,7 +63,7 @@ CREATE TABLE basket_item_attributes
 
 CREATE TABLE buyer
 (
-    id              UUID NOT NULL,
+    id              UUID    NOT NULL,
     created_at      TIMESTAMP WITHOUT TIME ZONE,
     updated_at      TIMESTAMP WITHOUT TIME ZONE,
     name            VARCHAR(255),
@@ -56,6 +71,7 @@ CREATE TABLE buyer
     email           VARCHAR(255),
     gsm_number      VARCHAR(255),
     identity_number VARCHAR(255),
+    is_registered   BOOLEAN NOT NULL,
     CONSTRAINT pk_buyer PRIMARY KEY (id)
 );
 
@@ -107,6 +123,12 @@ CREATE TABLE companies
     CONSTRAINT "pk_companıes" PRIMARY KEY (id)
 );
 
+CREATE TABLE companies_address
+(
+    company_id UUID NOT NULL,
+    address_id UUID NOT NULL
+);
+
 CREATE TABLE companies_orders
 (
     company_id UUID NOT NULL,
@@ -124,18 +146,6 @@ CREATE TABLE companies_users
     company_id UUID NOT NULL,
     users_id   UUID NOT NULL,
     CONSTRAINT "pk_companıes_users" PRIMARY KEY (company_id, users_id)
-);
-
-CREATE TABLE company_address
-(
-    company_id     UUID NOT NULL,
-    city           VARCHAR(255),
-    street         VARCHAR(255),
-    postal_code    VARCHAR(255),
-    build_no       VARCHAR(255),
-    door_number    VARCHAR(255),
-    detail_address VARCHAR(255),
-    country        VARCHAR(255)
 );
 
 CREATE TABLE company_bank_accounts
@@ -169,40 +179,6 @@ CREATE TABLE company_shipping_companies
     CONSTRAINT "pk_company_shıppıng_companıes" PRIMARY KEY (company_id, shipping_company_id)
 );
 
-CREATE TABLE digital_fashion_category
-(
-    id         UUID NOT NULL,
-    created_at TIMESTAMP WITHOUT TIME ZONE,
-    updated_at TIMESTAMP WITHOUT TIME ZONE,
-    name       VARCHAR(255),
-    image      VARCHAR(255),
-    CONSTRAINT "pk_dıgıtalfashıoncategory" PRIMARY KEY (id)
-);
-
-CREATE TABLE digital_fashion_sub_category
-(
-    id                          UUID NOT NULL,
-    created_at                  TIMESTAMP WITHOUT TIME ZONE,
-    updated_at                  TIMESTAMP WITHOUT TIME ZONE,
-    name                        VARCHAR(255),
-    image                       VARCHAR(255),
-    digital_fashion_category_id UUID,
-    CONSTRAINT "pk_dıgıtalfashıonsubcategory" PRIMARY KEY (id)
-);
-
-CREATE TABLE fabrics
-(
-    id           UUID    NOT NULL,
-    created_at   TIMESTAMP WITHOUT TIME ZONE,
-    updated_at   TIMESTAMP WITHOUT TIME ZONE,
-    fabric_name  VARCHAR(255),
-    fabric_image VARCHAR(255),
-    fabric_price DECIMAL,
-    stock        INTEGER NOT NULL,
-    color        VARCHAR(255),
-    CONSTRAINT "pk_fabrıcs" PRIMARY KEY (id)
-);
-
 CREATE TABLE fashion_collection
 (
     id              UUID    NOT NULL,
@@ -224,38 +200,6 @@ CREATE TABLE fashion_collection_products
     CONSTRAINT "pk_fashıon_collectıon_products" PRIMARY KEY (fashion_collection_id, product_id)
 );
 
-CREATE TABLE guest
-(
-    id                      UUID NOT NULL,
-    created_at              TIMESTAMP WITHOUT TIME ZONE,
-    updated_at              TIMESTAMP WITHOUT TIME ZONE,
-    name                    VARCHAR(255),
-    surname                 VARCHAR(255),
-    email                   VARCHAR(255),
-    gsm_number              VARCHAR(255),
-    shipping_city           VARCHAR(255),
-    shipping_street         VARCHAR(255),
-    shipping_postal_code    VARCHAR(255),
-    shipping_build_no       VARCHAR(255),
-    shipping_door_number    VARCHAR(255),
-    shipping_detail_address VARCHAR(255),
-    shipping_country        VARCHAR(255),
-    billing_city            VARCHAR(255),
-    billing_street          VARCHAR(255),
-    billing_postal_code     VARCHAR(255),
-    billing_build_no        VARCHAR(255),
-    billing_door_number     VARCHAR(255),
-    billing_detail_address  VARCHAR(255),
-    billing_country         VARCHAR(255),
-    CONSTRAINT pk_guest PRIMARY KEY (id)
-);
-
-CREATE TABLE guest_orders
-(
-    guest_id  UUID NOT NULL,
-    orders_id UUID NOT NULL
-);
-
 CREATE TABLE news
 (
     id         UUID    NOT NULL,
@@ -271,30 +215,19 @@ CREATE TABLE news
 
 CREATE TABLE orders
 (
-    id                      UUID NOT NULL,
-    created_at              TIMESTAMP WITHOUT TIME ZONE,
-    updated_at              TIMESTAMP WITHOUT TIME ZONE,
-    user_id                 UUID,
-    total_price             DECIMAL,
-    shipping_price          DECIMAL,
-    payment_type            SMALLINT,
-    payment_status          SMALLINT,
-    shipping_company_id     UUID,
-    company_id              UUID,
-    shipping_city           VARCHAR(255),
-    shipping_street         VARCHAR(255),
-    shipping_postal_code    VARCHAR(255),
-    shipping_build_no       VARCHAR(255),
-    shipping_door_number    VARCHAR(255),
-    shipping_detail_address VARCHAR(255),
-    shipping_country        VARCHAR(255),
-    billing_city            VARCHAR(255),
-    billing_street          VARCHAR(255),
-    billing_postal_code     VARCHAR(255),
-    billing_build_no        VARCHAR(255),
-    billing_door_number     VARCHAR(255),
-    billing_detail_address  VARCHAR(255),
-    billing_country         VARCHAR(255),
+    id                  UUID NOT NULL,
+    created_at          TIMESTAMP WITHOUT TIME ZONE,
+    updated_at          TIMESTAMP WITHOUT TIME ZONE,
+    user_id             UUID,
+    guest_id            UUID,
+    shipping_address_id UUID,
+    billing_address_id  UUID,
+    total_price         DECIMAL,
+    shipping_price      DECIMAL,
+    payment_type        SMALLINT,
+    payment_status      SMALLINT,
+    shipping_company_id UUID,
+    company_id          UUID,
     CONSTRAINT pk_orders PRIMARY KEY (id)
 );
 
@@ -407,18 +340,6 @@ CREATE TABLE themes
     CONSTRAINT pk_themes PRIMARY KEY (id)
 );
 
-CREATE TABLE user_address
-(
-    user_id        UUID NOT NULL,
-    city           VARCHAR(255),
-    street         VARCHAR(255),
-    postal_code    VARCHAR(255),
-    build_no       VARCHAR(255),
-    door_number    VARCHAR(255),
-    detail_address VARCHAR(255),
-    country        VARCHAR(255)
-);
-
 CREATE TABLE user_fav_products
 (
     user_id      UUID NOT NULL,
@@ -459,6 +380,12 @@ CREATE TABLE users
     CONSTRAINT pk_users PRIMARY KEY (id)
 );
 
+CREATE TABLE users_address
+(
+    user_id    UUID NOT NULL,
+    address_id UUID NOT NULL
+);
+
 CREATE TABLE users_follow_sellers
 (
     user_id           UUID NOT NULL,
@@ -493,6 +420,9 @@ CREATE TABLE variations
 ALTER TABLE users
     ADD CONSTRAINT uc_74165e195b2f7b25de690d14a UNIQUE (email);
 
+ALTER TABLE companies_address
+    ADD CONSTRAINT "uc_companıes_address_address" UNIQUE (address_id);
+
 ALTER TABLE companies_orders
     ADD CONSTRAINT "uc_companıes_orders_orders" UNIQUE (orders_id);
 
@@ -502,20 +432,20 @@ ALTER TABLE companies_products
 ALTER TABLE companies_users
     ADD CONSTRAINT "uc_companıes_users_users" UNIQUE (users_id);
 
-ALTER TABLE guest_orders
-    ADD CONSTRAINT uc_guest_orders_orders UNIQUE (orders_id);
-
 ALTER TABLE orders_basket_items
     ADD CONSTRAINT "uc_orders_basket_ıtems_basketıtems" UNIQUE (basket_items_id);
 
 ALTER TABLE orders
-    ADD CONSTRAINT uc_orders_user UNIQUE (user_id);
+    ADD CONSTRAINT uc_orders_guest UNIQUE (guest_id);
 
 ALTER TABLE products_comments
     ADD CONSTRAINT uc_products_comments_comments UNIQUE (comments_id);
 
 ALTER TABLE shipping_company_orders
     ADD CONSTRAINT "uc_shıppıng_company_orders_orders" UNIQUE (orders_id);
+
+ALTER TABLE users_address
+    ADD CONSTRAINT uc_users_address_address UNIQUE (address_id);
 
 ALTER TABLE users_follow_sellers
     ADD CONSTRAINT uc_users_follow_sellers_followsellers UNIQUE (follow_sellers_id);
@@ -526,14 +456,20 @@ ALTER TABLE users_orders
 ALTER TABLE attributes
     ADD CONSTRAINT FK_ATTRIBUTES_ON_VARIATION FOREIGN KEY (variation_id) REFERENCES variations (id);
 
-ALTER TABLE digital_fashion_sub_category
-    ADD CONSTRAINT FK_DIGITALFASHIONSUBCATEGORY_ON_DIGITAL_FASHION_CATEGORY FOREIGN KEY (digital_fashion_category_id) REFERENCES digital_fashion_category (id);
-
 ALTER TABLE fashion_collection
     ADD CONSTRAINT FK_FASHIONCOLLECTION_ON_COMPANY FOREIGN KEY (company_id) REFERENCES companies (id);
 
 ALTER TABLE orders
+    ADD CONSTRAINT FK_ORDERS_ON_BILLINGADDRESS FOREIGN KEY (billing_address_id) REFERENCES address (id);
+
+ALTER TABLE orders
     ADD CONSTRAINT FK_ORDERS_ON_COMPANY FOREIGN KEY (company_id) REFERENCES companies (id);
+
+ALTER TABLE orders
+    ADD CONSTRAINT FK_ORDERS_ON_GUEST FOREIGN KEY (guest_id) REFERENCES buyer (id);
+
+ALTER TABLE orders
+    ADD CONSTRAINT FK_ORDERS_ON_SHIPPINGADDRESS FOREIGN KEY (shipping_address_id) REFERENCES address (id);
 
 ALTER TABLE orders
     ADD CONSTRAINT FK_ORDERS_ON_SHIPPING_COMPANY FOREIGN KEY (shipping_company_id) REFERENCES shipping_company (id);
@@ -562,6 +498,12 @@ ALTER TABLE attributes_stock_attributes
 ALTER TABLE basket_item_attributes
     ADD CONSTRAINT "fk_basket_ıtem_attrıbutes_on_basket_ıtem" FOREIGN KEY (basket_item_id) REFERENCES basket_item (id);
 
+ALTER TABLE companies_address
+    ADD CONSTRAINT fk_comadd_on_address FOREIGN KEY (address_id) REFERENCES address (id);
+
+ALTER TABLE companies_address
+    ADD CONSTRAINT fk_comadd_on_company FOREIGN KEY (company_id) REFERENCES companies (id);
+
 ALTER TABLE company_categories
     ADD CONSTRAINT fk_comcat_on_category FOREIGN KEY (category_id) REFERENCES category (id);
 
@@ -573,9 +515,6 @@ ALTER TABLE companies_orders
 
 ALTER TABLE companies_orders
     ADD CONSTRAINT fk_comord_on_order FOREIGN KEY (orders_id) REFERENCES orders (id);
-
-ALTER TABLE company_address
-    ADD CONSTRAINT fk_company_address_on_company FOREIGN KEY (company_id) REFERENCES companies (id);
 
 ALTER TABLE company_bank_accounts
     ADD CONSTRAINT fk_company_bank_accounts_on_company FOREIGN KEY (company_id) REFERENCES companies (id);
@@ -607,12 +546,6 @@ ALTER TABLE fashion_collection_products
 ALTER TABLE fashion_collection_products
     ADD CONSTRAINT fk_fascolpro_on_product FOREIGN KEY (product_id) REFERENCES products (id);
 
-ALTER TABLE guest_orders
-    ADD CONSTRAINT fk_gueord_on_guest FOREIGN KEY (guest_id) REFERENCES guest (id);
-
-ALTER TABLE guest_orders
-    ADD CONSTRAINT fk_gueord_on_order FOREIGN KEY (orders_id) REFERENCES orders (id);
-
 ALTER TABLE orders_basket_items
     ADD CONSTRAINT "fk_ordbasıte_on_basket_ıtem" FOREIGN KEY (basket_items_id) REFERENCES basket_item (id);
 
@@ -643,6 +576,12 @@ ALTER TABLE shipping_company_orders
 ALTER TABLE shipping_company_orders
     ADD CONSTRAINT "fk_shıcomord_on_shıppıng_company" FOREIGN KEY (shipping_company_id) REFERENCES shipping_company (id);
 
+ALTER TABLE users_address
+    ADD CONSTRAINT fk_useadd_on_address FOREIGN KEY (address_id) REFERENCES address (id);
+
+ALTER TABLE users_address
+    ADD CONSTRAINT fk_useadd_on_user FOREIGN KEY (user_id) REFERENCES users (id);
+
 ALTER TABLE users_follow_sellers
     ADD CONSTRAINT fk_usefolsel_on_company FOREIGN KEY (follow_sellers_id) REFERENCES companies (id);
 
@@ -654,9 +593,6 @@ ALTER TABLE users_orders
 
 ALTER TABLE users_orders
     ADD CONSTRAINT fk_useord_on_user FOREIGN KEY (user_id) REFERENCES users (id);
-
-ALTER TABLE user_address
-    ADD CONSTRAINT fk_user_address_on_user FOREIGN KEY (user_id) REFERENCES users (id);
 
 ALTER TABLE user_fav_products
     ADD CONSTRAINT fk_user_fav_products_on_user FOREIGN KEY (user_id) REFERENCES users (id);

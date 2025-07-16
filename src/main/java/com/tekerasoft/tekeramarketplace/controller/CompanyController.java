@@ -2,13 +2,12 @@ package com.tekerasoft.tekeramarketplace.controller;
 
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
+import com.tekerasoft.tekeramarketplace.dto.TargetPictureDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateProductRequest;
+import com.tekerasoft.tekeramarketplace.dto.request.CreateTargetPictureRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.UpdateProductRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
-import com.tekerasoft.tekeramarketplace.service.CompanyService;
-import com.tekerasoft.tekeramarketplace.service.FileService;
-import com.tekerasoft.tekeramarketplace.service.ProductService;
-import com.tekerasoft.tekeramarketplace.service.VariationService;
+import com.tekerasoft.tekeramarketplace.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -29,12 +28,14 @@ public class CompanyController {
     private final CompanyService companyService;
     private final FileService fileService;
     private final VariationService variationService;
+    private final DigitalFashionService digitalFashionService;
 
-    public CompanyController(ProductService productService, CompanyService companyService, FileService fileService, VariationService variationService) {
+    public CompanyController(ProductService productService, CompanyService companyService, FileService fileService, VariationService variationService, DigitalFashionService digitalFashionService) {
         this.productService = productService;
         this.companyService = companyService;
         this.fileService = fileService;
         this.variationService = variationService;
+        this.digitalFashionService = digitalFashionService;
     }
 
     @Operation(summary = "Company create product action")
@@ -76,4 +77,19 @@ public class CompanyController {
         return ResponseEntity.ok(variationService.delteImageFromVariant(path));
     }
 
+    @PostMapping("/createTargetPic")
+    public ApiResponse<?> createTargetPicture(@Valid @ModelAttribute CreateTargetPictureRequest req) {
+        return digitalFashionService.createTargetPicture(req);
+    }
+
+    @GetMapping("/getTargetPic")
+    public ResponseEntity<TargetPictureDto> getTargetPicture(@RequestParam("productId") String productId,
+                                                             @RequestParam("targetId") String targetId) {
+        return ResponseEntity.ok(digitalFashionService.getTargetPictureAndContent(productId, targetId));
+    }
+
+    @DeleteMapping("/deleteTargetPic")
+    public ApiResponse<?> deleteTargetPicture(@RequestParam String id) {
+        return digitalFashionService.deleteTargetPicture(id);
+    }
 }

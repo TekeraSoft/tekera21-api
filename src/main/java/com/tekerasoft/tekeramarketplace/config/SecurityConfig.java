@@ -51,7 +51,7 @@ public class SecurityConfig {
                                 "/ws/**",
                                 "/v1/api/auth/**"
                         ).permitAll()
-                        .requestMatchers("/v1/api/company/**").hasAnyAuthority(Role.COMPANY_ADMIN.name())
+                        .requestMatchers("/v1/api/company/**").hasAnyAuthority(Role.COMPANY_ADMIN.name(),Role.SUPER_ADMIN.name())
                         .requestMatchers("/v1/api/super-admin/**").hasAnyAuthority(Role.SUPER_ADMIN.name())
                         .anyRequest().authenticated()
                 )

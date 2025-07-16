@@ -8,7 +8,6 @@ import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.DigitalFashionException;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.TargetPicture;
-import com.tekerasoft.tekeramarketplace.repository.jparepository.FabricRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.TargetPictureRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,14 +41,12 @@ public class DigitalFashionService {
     private final static Logger LOGGER = LoggerFactory.getLogger(DigitalFashionService.class);
 
     private final TargetPictureRepository targetPictureRepository;
-    private final FabricRepository fabricRepository;
     private final FileService fileService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public DigitalFashionService(TargetPictureRepository targetPictureRepository, FabricRepository fabricRepository,
+    public DigitalFashionService(TargetPictureRepository targetPictureRepository,
                                  FileService fileService, KafkaTemplate<String, Object> kafkaTemplate) {
         this.targetPictureRepository = targetPictureRepository;
-        this.fabricRepository = fabricRepository;
         this.fileService = fileService;
         this.kafkaTemplate = kafkaTemplate;
     }

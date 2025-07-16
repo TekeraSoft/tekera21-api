@@ -36,9 +36,7 @@ open class Company(
     @OneToMany(fetch = FetchType.LAZY, cascade = [(CascadeType.ALL)])
     open var users: MutableSet<User> = mutableSetOf(),
 
-    @ElementCollection
-    @CollectionTable(name = "company_address",
-        joinColumns = [JoinColumn(name = "company_id")])
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
     open var address: MutableList<Address> = mutableListOf(),
 
     @ElementCollection

@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.service;
 
+import com.tekerasoft.tekeramarketplace.dto.DiscountStockDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductUiDto;
@@ -425,5 +426,10 @@ public class ProductService {
 
     public Page<ProductUiDto> getProductsBySubCategory(String subName,Pageable pageable) {
         return productRepository.findProductBySubCategory(subName,pageable).map(ProductUiDto::toProductUiDto);
+    }
+
+    @Transactional
+    public void discountStock(List<DiscountStockDto> discountStocks) {
+
     }
 }
