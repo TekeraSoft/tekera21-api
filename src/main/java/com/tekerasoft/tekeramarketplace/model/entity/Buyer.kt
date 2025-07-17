@@ -9,6 +9,6 @@ open class Buyer(
     open var email: String,
     open var gsmNumber: String,
     open var identityNumber: String,
-    open var isRegistered: Boolean
+    open var isRegistered: Boolean? = false,
 
 ): BaseEntity()

@@ -54,7 +54,7 @@ public class Filter extends OncePerRequestFilter {
             @Nonnull FilterChain filterChain) throws ServletException, IOException {
 
         // 1. Çerezlerden JWT token'ı çıkar
-        String token = extractTokenFromCookies(request);
+        String token = extractToken(request);
 
         // Eğer token yoksa, filtre zincirine devam et
         if (token == null) {
@@ -113,34 +113,28 @@ public class Filter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    /**
-     * HTTP isteğindeki çerezlerden JWT token'ı çıkarır.
-     * "next-auth.session-token" veya "__Secure-next-auth.session-token" adındaki çerezleri arar.
-     *
-     * @param request HttpServletRequest nesnesi
-     * @return Bulunan token değeri veya yoksa null
-     */
-    public static String extractTokenFromCookies(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            return null;
+
+    public static String extractToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7); // "Bearer " sonrası
         }
 
-        // Java 8 Stream API kullanarak daha modern bir yaklaşım
-        Optional<String> token = Arrays.stream(cookies)
-                .filter(cookie -> "session-token".equals(cookie.getName()))
-                .map(Cookie::getValue)
-                .findFirst();
+        // 2. Cookie'lerden al
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies != null) {
+//            return Arrays.stream(cookies)
+//                    .filter(cookie -> "session-token".equals(cookie.getName()))
+//                    .map(Cookie::getValue)
+//                    .findFirst()
+//                    .orElse(null);
+//        }
 
-        return token.orElse(null);
+        // 3. Hiçbir yerde yoksa null
+        return null;
     }
 
-    /**
-     * Kimlik doğrulama çerezlerini tarayıcıdan silmek için HTTP yanıtına "expired" çerezler ekler.
-     * Bu, istemcinin geçersiz veya süresi dolmuş token'ları tutmasını engeller.
-     *
-     * @param response HttpServletResponse nesnesi
-     */
+
     private void clearAuthCookies(HttpServletResponse response) {
         // session-token çerezini sil
         Cookie sessionCookie = new Cookie("session-token", null);
