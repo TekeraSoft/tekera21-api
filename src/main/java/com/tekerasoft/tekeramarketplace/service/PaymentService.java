@@ -9,7 +9,9 @@ import com.iyzipay.request.CreateThreedsPaymentRequestV2;
 import com.tekerasoft.tekeramarketplace.dto.request.BasketItemRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateOrderRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreatePayRequest;
+import com.tekerasoft.tekeramarketplace.model.entity.Company;
 import com.tekerasoft.tekeramarketplace.model.entity.Order;
+import com.tekerasoft.tekeramarketplace.model.entity.ShippingCompany;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,10 +35,13 @@ public class PaymentService {
         this.companyService = companyService;
     }
 
+    // Kargo ücreti iki taraf için ayrı gösterilecek
+
 //    public ThreedsInitialize payment(CreatePayRequest req) {
 //
 //        BigDecimal totalPrice = req.getBasketItems().stream().map(BasketItemRequest::getPrice)
 //                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
 //
 //        Order order = orderService.createOrder(
 //                CreateOrderRequest.convertFromPayRequestToOrderRequest(

@@ -40,7 +40,7 @@ data class CreateOrderRequest(
                     it.identityNumber)},
 
                 payRequest.basketItems.map { BasketItemRequest(
-                    UUID.fromString(it.id),
+                    it.productId,
                     it.name,
                     it.code,
                     it.brandName,

@@ -5,7 +5,7 @@ import com.tekerasoft.tekeramarketplace.model.entity.Address
 data class AddressDto(
     val city: String,
     val street: String,
-    val postalCode: String,
+    val postalCode: String?,
     val buildNo: String,
     val doorNumber: String,
     val detailAddress: String,

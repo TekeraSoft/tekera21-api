@@ -16,7 +16,7 @@ data class CreatePayRequest(
     @JsonProperty("billingAddress")
     val billingAddress: Address,
     @JsonProperty("shippingPrice")
-    val shippingPrice: BigDecimal,
+    val shippingPrice: BigDecimal
 )
 
 data class PaymentCard(

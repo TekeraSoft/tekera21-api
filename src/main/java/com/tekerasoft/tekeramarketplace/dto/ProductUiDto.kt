@@ -36,7 +36,7 @@ data class ProductUiDto(
                         it.modelName,
                         it.modelCode,
                         it.color,
-                        it.images.firstOrNull()?.let { listOf(it) } ?: emptyList())
+                        it.images)
                 },
                 product.currencyType,
                 product.videoUrl,
@@ -54,5 +54,5 @@ data class VariationUiDto(
     val modelName: String,
     val modelCode: String,
     val color: String,
-    val images: List<String>?,
+    val images: List<String>,
 )
