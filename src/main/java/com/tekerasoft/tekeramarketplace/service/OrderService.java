@@ -7,9 +7,7 @@ import com.tekerasoft.tekeramarketplace.repository.jparepository.OrderRepository
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -27,32 +25,25 @@ public class OrderService {
         this.shippingCompanyService = shippingCompanyService;
         this.companyService = companyService;
     }
-
-    public ApiResponse<?> createOrder(CreateOrderRequest req) {
+    
+    public void createOrder(CreateOrderRequest req) {
         Order order = new Order();
 
         Optional<User> user = userService.getByUsername(req.getBuyer().getEmail());
         user.ifPresent(order::setUser);
 
-        Buyer buyerRequest = BuyerRequest.toEntity(req.getBuyer(), user.isPresent());
-        order.setBuyer(buyerRequest);
-
-        List<BasketItem> basketItems = req.getBasketItems().stream().map(BasketItemRequest::toEntity).toList();
-        order.setBasketItems(basketItems);
-
-        Address shippingAddressRequest = ShippingAddressRequest.toEntity(req.getShippingAddress());
-        order.setShippingAddress(shippingAddressRequest);
-
-        Address billingAddressRequest = BillingAddressRequest.toEntity(req.getBillingAddress());
-        order.setBillingAddress(billingAddressRequest);
-
+        order.setBuyer(BuyerRequest.toEntity(req.getBuyer(), user.isPresent()));
+        order.setBasketItems(req.getBasketItems().stream().map(BasketItemRequest::toEntity).toList());
+        order.setShippingAddress(ShippingAddressRequest.toEntity(req.getShippingAddress()));
+        order.setBillingAddress(BillingAddressRequest.toEntity(req.getBillingAddress()));
         order.setTotalPrice(req.getTotalPrice());
         order.setPaymentType(req.getPaymentType());
         order.setPaymentStatus(req.getPaymentStatus());
-
         order.setShippingCompany(shippingCompanyService.getShippingCompany(req.getShippingCompanyId()));
         orderRepository.save(order);
-        return new ApiResponse<>("Order Created", HttpStatus.CREATED.value());
+        new ApiResponse<>("Order Created", HttpStatus.CREATED.value());
     }
+
+
 
 }

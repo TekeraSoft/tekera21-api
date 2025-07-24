@@ -2,25 +2,20 @@ package com.tekerasoft.tekeramarketplace.model.entity
 
 import jakarta.persistence.*
 import java.math.BigDecimal
+import java.util.UUID
 
 @Entity
 open class BasketItem(
+    @Id
+    open var id: UUID,
     open var name: String,
-    open var slug: String,
-    open var code: String,
+    open var code: String? = null,
     open var brandName: String,
     open var quantity: Int,
-    open var modelName: String,
-    open var modelCode: String,
+    open var modelCode: String? = null,
     open var price: BigDecimal,
-    open var sku: String,
-    open var barcode: String,
-    @ElementCollection
-    @CollectionTable(
-        name = "basket_item_attributes",
-        joinColumns = [JoinColumn(name = "basket_item_id")]
-    )
-    open var attributes: List<AttributeDetail>,
+    open var sku: String? = null,
+    open var barcode: String? = null,
     open var image: String,
     open var companyId: String
-): BaseEntity()
+)

@@ -1,12 +1,15 @@
 package com.tekerasoft.tekeramarketplace.dto.request
 
+import com.tekerasoft.tekeramarketplace.dto.request.BasketItemRequest.Companion.toEntity
 import com.tekerasoft.tekeramarketplace.model.entity.Address
 import com.tekerasoft.tekeramarketplace.model.entity.AttributeDetail
 import com.tekerasoft.tekeramarketplace.model.entity.BasketItem
 import com.tekerasoft.tekeramarketplace.model.entity.Buyer
+import com.tekerasoft.tekeramarketplace.model.entity.Order
 import com.tekerasoft.tekeramarketplace.model.entity.PaymentStatus
 import com.tekerasoft.tekeramarketplace.model.entity.PaymentType
 import java.math.BigDecimal
+import java.util.UUID
 
 data class CreateOrderRequest(
     val buyer: BuyerRequest,
@@ -18,8 +21,66 @@ data class CreateOrderRequest(
     val paymentType: PaymentType,
     val paymentStatus: PaymentStatus,
     val shippingCompanyId: String,
-    val companyId: String,
-)
+) {
+    companion object {
+        @JvmStatic
+        fun convertFromPayRequestToOrderRequest(payRequest: CreatePayRequest,
+                                                totalPrice: BigDecimal,
+                                                shippingPrice: BigDecimal,
+                                                paymentType: PaymentType,
+                                                paymentStatus: PaymentStatus,
+                                                shippingCompanyId: String): CreateOrderRequest {
+            return CreateOrderRequest(
+
+                payRequest.buyer.let { BuyerRequest(
+                    it.name,
+                    it.surname,
+                    it.email,
+                    it.gsmNumber,
+                    it.identityNumber)},
+
+                payRequest.basketItems.map { BasketItemRequest(
+                    UUID.fromString(it.id),
+                    it.name,
+                    it.code,
+                    it.brandName,
+                    it.quantity,
+                    it.modelCode,
+                    it.price,
+                    it.sku,
+                    it.barcode,
+                    it.image,
+                    it.companyId,
+                    )},
+
+                payRequest.shippingAddress.let { ShippingAddressRequest(
+                    it.city,
+                    it.street,
+                    it.zipCode,
+                    it.buildNo,
+                    it.doorNumber,
+                    it.address,
+                    it.country,
+
+                ) },
+                payRequest.billingAddress.let { BillingAddressRequest(
+                    it.city,
+                    it.street,
+                    it.zipCode,
+                    it.buildNo,
+                    it.doorNumber,
+                    it.address,
+                    it.country,
+                )},
+                totalPrice,
+                shippingPrice,
+                paymentType,
+                paymentStatus,
+                shippingCompanyId
+            )
+        }
+    }
+}
 
 
 data class BuyerRequest(
@@ -45,17 +106,15 @@ data class BuyerRequest(
 }
 
 data class BasketItemRequest(
+    val productId: UUID,
     val name: String,
-    val slug: String,
-    val code: String,
+    val code: String?,
     val brandName: String,
     val quantity: Int,
-    val modelName: String,
-    val modelCode: String,
+    val modelCode: String?,
     val price: BigDecimal,
-    val sku: String,
-    val barcode: String,
-    val attributes: List<AttributeDetailRequest>,
+    val sku: String?,
+    val barcode: String?,
     val image: String,
     val companyId: String,
 ) {
@@ -63,17 +122,15 @@ data class BasketItemRequest(
         @JvmStatic
         fun toEntity(from: BasketItemRequest): BasketItem {
             return BasketItem(
+                from.productId,
                 from.name,
-                 from.slug,
                 from.code,
                 from.brandName,
                 from.quantity,
-                from.modelName,
                 from.modelCode,
                 from.price,
                 from.sku,
                 from.barcode,
-                from.attributes.map { it -> AttributeDetail(it.key, it.value) },
                 from.image,
                 from.companyId,
             )
@@ -81,15 +138,10 @@ data class BasketItemRequest(
     }
 }
 
-data class AttributeDetailRequest(
-    val key: String,
-    val value: String,
-)
-
 data class ShippingAddressRequest(
     val city: String,
     val street: String,
-    val postalCode: String,
+    val postalCode: String?,
     val buildNo: String,
     val doorNumber: String,
     val detailAddress: String,
@@ -114,7 +166,7 @@ data class ShippingAddressRequest(
 data class BillingAddressRequest(
     val city: String,
     val street: String,
-    val postalCode: String,
+    val postalCode: String?,
     val buildNo: String,
     val doorNumber: String,
     val detailAddress: String,

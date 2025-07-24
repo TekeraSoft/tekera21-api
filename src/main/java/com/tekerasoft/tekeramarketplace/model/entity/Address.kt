@@ -11,7 +11,7 @@ open class Address (
     @JsonProperty("street")
     open var street: String,
     @JsonProperty("postalCode")
-    open var postalCode: String,
+    open var postalCode: String? = null,
     @JsonProperty("buildNo")
     open var buildNo: String,
     @JsonProperty("doorNumber")
