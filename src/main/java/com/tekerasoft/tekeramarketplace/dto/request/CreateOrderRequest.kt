@@ -1,13 +1,14 @@
 package com.tekerasoft.tekeramarketplace.dto.request
 
-import com.tekerasoft.tekeramarketplace.dto.request.BasketItemRequest.Companion.toEntity
 import com.tekerasoft.tekeramarketplace.model.entity.Address
 import com.tekerasoft.tekeramarketplace.model.entity.AttributeDetail
 import com.tekerasoft.tekeramarketplace.model.entity.BasketItem
 import com.tekerasoft.tekeramarketplace.model.entity.Buyer
+import com.tekerasoft.tekeramarketplace.model.entity.Company
 import com.tekerasoft.tekeramarketplace.model.entity.Order
 import com.tekerasoft.tekeramarketplace.model.entity.PaymentStatus
 import com.tekerasoft.tekeramarketplace.model.entity.PaymentType
+import com.tekerasoft.tekeramarketplace.model.entity.ShippingCompany
 import java.math.BigDecimal
 import java.util.UUID
 
@@ -19,8 +20,7 @@ data class CreateOrderRequest(
     val totalPrice: BigDecimal,
     val shippingPrice: BigDecimal,
     val paymentType: PaymentType,
-    val paymentStatus: PaymentStatus,
-    val shippingCompanyId: String,
+    val paymentStatus: PaymentStatus
 ) {
     companion object {
         @JvmStatic
@@ -28,8 +28,7 @@ data class CreateOrderRequest(
                                                 totalPrice: BigDecimal,
                                                 shippingPrice: BigDecimal,
                                                 paymentType: PaymentType,
-                                                paymentStatus: PaymentStatus,
-                                                shippingCompanyId: String): CreateOrderRequest {
+                                                paymentStatus: PaymentStatus): CreateOrderRequest {
             return CreateOrderRequest(
 
                 payRequest.buyer.let { BuyerRequest(
@@ -51,6 +50,7 @@ data class CreateOrderRequest(
                     it.barcode,
                     it.image,
                     it.companyId,
+                    it.shippingCompanyId
                     )},
 
                 payRequest.shippingAddress.let { ShippingAddressRequest(
@@ -75,8 +75,7 @@ data class CreateOrderRequest(
                 totalPrice,
                 shippingPrice,
                 paymentType,
-                paymentStatus,
-                shippingCompanyId
+                paymentStatus
             )
         }
     }
@@ -89,21 +88,7 @@ data class BuyerRequest(
     val email: String,
     val gsmNumber: String,
     val identityNumber: String,
-) {
-    companion object {
-        @JvmStatic
-        fun toEntity(from: BuyerRequest, isRegistered: Boolean): Buyer {
-            return Buyer(
-                from.name,
-                from.surname,
-                from.email,
-                from.gsmNumber,
-                from.identityNumber,
-                isRegistered,
-            )
-        }
-    }
-}
+)
 
 data class BasketItemRequest(
     val productId: UUID,
@@ -117,26 +102,8 @@ data class BasketItemRequest(
     val barcode: String?,
     val image: String,
     val companyId: String,
-) {
-    companion object {
-        @JvmStatic
-        fun toEntity(from: BasketItemRequest): BasketItem {
-            return BasketItem(
-                from.productId,
-                from.name,
-                from.code,
-                from.brandName,
-                from.quantity,
-                from.modelCode,
-                from.price,
-                from.sku,
-                from.barcode,
-                from.image,
-                from.companyId,
-            )
-        }
-    }
-}
+    val shippingCompanyId: String
+)
 
 data class ShippingAddressRequest(
     val city: String,
@@ -146,22 +113,7 @@ data class ShippingAddressRequest(
     val doorNumber: String,
     val detailAddress: String,
     val country: String,
-) {
-    companion object {
-        @JvmStatic
-        fun toEntity(from: ShippingAddressRequest): Address {
-            return Address(
-                from.city,
-                from.street,
-                    from.postalCode,
-                from.buildNo,
-                from.doorNumber,
-                from.detailAddress,
-                from.country,
-            )
-        }
-    }
-}
+)
 
 data class BillingAddressRequest(
     val city: String,
@@ -171,19 +123,4 @@ data class BillingAddressRequest(
     val doorNumber: String,
     val detailAddress: String,
     val country: String,
-) {
-    companion object {
-        @JvmStatic
-        fun toEntity(from: BillingAddressRequest): Address {
-            return Address(
-                from.city,
-                from.street,
-                from.postalCode,
-                from.buildNo,
-                from.doorNumber,
-                from.detailAddress,
-                from.country,
-            )
-        }
-    }
-}
+)

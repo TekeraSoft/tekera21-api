@@ -19,4 +19,5 @@ public class ShippingCompanyService {
         return shippingCompanyRepository.findById(UUID.fromString(id))
                 .orElseThrow();
     }
+
 }

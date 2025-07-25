@@ -17,5 +17,16 @@ open class BasketItem(
     open var sku: String? = null,
     open var barcode: String? = null,
     open var image: String,
-    open var companyId: String
-)
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    open var attributes: MutableList<BasketAttributes>,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    open var company: Company,
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shipping_company_id")
+    open var shippingCompany: ShippingCompany,
+
+    )

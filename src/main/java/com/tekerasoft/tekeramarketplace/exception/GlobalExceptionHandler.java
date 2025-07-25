@@ -51,6 +51,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
     }
 
+    @ExceptionHandler(PaymentException.class)
+    public ResponseEntity<Object> handlePaymentException(PaymentException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+
     @ExceptionHandler(DecreaseStockException.class)
     public ResponseEntity<Object> handleDecreaseStockException(DecreaseStockException ex) {
         return ResponseEntity

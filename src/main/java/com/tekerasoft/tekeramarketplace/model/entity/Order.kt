@@ -12,7 +12,7 @@ open class Order(
     open var user: User? = null,
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "guest_id")
+    @JoinColumn(name = "buyer_id")
     open var buyer: Buyer,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -32,12 +32,5 @@ open class Order(
 
     open var paymentStatus: PaymentStatus? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="shipping_company_id")
-    open var shippingCompany: ShippingCompany,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    open var company: Company? = null,
 
 ): BaseEntity()
