@@ -2,7 +2,6 @@ package com.tekerasoft.tekeramarketplace.service;
 
 import com.iyzipay.Options;
 import com.iyzipay.model.*;
-import com.iyzipay.model.BasketItem;
 import com.iyzipay.model.Buyer;
 import com.iyzipay.model.Currency;
 import com.iyzipay.request.CreatePaymentRequest;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class PaymentService {
@@ -39,7 +37,8 @@ public class PaymentService {
     private final CompanyService companyService;
     private static Logger logger = LoggerFactory.getLogger(PaymentService.class);
 
-    public PaymentService(Options options, OrderService orderService, UserService userService, CompanyService companyService) {
+    public PaymentService(Options options, OrderService orderService, UserService userService,
+                          CompanyService companyService) {
         this.options = options;
         this.orderService = orderService;
         this.userService = userService;
@@ -100,8 +99,6 @@ public class PaymentService {
 
         paymentRequest.setPrice(totalPrice);
         paymentRequest.setPaidPrice(totalPrice);
-
-
 
     }
 

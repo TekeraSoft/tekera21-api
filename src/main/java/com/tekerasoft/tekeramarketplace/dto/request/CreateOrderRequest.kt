@@ -50,7 +50,8 @@ data class CreateOrderRequest(
                     it.barcode,
                     it.image,
                     it.companyId,
-                    it.shippingCompanyId
+                    it.shippingCompanyId,
+                    it.attributeId
                     )},
 
                 payRequest.shippingAddress.let { ShippingAddressRequest(
@@ -102,7 +103,8 @@ data class BasketItemRequest(
     val barcode: String?,
     val image: String,
     val companyId: String,
-    val shippingCompanyId: String
+    val shippingCompanyId: String,
+    val attributeId: String
 )
 
 data class ShippingAddressRequest(

@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.exception.DecreaseStockException;
+import com.tekerasoft.tekeramarketplace.model.entity.Attribute;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.AttributeRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,10 @@ public class AttributeService {
 
     public AttributeService(AttributeRepository attributeRepository) {
         this.attributeRepository = attributeRepository;
+    }
+
+    public Attribute getAttributeById(String id) {
+        return attributeRepository.findById(UUID.fromString(id)).orElse(null);
     }
 
     public void decreaseStock(String attributeId, int quantity) {

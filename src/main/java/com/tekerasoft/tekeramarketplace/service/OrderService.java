@@ -20,14 +20,16 @@ public class OrderService {
     private final UserService userService;
     private final ShippingCompanyService shippingCompanyService;
     private final CompanyService companyService;
+    private final AttributeService attributeService;
 
     public OrderService(OrderRepository orderRepository,
                         UserService userService,
-                        ShippingCompanyService shippingCompanyService, CompanyService companyService) {
+                        ShippingCompanyService shippingCompanyService, CompanyService companyService, AttributeService attributeService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.shippingCompanyService = shippingCompanyService;
         this.companyService = companyService;
+        this.attributeService = attributeService;
     }
     
     public Order createOrder(CreateOrderRequest req) {
@@ -39,6 +41,7 @@ public class OrderService {
         List<BasketItem> basketItems = req.getBasketItems().stream().map(bi -> {
             Company company = companyService.getCompanyById(bi.getCompanyId());
             ShippingCompany shippingCompany = shippingCompanyService.getShippingCompany(bi.getShippingCompanyId());
+            Attribute attributes = attributeService.getAttributeById(bi.getAttributeId());
             return new BasketItem(
                     bi.getProductId(),
                     bi.getName(),
@@ -50,6 +53,7 @@ public class OrderService {
                     bi.getSku(),
                     bi.getBarcode(),
                     bi.getImage(),
+                    attributes.getAttributeDetails().stream().map(it -> new BasketAttributes(it.getKey(),it.getValue())).toList(),
                     company,
                     shippingCompany
             );
