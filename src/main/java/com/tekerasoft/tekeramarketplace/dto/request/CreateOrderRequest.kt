@@ -1,16 +1,8 @@
 package com.tekerasoft.tekeramarketplace.dto.request
 
-import com.tekerasoft.tekeramarketplace.model.entity.Address
-import com.tekerasoft.tekeramarketplace.model.entity.AttributeDetail
-import com.tekerasoft.tekeramarketplace.model.entity.BasketItem
-import com.tekerasoft.tekeramarketplace.model.entity.Buyer
-import com.tekerasoft.tekeramarketplace.model.entity.Company
-import com.tekerasoft.tekeramarketplace.model.entity.Order
 import com.tekerasoft.tekeramarketplace.model.entity.PaymentStatus
 import com.tekerasoft.tekeramarketplace.model.entity.PaymentType
-import com.tekerasoft.tekeramarketplace.model.entity.ShippingCompany
 import java.math.BigDecimal
-import java.util.UUID
 
 data class CreateOrderRequest(
     val buyer: BuyerRequest,
@@ -40,18 +32,9 @@ data class CreateOrderRequest(
 
                 payRequest.basketItems.map { BasketItemRequest(
                     it.productId,
-                    it.name,
-                    it.code,
-                    it.brandName,
+                    it.variationId,
+                    it.attributeId,
                     it.quantity,
-                    it.modelCode,
-                    it.price,
-                    it.sku,
-                    it.barcode,
-                    it.image,
-                    it.companyId,
-                    it.shippingCompanyId,
-                    it.attributeId
                     )},
 
                 payRequest.shippingAddress.let { ShippingAddressRequest(
@@ -92,19 +75,10 @@ data class BuyerRequest(
 )
 
 data class BasketItemRequest(
-    val productId: UUID,
-    val name: String,
-    val code: String?,
-    val brandName: String,
+    val productId: String,
+    val variationId: String,
+    val attributeId: String,
     val quantity: Int,
-    val modelCode: String?,
-    val price: BigDecimal,
-    val sku: String?,
-    val barcode: String?,
-    val image: String,
-    val companyId: String,
-    val shippingCompanyId: String,
-    val attributeId: String
 )
 
 data class ShippingAddressRequest(

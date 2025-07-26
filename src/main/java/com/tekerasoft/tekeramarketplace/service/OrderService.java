@@ -1,17 +1,16 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.request.*;
-import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.model.entity.Address;
 import com.tekerasoft.tekeramarketplace.model.entity.BasketItem;
 import com.tekerasoft.tekeramarketplace.model.entity.Buyer;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.OrderRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class OrderService {
@@ -21,15 +20,20 @@ public class OrderService {
     private final ShippingCompanyService shippingCompanyService;
     private final CompanyService companyService;
     private final AttributeService attributeService;
+    private final ProductService productService;
+    private final VariationService variationService;
 
     public OrderService(OrderRepository orderRepository,
                         UserService userService,
-                        ShippingCompanyService shippingCompanyService, CompanyService companyService, AttributeService attributeService) {
+                        ShippingCompanyService shippingCompanyService, CompanyService companyService,
+                        AttributeService attributeService, ProductService productService, VariationService variationService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.shippingCompanyService = shippingCompanyService;
         this.companyService = companyService;
         this.attributeService = attributeService;
+        this.productService = productService;
+        this.variationService = variationService;
     }
     
     public Order createOrder(CreateOrderRequest req) {
@@ -39,23 +43,23 @@ public class OrderService {
         user.ifPresent(order::setUser);
 
         List<BasketItem> basketItems = req.getBasketItems().stream().map(bi -> {
-            Company company = companyService.getCompanyById(bi.getCompanyId());
-            ShippingCompany shippingCompany = shippingCompanyService.getShippingCompany(bi.getShippingCompanyId());
-            Attribute attributes = attributeService.getAttributeById(bi.getAttributeId());
+            Product product = productService.getById(UUID.fromString(bi.getProductId()));
+            Attribute attribute = attributeService.getAttributeById(bi.getAttributeId());
+            Variation variation = variationService.getVariation(bi.getVariationId());
             return new BasketItem(
-                    bi.getProductId(),
-                    bi.getName(),
-                    bi.getCode(),
-                    bi.getBrandName(),
+                    UUID.fromString(bi.getProductId()),
+                    product.getName(),
+                    product.getCode(),
+                    product.getBrandName(),
                     bi.getQuantity(),
-                    bi.getModelCode(),
-                    bi.getPrice(),
-                    bi.getSku(),
-                    bi.getBarcode(),
-                    bi.getImage(),
-                    attributes.getAttributeDetails().stream().map(it -> new BasketAttributes(it.getKey(),it.getValue())).toList(),
-                    company,
-                    shippingCompany
+                    variation.getModelCode(),
+                    attribute.getPrice(),
+                    attribute.getSku(),
+                    attribute.getBarcode(),
+                    variation.getImages().getFirst(),
+                    attribute.getAttributeDetails().stream().map(it -> new BasketAttributes(it.getKey(),it.getValue())).toList(),
+                    product.getCompany(),
+                    product.getCompany().getShippingCompanies().stream().findFirst().get()
             );
         }).toList();
         order.setBasketItems(basketItems);

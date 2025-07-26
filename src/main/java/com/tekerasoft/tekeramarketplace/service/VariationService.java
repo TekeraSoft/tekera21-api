@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.Variation;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.VariationRepository;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class VariationService {
@@ -33,5 +35,10 @@ public class VariationService {
         }
 
         return new ApiResponse<>("Delete Variation Image", HttpStatus.OK.value());
+    }
+
+    public Variation getVariation(String id) {
+        return variationRepository.findById(UUID.fromString(id))
+                .orElseThrow(() -> new NotFoundException("Variation not found"));
     }
 }
