@@ -175,11 +175,15 @@ public class PaymentService {
             String paymentId = parameters.containsKey("paymentId") ? parameters.get("paymentId")[0] : null;
             String conversationId = parameters.containsKey("conversationId") ? parameters.get("conversationId")[0] : null;
 
+            ThreedsPayment threedsPayment = completePayment(paymentId, conversationId);
+
+            if(threedsPayment.getStatus().equals("failure")) {
+                throw new PaymentException(threedsPayment.getErrorMessage());
+            }
+
             if(paymentId != null || conversationId != null) {
                 throw new PaymentException("Eksik Ödeme Bilgisi");
             }
-
-            ThreedsPayment threedsPayment = completePayment(paymentId, conversationId);
 
             if("success".equalsIgnoreCase(threedsPayment.getStatus())) {
                 response.sendRedirect(originUrl + "/payment-success");
