@@ -21,6 +21,8 @@ open class BasketItem(
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var attributes: MutableList<BasketAttributes>,
 
+    open var shippingPrice: BigDecimal,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     open var company: Company,

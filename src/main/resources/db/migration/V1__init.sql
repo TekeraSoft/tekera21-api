@@ -34,36 +34,43 @@ CREATE TABLE attributes_stock_attributes
     value        VARCHAR(255)
 );
 
-CREATE TABLE basket_item
+CREATE TABLE basket_attributes
 (
-    id         UUID    NOT NULL,
+    id         UUID NOT NULL,
     created_at TIMESTAMP WITHOUT TIME ZONE,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
-    name       VARCHAR(255),
-    slug       VARCHAR(255),
-    code       VARCHAR(255),
-    brand_name VARCHAR(255),
-    quantity   INTEGER NOT NULL,
-    model_name VARCHAR(255),
-    model_code VARCHAR(255),
-    price      DECIMAL,
-    sku        VARCHAR(255),
-    barcode    VARCHAR(255),
-    image      VARCHAR(255),
-    company_id VARCHAR(255),
+    key        VARCHAR(255),
+    value      VARCHAR(255),
+    CONSTRAINT "pk_basketattrıbutes" PRIMARY KEY (id)
+);
+
+CREATE TABLE basket_item
+(
+    id                  UUID    NOT NULL,
+    name                VARCHAR(255),
+    code                VARCHAR(255),
+    brand_name          VARCHAR(255),
+    quantity            INTEGER NOT NULL,
+    model_code          VARCHAR(255),
+    price               DECIMAL,
+    sku                 VARCHAR(255),
+    barcode             VARCHAR(255),
+    image               VARCHAR(255),
+    shipping_price      DECIMAL,
+    company_id          UUID,
+    shipping_company_id UUID,
     CONSTRAINT "pk_basketıtem" PRIMARY KEY (id)
 );
 
 CREATE TABLE basket_item_attributes
 (
     basket_item_id UUID NOT NULL,
-    key            VARCHAR(255),
-    value          VARCHAR(255)
+    attributes_id  UUID NOT NULL
 );
 
 CREATE TABLE buyer
 (
-    id              UUID    NOT NULL,
+    id              UUID NOT NULL,
     created_at      TIMESTAMP WITHOUT TIME ZONE,
     updated_at      TIMESTAMP WITHOUT TIME ZONE,
     name            VARCHAR(255),
@@ -71,7 +78,7 @@ CREATE TABLE buyer
     email           VARCHAR(255),
     gsm_number      VARCHAR(255),
     identity_number VARCHAR(255),
-    is_registered   BOOLEAN NOT NULL,
+    is_registered   BOOLEAN,
     CONSTRAINT pk_buyer PRIMARY KEY (id)
 );
 
@@ -219,15 +226,13 @@ CREATE TABLE orders
     created_at          TIMESTAMP WITHOUT TIME ZONE,
     updated_at          TIMESTAMP WITHOUT TIME ZONE,
     user_id             UUID,
-    guest_id            UUID,
+    buyer_id            UUID,
     shipping_address_id UUID,
     billing_address_id  UUID,
     total_price         DECIMAL,
     shipping_price      DECIMAL,
     payment_type        SMALLINT,
     payment_status      SMALLINT,
-    shipping_company_id UUID,
-    company_id          UUID,
     CONSTRAINT pk_orders PRIMARY KEY (id)
 );
 
@@ -420,6 +425,12 @@ CREATE TABLE variations
 ALTER TABLE users
     ADD CONSTRAINT uc_74165e195b2f7b25de690d14a UNIQUE (email);
 
+ALTER TABLE basket_item_attributes
+    ADD CONSTRAINT "uc_basket_ıtem_attrıbutes_attrıbutes" UNIQUE (attributes_id);
+
+ALTER TABLE basket_item
+    ADD CONSTRAINT "uc_basketıtem_shıppıng_company" UNIQUE (shipping_company_id);
+
 ALTER TABLE companies_address
     ADD CONSTRAINT "uc_companıes_address_address" UNIQUE (address_id);
 
@@ -436,7 +447,7 @@ ALTER TABLE orders_basket_items
     ADD CONSTRAINT "uc_orders_basket_ıtems_basketıtems" UNIQUE (basket_items_id);
 
 ALTER TABLE orders
-    ADD CONSTRAINT uc_orders_guest UNIQUE (guest_id);
+    ADD CONSTRAINT uc_orders_buyer UNIQUE (buyer_id);
 
 ALTER TABLE products_comments
     ADD CONSTRAINT uc_products_comments_comments UNIQUE (comments_id);
@@ -456,6 +467,12 @@ ALTER TABLE users_orders
 ALTER TABLE attributes
     ADD CONSTRAINT FK_ATTRIBUTES_ON_VARIATION FOREIGN KEY (variation_id) REFERENCES variations (id);
 
+ALTER TABLE basket_item
+    ADD CONSTRAINT FK_BASKETITEM_ON_COMPANY FOREIGN KEY (company_id) REFERENCES companies (id);
+
+ALTER TABLE basket_item
+    ADD CONSTRAINT FK_BASKETITEM_ON_SHIPPING_COMPANY FOREIGN KEY (shipping_company_id) REFERENCES shipping_company (id);
+
 ALTER TABLE fashion_collection
     ADD CONSTRAINT FK_FASHIONCOLLECTION_ON_COMPANY FOREIGN KEY (company_id) REFERENCES companies (id);
 
@@ -463,16 +480,10 @@ ALTER TABLE orders
     ADD CONSTRAINT FK_ORDERS_ON_BILLINGADDRESS FOREIGN KEY (billing_address_id) REFERENCES address (id);
 
 ALTER TABLE orders
-    ADD CONSTRAINT FK_ORDERS_ON_COMPANY FOREIGN KEY (company_id) REFERENCES companies (id);
-
-ALTER TABLE orders
-    ADD CONSTRAINT FK_ORDERS_ON_GUEST FOREIGN KEY (guest_id) REFERENCES buyer (id);
+    ADD CONSTRAINT FK_ORDERS_ON_BUYER FOREIGN KEY (buyer_id) REFERENCES buyer (id);
 
 ALTER TABLE orders
     ADD CONSTRAINT FK_ORDERS_ON_SHIPPINGADDRESS FOREIGN KEY (shipping_address_id) REFERENCES address (id);
-
-ALTER TABLE orders
-    ADD CONSTRAINT FK_ORDERS_ON_SHIPPING_COMPANY FOREIGN KEY (shipping_company_id) REFERENCES shipping_company (id);
 
 ALTER TABLE orders
     ADD CONSTRAINT FK_ORDERS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
@@ -496,7 +507,10 @@ ALTER TABLE attributes_stock_attributes
     ADD CONSTRAINT "fk_attrıbutes_stockattrıbutes_on_attrıbute" FOREIGN KEY (attribute_id) REFERENCES attributes (id);
 
 ALTER TABLE basket_item_attributes
-    ADD CONSTRAINT "fk_basket_ıtem_attrıbutes_on_basket_ıtem" FOREIGN KEY (basket_item_id) REFERENCES basket_item (id);
+    ADD CONSTRAINT "fk_basıteatt_on_basket_attrıbutes" FOREIGN KEY (attributes_id) REFERENCES basket_attributes (id);
+
+ALTER TABLE basket_item_attributes
+    ADD CONSTRAINT "fk_basıteatt_on_basket_ıtem" FOREIGN KEY (basket_item_id) REFERENCES basket_item (id);
 
 ALTER TABLE companies_address
     ADD CONSTRAINT fk_comadd_on_address FOREIGN KEY (address_id) REFERENCES address (id);

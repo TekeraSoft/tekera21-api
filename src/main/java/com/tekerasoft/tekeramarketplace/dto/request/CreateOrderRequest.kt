@@ -10,7 +10,6 @@ data class CreateOrderRequest(
     val shippingAddress: ShippingAddressRequest,
     val billingAddress: BillingAddressRequest,
     val totalPrice: BigDecimal,
-    val shippingPrice: BigDecimal,
     val paymentType: PaymentType,
     val paymentStatus: PaymentStatus
 ) {
@@ -18,7 +17,6 @@ data class CreateOrderRequest(
         @JvmStatic
         fun convertFromPayRequestToOrderRequest(payRequest: CreatePayRequest,
                                                 totalPrice: BigDecimal,
-                                                shippingPrice: BigDecimal,
                                                 paymentType: PaymentType,
                                                 paymentStatus: PaymentStatus): CreateOrderRequest {
             return CreateOrderRequest(
@@ -57,7 +55,6 @@ data class CreateOrderRequest(
                     it.country,
                 )},
                 totalPrice,
-                shippingPrice,
                 paymentType,
                 paymentStatus
             )

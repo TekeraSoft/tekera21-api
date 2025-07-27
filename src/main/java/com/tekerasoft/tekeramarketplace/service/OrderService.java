@@ -1,6 +1,8 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.request.*;
+import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.model.entity.Address;
 import com.tekerasoft.tekeramarketplace.model.entity.BasketItem;
@@ -25,8 +27,11 @@ public class OrderService {
 
     public OrderService(OrderRepository orderRepository,
                         UserService userService,
-                        ShippingCompanyService shippingCompanyService, CompanyService companyService,
-                        AttributeService attributeService, ProductService productService, VariationService variationService) {
+                        ShippingCompanyService shippingCompanyService,
+                        CompanyService companyService,
+                        AttributeService attributeService,
+                        ProductService productService,
+                        VariationService variationService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.shippingCompanyService = shippingCompanyService;
@@ -56,8 +61,9 @@ public class OrderService {
                     attribute.getPrice(),
                     attribute.getSku(),
                     attribute.getBarcode(),
-                    variation.getImages().getFirst(),
+                    variation.getImages().get(0),
                     attribute.getAttributeDetails().stream().map(it -> new BasketAttributes(it.getKey(),it.getValue())).toList(),
+                    product.getCompany().getShippingCompanies().stream().findFirst().get().getPrice(),
                     product.getCompany(),
                     product.getCompany().getShippingCompanies().stream().findFirst().get()
             );
@@ -100,6 +106,11 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-
+    public void changeOrderPaymentStatus(String orderId,PaymentStatus paymentStatus) {
+        Order order = orderRepository.findById(UUID.fromString(orderId))
+                        .orElseThrow(() -> new NotFoundException("Order not found"));
+        order.setPaymentStatus(paymentStatus);
+        orderRepository.save(order);
+    }
 
 }

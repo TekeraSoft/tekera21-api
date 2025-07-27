@@ -13,7 +13,6 @@ import com.tekerasoft.tekeramarketplace.dto.request.CreateOrderRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreatePayRequest;
 import com.tekerasoft.tekeramarketplace.exception.PaymentException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
-import com.tekerasoft.tekeramarketplace.model.entity.BasketItem;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -67,7 +66,6 @@ public class PaymentService {
                 CreateOrderRequest.convertFromPayRequestToOrderRequest(
                         req,
                         totalPrice,
-                        new BigDecimal("100.00"),
                         PaymentType.CREDIT_CARD,
                         PaymentStatus.PENDING
                 )
@@ -148,8 +146,7 @@ public class PaymentService {
         paymentRequest.setPaidPrice(totalPrice);
         paymentRequest.setBasketItems(basketItems);
 
-        ThreedsInitialize threedsInitialize = ThreedsInitialize.create(paymentRequest,options);
-
+        return ThreedsInitialize.create(paymentRequest,options);
 
     }
 
@@ -160,9 +157,7 @@ public class PaymentService {
             threedsPaymentRequestV2.setConversationId(conversationId);
             threedsPaymentRequestV2.setLocale(Locale.TR.getValue());
 
-            ThreedsPayment threedsPayment = ThreedsPayment.createV2(threedsPaymentRequestV2, options);
-
-            return threedsPayment;
+            return ThreedsPayment.createV2(threedsPaymentRequestV2, options);
         } catch (RuntimeException e) {
             logger.error(e.getMessage());
             throw new RuntimeException("Error completing 3D Secure Payment");
@@ -186,6 +181,7 @@ public class PaymentService {
             }
 
             if("success".equalsIgnoreCase(threedsPayment.getStatus())) {
+                orderService.changeOrderPaymentStatus(conversationId, PaymentStatus.PAID);
                 response.sendRedirect(originUrl + "/payment-success");
             } else {
                 response.sendRedirect(originUrl + "/payment-failure");
