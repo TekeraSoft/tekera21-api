@@ -48,6 +48,7 @@ data class ProductDto(
                         it.modelCode,
                         it.color,
                         it.attributes.map { it ->  AttributeDto(
+                            it.id,
                             it.attributeDetails,
                             it.stock,
                             it.price,

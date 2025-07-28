@@ -14,9 +14,8 @@ data class CreatePayRequest(
     @JsonProperty("basketItems")
     val basketItems: List<BasketItemRequest>,
     @JsonProperty("billingAddress")
-    val billingAddress: Address,
-    @JsonProperty("shippingPrice")
-    val shippingPrice: BigDecimal
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val billingAddress: Address? = null
 )
 
 data class PaymentCard(
@@ -33,8 +32,6 @@ data class PaymentCard(
 )
 
 data class Buyer(
-    @JsonProperty("id")
-    val id: String,
     @JsonProperty("name")
     val name: String,
     @JsonProperty("surname")
@@ -56,15 +53,13 @@ data class Buyer(
 )
 
 data class Address(
-    @JsonProperty("contactName")
-    val contactName: String,
     @JsonProperty("city")
     val city: String,
     @JsonProperty("state")
     val state: String,
     @JsonProperty("buildNo")
     val buildNo: String,
-    @JsonProperty("buildNo")
+    @JsonProperty("doorNumber")
     val doorNumber: String,
     @JsonProperty("country")
     val country: String,
@@ -75,51 +70,5 @@ data class Address(
     @JsonProperty("zipCode")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     val zipCode: String? = null,
-)
-
-data class BasketItem(
-
-    @JsonProperty("id")
-    val id: String,
-
-    @JsonProperty("name")
-    val name: String,
-
-    @JsonProperty("code")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    val code: String? = null,
-
-    @JsonProperty("brandName")
-    val brandName: String,
-
-    @JsonProperty("category1")
-    val category1: String,
-
-    @JsonProperty("category2")
-    val category2: String,
-
-    @JsonProperty("price")
-    var price: BigDecimal,
-
-    @JsonProperty("quantity")
-    val quantity: Int,
-
-    @JsonProperty("modelCode")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    val modelCode: String? = null,
-
-    @JsonProperty("sku")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    val sku: String? = null,
-
-    @JsonProperty("barcode")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    val barcode: String? = null,
-
-    @JsonProperty("image")
-    val image: String,
-
-    @JsonProperty("companyId")
-    val companyId: String,
 )
 

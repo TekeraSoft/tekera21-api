@@ -22,10 +22,11 @@ public class SuperAdminController {
     private final ProductService productService;
     private final ThemeService themeService;
     private final FashionCollectionService fashionCollectionService;
+    private final ShippingCompanyService shippingCompanyService;
 
     public SuperAdminController(CategoryService categoryService, SubCategoryService subCategoryService,
                                 CompanyService companyService, ProductService productService,
-                                ThemeService themeService, FashionCollectionService fashionCollectionService)
+                                ThemeService themeService, FashionCollectionService fashionCollectionService, ShippingCompanyService shippingCompanyService)
     {
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
@@ -33,6 +34,7 @@ public class SuperAdminController {
         this.productService = productService;
         this.themeService = themeService;
         this.fashionCollectionService = fashionCollectionService;
+        this.shippingCompanyService = shippingCompanyService;
     }
 
     @PostMapping(value = "/createCategory", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -146,5 +148,10 @@ public class SuperAdminController {
     @GetMapping("/getFashionCollection")
     public ResponseEntity<FashionCollectionDto> getFashionCollection(@RequestParam String id) {
         return ResponseEntity.ok(fashionCollectionService.getFashionCollection(id));
+    }
+
+    @PostMapping("/createShippingCompany")
+    public ResponseEntity<ApiResponse<?>> createShippingCompany(@RequestBody CreateShippingCompanyRequest req) {
+        return ResponseEntity.ok(shippingCompanyService.createShippingCompany(req));
     }
 }

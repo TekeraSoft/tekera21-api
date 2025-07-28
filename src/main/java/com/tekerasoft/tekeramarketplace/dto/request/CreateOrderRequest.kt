@@ -8,7 +8,7 @@ data class CreateOrderRequest(
     val buyer: BuyerRequest,
     val basketItems: List<BasketItemRequest>,
     val shippingAddress: ShippingAddressRequest,
-    val billingAddress: BillingAddressRequest,
+    val billingAddress: BillingAddressRequest?,
     val totalPrice: BigDecimal,
     val paymentType: PaymentType,
     val paymentStatus: PaymentStatus
@@ -45,7 +45,7 @@ data class CreateOrderRequest(
                     it.country,
 
                 ) },
-                payRequest.billingAddress.let { BillingAddressRequest(
+                payRequest.billingAddress?.let { BillingAddressRequest(
                     it.city,
                     it.street,
                     it.zipCode,

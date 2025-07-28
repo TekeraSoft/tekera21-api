@@ -89,7 +89,7 @@ public class PaymentService {
         paymentRequest.setPaymentCard(paymentCard);
 
         Buyer buyer = new Buyer();
-        buyer.setId(req.getBuyer().getId());
+        buyer.setId(order.getBuyer().getId().toString());
         buyer.setName(req.getBuyer().getName());
         buyer.setSurname(req.getBuyer().getSurname());
         buyer.setGsmNumber(req.getBuyer().getGsmNumber());
@@ -105,23 +105,25 @@ public class PaymentService {
         paymentRequest.setBuyer(buyer);
 
         Address shippingAddress = new Address();
-        shippingAddress.setContactName(req.getShippingAddress().getContactName());
+        shippingAddress.setContactName(req.getBuyer().getName()+" "+req.getBuyer().getSurname());
         shippingAddress.setCity(req.getShippingAddress().getCity());
         shippingAddress.setCountry(req.getShippingAddress().getCountry());
         shippingAddress.setAddress(req.getShippingAddress().getAddress());
         shippingAddress.setZipCode(req.getShippingAddress().getZipCode());
         paymentRequest.setShippingAddress(shippingAddress);
 
-        Address billingAddress = new Address();
-        billingAddress.setContactName(req.getBillingAddress().getContactName());
-        billingAddress.setCity(req.getBillingAddress().getCity());
-        billingAddress.setCountry(req.getBillingAddress().getCountry());
-        billingAddress.setAddress(req.getBillingAddress().getAddress());
-        billingAddress.setZipCode(req.getBillingAddress().getZipCode());
-        paymentRequest.setBillingAddress(billingAddress);
+        if(req.getBillingAddress() != null) {
+            Address billingAddress = new Address();
+            billingAddress.setContactName(req.getBuyer().getName()+" "+req.getBuyer().getSurname());
+            billingAddress.setCity(req.getBillingAddress().getCity());
+            billingAddress.setCountry(req.getBillingAddress().getCountry());
+            billingAddress.setAddress(req.getBillingAddress().getAddress());
+            billingAddress.setZipCode(req.getBillingAddress().getZipCode());
+            paymentRequest.setBillingAddress(billingAddress);
+        }else {
+            paymentRequest.setBillingAddress(shippingAddress);
+        }
 
-        // Basket items all price reduce / multiplay
-        // Calculate item count and all price
         List<com.iyzipay.model.BasketItem> basketItems = new ArrayList<>();
         for(BasketItemRequest bi: req.getBasketItems()) {
             com.iyzipay.model.BasketItem basketItem = new com.iyzipay.model.BasketItem();
@@ -181,9 +183,10 @@ public class PaymentService {
             }
 
             if("success".equalsIgnoreCase(threedsPayment.getStatus())) {
-                orderService.changeOrderPaymentStatus(conversationId, PaymentStatus.PAID);
+                orderService.completeOrder(conversationId, PaymentStatus.PAID);
                 response.sendRedirect(originUrl + "/payment-success");
             } else {
+                orderService.completeOrder(conversationId, PaymentStatus.FAIL);
                 response.sendRedirect(originUrl + "/payment-failure");
             }
         } catch (IOException e) {

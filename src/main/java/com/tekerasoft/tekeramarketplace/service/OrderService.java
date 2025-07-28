@@ -1,13 +1,13 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.request.*;
-import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.model.entity.Address;
 import com.tekerasoft.tekeramarketplace.model.entity.BasketItem;
 import com.tekerasoft.tekeramarketplace.model.entity.Buyer;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.OrderRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,23 +19,17 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserService userService;
-    private final ShippingCompanyService shippingCompanyService;
-    private final CompanyService companyService;
     private final AttributeService attributeService;
     private final ProductService productService;
     private final VariationService variationService;
 
     public OrderService(OrderRepository orderRepository,
                         UserService userService,
-                        ShippingCompanyService shippingCompanyService,
-                        CompanyService companyService,
                         AttributeService attributeService,
                         ProductService productService,
                         VariationService variationService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
-        this.shippingCompanyService = shippingCompanyService;
-        this.companyService = companyService;
         this.attributeService = attributeService;
         this.productService = productService;
         this.variationService = variationService;
@@ -62,7 +56,9 @@ public class OrderService {
                     attribute.getSku(),
                     attribute.getBarcode(),
                     variation.getImages().get(0),
-                    attribute.getAttributeDetails().stream().map(it -> new BasketAttributes(it.getKey(),it.getValue())).toList(),
+                    bi.getAttributeId(),
+                    attribute.getAttributeDetails().stream().map(it ->
+                            new BasketAttributes(it.getKey(),it.getValue())).toList(),
                     product.getCompany().getShippingCompanies().stream().findFirst().get().getPrice(),
                     product.getCompany(),
                     product.getCompany().getShippingCompanies().stream().findFirst().get()
@@ -89,15 +85,19 @@ public class OrderService {
         shippingAddress.setDetailAddress(req.getShippingAddress().getDetailAddress());
         order.setShippingAddress(shippingAddress);
 
-        Address billingAddress = new Address();
-        billingAddress.setCity(req.getBillingAddress().getCity());
-        billingAddress.setCountry(req.getBillingAddress().getCountry());
-        billingAddress.setPostalCode(req.getBillingAddress().getPostalCode());
-        billingAddress.setStreet(req.getBillingAddress().getStreet());
-        billingAddress.setBuildNo(req.getBillingAddress().getBuildNo());
-        billingAddress.setDoorNumber(req.getBillingAddress().getDoorNumber());
-        billingAddress.setDetailAddress(req.getBillingAddress().getDetailAddress());
-        order.setBillingAddress(billingAddress);
+        if(req.getBillingAddress() != null) {
+            Address billingAddress = new Address();
+            billingAddress.setCity(req.getBillingAddress().getCity());
+            billingAddress.setCountry(req.getBillingAddress().getCountry());
+            billingAddress.setPostalCode(req.getBillingAddress().getPostalCode());
+            billingAddress.setStreet(req.getBillingAddress().getStreet());
+            billingAddress.setBuildNo(req.getBillingAddress().getBuildNo());
+            billingAddress.setDoorNumber(req.getBillingAddress().getDoorNumber());
+            billingAddress.setDetailAddress(req.getBillingAddress().getDetailAddress());
+            order.setBillingAddress(billingAddress);
+        } else {
+            order.setBillingAddress(shippingAddress);
+        }
 
         order.setTotalPrice(req.getTotalPrice());
         order.setPaymentStatus(req.getPaymentStatus());
@@ -106,11 +106,22 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public void changeOrderPaymentStatus(String orderId,PaymentStatus paymentStatus) {
-        Order order = orderRepository.findById(UUID.fromString(orderId))
+    @Transactional
+    public void completeOrder(String conversationId,PaymentStatus paymentStatus) {
+        Order order = orderRepository.findById(UUID.fromString(conversationId))
                         .orElseThrow(() -> new NotFoundException("Order not found"));
-        order.setPaymentStatus(paymentStatus);
-        orderRepository.save(order);
+        if(paymentStatus.equals(PaymentStatus.PAID)) {
+            order.setPaymentStatus(paymentStatus);
+            for(BasketItem bi: order.getBasketItems()) {
+                attributeService.decreaseStock(bi.getAttributeId(), bi.getQuantity());
+            }
+            orderRepository.save(order);
+        }
+    }
+
+    public Order getOrderById(String orderId) {
+        return orderRepository.findById(UUID.fromString(orderId))
+                .orElseThrow(() -> new NotFoundException("Order not found"));
     }
 
 }

@@ -14,8 +14,8 @@ open class ShippingCompany(
     open var gsmNumber: String,
     open var email: String,
     open var price: BigDecimal = BigDecimal.ZERO,
-    open var minDeliveryDay: BigDecimal = BigDecimal.ZERO,
-    open var maxDeliveryDay: BigDecimal = BigDecimal.ZERO,
+    open var minDeliveryDay: Int,
+    open var maxDeliveryDay: Int,
 
     @OneToMany(fetch = FetchType.LAZY)
     open var orders: MutableList<Order> = mutableListOf(),

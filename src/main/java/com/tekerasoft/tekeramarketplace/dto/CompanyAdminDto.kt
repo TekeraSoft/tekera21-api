@@ -4,6 +4,7 @@ import com.tekerasoft.tekeramarketplace.model.entity.Address
 import com.tekerasoft.tekeramarketplace.model.entity.BankAccount
 import com.tekerasoft.tekeramarketplace.model.entity.Company
 import com.tekerasoft.tekeramarketplace.model.entity.CompanyDocument
+import com.tekerasoft.tekeramarketplace.model.entity.ShippingCompany
 import java.time.LocalDateTime
 import java.util.UUID
 

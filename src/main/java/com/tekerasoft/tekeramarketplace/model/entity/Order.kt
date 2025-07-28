@@ -11,17 +11,17 @@ open class Order(
     @JoinColumn(name="user_id")
     open var user: User? = null,
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "buyer_id")
     open var buyer: Buyer,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var basketItems: MutableList<BasketItem>,
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open var shippingAddress: Address,
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open var billingAddress: Address? = null,
 
     open var totalPrice : BigDecimal,

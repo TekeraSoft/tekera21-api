@@ -21,10 +21,10 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
-//    @PostMapping("/pay")
-//    public ResponseEntity<ThreedsInitialize> pay(@RequestBody CreatePayRequest req) {
-//        return ResponseEntity.ok(paymentService.payment(req));
-//    }
+    @PostMapping("/pay")
+    public ResponseEntity<ThreedsInitialize> pay(@RequestBody CreatePayRequest req) {
+        return ResponseEntity.ok(paymentService.payment(req));
+    }
 
     @PostMapping("/paymentCheck")
     public ResponseEntity<String> paymentCheck(HttpServletRequest request, HttpServletResponse response) {

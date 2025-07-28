@@ -18,6 +18,8 @@ open class BasketItem(
     open var barcode: String? = null,
     open var image: String,
 
+    open var attributeId: String,
+
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var attributes: MutableList<BasketAttributes>,
 

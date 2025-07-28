@@ -56,6 +56,7 @@ CREATE TABLE basket_item
     sku                 VARCHAR(255),
     barcode             VARCHAR(255),
     image               VARCHAR(255),
+    attribute_id        VARCHAR(255),
     shipping_price      DECIMAL,
     company_id          UUID,
     shipping_company_id UUID,
@@ -291,15 +292,15 @@ CREATE TABLE products_comments
 
 CREATE TABLE shipping_company
 (
-    id               UUID NOT NULL,
+    id               UUID    NOT NULL,
     created_at       TIMESTAMP WITHOUT TIME ZONE,
     updated_at       TIMESTAMP WITHOUT TIME ZONE,
     name             VARCHAR(255),
     gsm_number       VARCHAR(255),
     email            VARCHAR(255),
     price            DECIMAL,
-    min_delivery_day DECIMAL,
-    max_delivery_day DECIMAL,
+    min_delivery_day INTEGER NOT NULL,
+    max_delivery_day INTEGER NOT NULL,
     CONSTRAINT "pk_shıppıng_company" PRIMARY KEY (id)
 );
 

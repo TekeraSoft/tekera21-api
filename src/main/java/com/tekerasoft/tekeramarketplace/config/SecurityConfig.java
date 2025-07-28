@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize // WebSocket izin ver
                         .requestMatchers(
                                 "/v1/api/product/**",
+                                "/v1/api/payment/**",
                                 "/v1/api/category/**",
                                 "/v1/api/digital-fashion/**",
                                 "/v1/api/fashion-collection/**",
