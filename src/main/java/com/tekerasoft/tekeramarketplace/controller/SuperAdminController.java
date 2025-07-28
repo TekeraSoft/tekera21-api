@@ -21,18 +21,22 @@ public class SuperAdminController {
     private final CompanyService companyService;
     private final ProductService productService;
     private final ThemeService themeService;
+    private final OrderService orderService;
     private final FashionCollectionService fashionCollectionService;
     private final ShippingCompanyService shippingCompanyService;
 
     public SuperAdminController(CategoryService categoryService, SubCategoryService subCategoryService,
                                 CompanyService companyService, ProductService productService,
-                                ThemeService themeService, FashionCollectionService fashionCollectionService, ShippingCompanyService shippingCompanyService)
+                                ThemeService themeService, OrderService orderService,
+                                FashionCollectionService fashionCollectionService,
+                                ShippingCompanyService shippingCompanyService)
     {
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
         this.companyService = companyService;
         this.productService = productService;
         this.themeService = themeService;
+        this.orderService = orderService;
         this.fashionCollectionService = fashionCollectionService;
         this.shippingCompanyService = shippingCompanyService;
     }
@@ -153,5 +157,10 @@ public class SuperAdminController {
     @PostMapping("/createShippingCompany")
     public ResponseEntity<ApiResponse<?>> createShippingCompany(@RequestBody CreateShippingCompanyRequest req) {
         return ResponseEntity.ok(shippingCompanyService.createShippingCompany(req));
+    }
+
+    @GetMapping("/getAllOrder")
+    public ResponseEntity<Page<OrderDto>> getAllOrder(Pageable pageable) {
+        return ResponseEntity.ok(orderService.getAllOrder(pageable));
     }
 }

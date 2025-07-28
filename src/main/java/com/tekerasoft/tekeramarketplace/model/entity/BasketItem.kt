@@ -6,8 +6,7 @@ import java.util.UUID
 
 @Entity
 open class BasketItem(
-    @Id
-    open var id: UUID,
+    open var productId: String,
     open var name: String,
     open var code: String? = null,
     open var brandName: String,
@@ -29,8 +28,8 @@ open class BasketItem(
     @JoinColumn(name = "company_id")
     open var company: Company,
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shipping_company_id")
     open var shippingCompany: ShippingCompany,
 
-    )
+    ): BaseEntity()

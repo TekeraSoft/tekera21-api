@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.service;
 
+import com.tekerasoft.tekeramarketplace.dto.OrderDto;
 import com.tekerasoft.tekeramarketplace.dto.request.*;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
@@ -8,6 +9,8 @@ import com.tekerasoft.tekeramarketplace.model.entity.BasketItem;
 import com.tekerasoft.tekeramarketplace.model.entity.Buyer;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.OrderRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,19 +25,22 @@ public class OrderService {
     private final AttributeService attributeService;
     private final ProductService productService;
     private final VariationService variationService;
+    private final CompanyService companyService;
 
     public OrderService(OrderRepository orderRepository,
                         UserService userService,
                         AttributeService attributeService,
                         ProductService productService,
-                        VariationService variationService) {
+                        VariationService variationService, CompanyService companyService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.attributeService = attributeService;
         this.productService = productService;
         this.variationService = variationService;
+        this.companyService = companyService;
     }
-    
+
+    @Transactional
     public Order createOrder(CreateOrderRequest req) {
         Order order = new Order();
 
@@ -45,24 +51,23 @@ public class OrderService {
             Product product = productService.getById(UUID.fromString(bi.getProductId()));
             Attribute attribute = attributeService.getAttributeById(bi.getAttributeId());
             Variation variation = variationService.getVariation(bi.getVariationId());
-            return new BasketItem(
-                    UUID.fromString(bi.getProductId()),
-                    product.getName(),
-                    product.getCode(),
-                    product.getBrandName(),
-                    bi.getQuantity(),
-                    variation.getModelCode(),
-                    attribute.getPrice(),
-                    attribute.getSku(),
-                    attribute.getBarcode(),
-                    variation.getImages().get(0),
-                    bi.getAttributeId(),
-                    attribute.getAttributeDetails().stream().map(it ->
-                            new BasketAttributes(it.getKey(),it.getValue())).toList(),
-                    product.getCompany().getShippingCompanies().stream().findFirst().get().getPrice(),
-                    product.getCompany(),
-                    product.getCompany().getShippingCompanies().stream().findFirst().get()
-            );
+            BasketItem basketItem = new BasketItem();
+            basketItem.setName(product.getName());
+            basketItem.setProductId(product.getId().toString());
+            basketItem.setCode(product.getCode());
+            basketItem.setBrandName(product.getBrandName());
+            basketItem.setQuantity(bi.getQuantity());
+            basketItem.setModelCode(variation.getModelCode());
+            basketItem.setPrice(attribute.getPrice());
+            basketItem.setSku(attribute.getSku());
+            basketItem.setBarcode(attribute.getBarcode());
+            basketItem.setImage(variation.getImages().get(0));
+            basketItem.setAttributes(attribute.getAttributeDetails().stream().map(it ->
+                    new BasketAttributes(it.getKey(),it.getValue())).toList());
+            basketItem.setShippingPrice(product.getCompany().getShippingCompanies().stream().findFirst().get().getPrice());
+            basketItem.setCompany(product.getCompany());
+            basketItem.setShippingCompany(product.getCompany().getShippingCompanies().stream().findFirst().get());
+            return basketItem;
         }).toList();
         order.setBasketItems(basketItems);
 
@@ -122,6 +127,15 @@ public class OrderService {
     public Order getOrderById(String orderId) {
         return orderRepository.findById(UUID.fromString(orderId))
                 .orElseThrow(() -> new NotFoundException("Order not found"));
+    }
+
+    public Page<OrderDto> getAllOrder(Pageable pageable) {
+        return orderRepository.findAll(pageable).map(OrderDto::toDto);
+    }
+
+    public Page<OrderDto> findOrdersContainingBasketItemsForCompany(String companyId, Pageable pageable) {
+        return orderRepository.findOrdersContainingBasketItemsForCompany(UUID.fromString(companyId), pageable)
+                .map(OrderDto::toDto);
     }
 
 }

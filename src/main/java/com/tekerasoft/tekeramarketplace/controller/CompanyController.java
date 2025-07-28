@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.controller;
 
+import com.tekerasoft.tekeramarketplace.dto.OrderDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.TargetPictureDto;
@@ -29,13 +30,15 @@ public class CompanyController {
     private final FileService fileService;
     private final VariationService variationService;
     private final DigitalFashionService digitalFashionService;
+    private final OrderService orderService;
 
-    public CompanyController(ProductService productService, CompanyService companyService, FileService fileService, VariationService variationService, DigitalFashionService digitalFashionService) {
+    public CompanyController(ProductService productService, CompanyService companyService, FileService fileService, VariationService variationService, DigitalFashionService digitalFashionService, OrderService orderService) {
         this.productService = productService;
         this.companyService = companyService;
         this.fileService = fileService;
         this.variationService = variationService;
         this.digitalFashionService = digitalFashionService;
+        this.orderService = orderService;
     }
 
     @Operation(summary = "Company create product action")
@@ -91,5 +94,12 @@ public class CompanyController {
     @DeleteMapping("/deleteTargetPic")
     public ApiResponse<?> deleteTargetPicture(@RequestParam String id) {
         return digitalFashionService.deleteTargetPicture(id);
+    }
+
+    @GetMapping("/findOrdersContainingBasketItemsForCompany")
+    public ResponseEntity<Page<OrderDto>> findOrdersContainingBasketItemsForCompany(@RequestParam String companyId,
+                                                                                    Pageable pageable)
+    {
+        return ResponseEntity.ok(orderService.findOrdersContainingBasketItemsForCompany(companyId,pageable));
     }
 }

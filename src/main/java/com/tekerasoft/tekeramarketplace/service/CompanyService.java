@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.CompanyAdminDto;
+import com.tekerasoft.tekeramarketplace.dto.OrderDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCompanyRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
@@ -169,4 +170,8 @@ public class CompanyService {
     public Page<CompanyAdminDto> getAllCompanies(Pageable pageable) {
         return companyRepository.findActiveCompanies(pageable).map(CompanyAdminDto::toDto);
     }
+
+//    public Page<OrderDto> getAllOrders(String companyId, Pageable pageable) {
+//        return companyRepository.findById(UUID.fromString(companyId)).get().getOrders().map(OrderDto::toDto);
+//    }
 }

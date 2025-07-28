@@ -47,6 +47,9 @@ CREATE TABLE basket_attributes
 CREATE TABLE basket_item
 (
     id                  UUID    NOT NULL,
+    created_at          TIMESTAMP WITHOUT TIME ZONE,
+    updated_at          TIMESTAMP WITHOUT TIME ZONE,
+    product_id          VARCHAR(255),
     name                VARCHAR(255),
     code                VARCHAR(255),
     brand_name          VARCHAR(255),
@@ -428,9 +431,6 @@ ALTER TABLE users
 
 ALTER TABLE basket_item_attributes
     ADD CONSTRAINT "uc_basket_ıtem_attrıbutes_attrıbutes" UNIQUE (attributes_id);
-
-ALTER TABLE basket_item
-    ADD CONSTRAINT "uc_basketıtem_shıppıng_company" UNIQUE (shipping_company_id);
 
 ALTER TABLE companies_address
     ADD CONSTRAINT "uc_companıes_address_address" UNIQUE (address_id);

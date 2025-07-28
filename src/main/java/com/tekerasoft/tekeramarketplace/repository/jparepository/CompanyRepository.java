@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.repository.jparepository;
 
 import com.tekerasoft.tekeramarketplace.model.entity.Company;
+import com.tekerasoft.tekeramarketplace.model.entity.Order;
 import com.tekerasoft.tekeramarketplace.model.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

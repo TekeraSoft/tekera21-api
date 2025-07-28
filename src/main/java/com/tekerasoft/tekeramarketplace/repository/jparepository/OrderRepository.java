@@ -1,6 +1,8 @@
 package com.tekerasoft.tekeramarketplace.repository.jparepository;
 
 import com.tekerasoft.tekeramarketplace.model.entity.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +23,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
        OR LOWER(CONCAT(o.buyer.name, ' ', o.buyer.surname)) = LOWER(:searchParam)
     """)
     List<Order> findOrdersByPhoneNumberOrUsername(@Param("searchParam") String searchParam);
+
+    @Query("SELECT DISTINCT o FROM Order o JOIN o.basketItems bi WHERE bi.company.id = :companyId")
+    Page<Order> findOrdersContainingBasketItemsForCompany(@Param("companyId") UUID companyId, Pageable pageable);
 }
