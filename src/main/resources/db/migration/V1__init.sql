@@ -34,16 +34,6 @@ CREATE TABLE attributes_stock_attributes
     value        VARCHAR(255)
 );
 
-CREATE TABLE basket_attributes
-(
-    id         UUID NOT NULL,
-    created_at TIMESTAMP WITHOUT TIME ZONE,
-    updated_at TIMESTAMP WITHOUT TIME ZONE,
-    key        VARCHAR(255),
-    value      VARCHAR(255),
-    CONSTRAINT "pk_basketattrıbutes" PRIMARY KEY (id)
-);
-
 CREATE TABLE basket_item
 (
     id                  UUID    NOT NULL,
@@ -69,7 +59,8 @@ CREATE TABLE basket_item
 CREATE TABLE basket_item_attributes
 (
     basket_item_id UUID NOT NULL,
-    attributes_id  UUID NOT NULL
+    key            VARCHAR(255),
+    value          VARCHAR(255)
 );
 
 CREATE TABLE buyer
@@ -224,6 +215,12 @@ CREATE TABLE news
     CONSTRAINT pk_news PRIMARY KEY (id)
 );
 
+CREATE TABLE order_basket_items
+(
+    basket_item_id UUID NOT NULL,
+    order_id       UUID NOT NULL
+);
+
 CREATE TABLE orders
 (
     id                  UUID NOT NULL,
@@ -238,12 +235,6 @@ CREATE TABLE orders
     payment_type        SMALLINT,
     payment_status      SMALLINT,
     CONSTRAINT pk_orders PRIMARY KEY (id)
-);
-
-CREATE TABLE orders_basket_items
-(
-    order_id        UUID NOT NULL,
-    basket_items_id UUID NOT NULL
 );
 
 CREATE TABLE product_attributes
@@ -429,9 +420,6 @@ CREATE TABLE variations
 ALTER TABLE users
     ADD CONSTRAINT uc_74165e195b2f7b25de690d14a UNIQUE (email);
 
-ALTER TABLE basket_item_attributes
-    ADD CONSTRAINT "uc_basket_ıtem_attrıbutes_attrıbutes" UNIQUE (attributes_id);
-
 ALTER TABLE companies_address
     ADD CONSTRAINT "uc_companıes_address_address" UNIQUE (address_id);
 
@@ -444,8 +432,8 @@ ALTER TABLE companies_products
 ALTER TABLE companies_users
     ADD CONSTRAINT "uc_companıes_users_users" UNIQUE (users_id);
 
-ALTER TABLE orders_basket_items
-    ADD CONSTRAINT "uc_orders_basket_ıtems_basketıtems" UNIQUE (basket_items_id);
+ALTER TABLE order_basket_items
+    ADD CONSTRAINT "uc_order_basket_ıtems_basket_ıtem" UNIQUE (basket_item_id);
 
 ALTER TABLE orders
     ADD CONSTRAINT uc_orders_buyer UNIQUE (buyer_id);
@@ -508,10 +496,7 @@ ALTER TABLE attributes_stock_attributes
     ADD CONSTRAINT "fk_attrıbutes_stockattrıbutes_on_attrıbute" FOREIGN KEY (attribute_id) REFERENCES attributes (id);
 
 ALTER TABLE basket_item_attributes
-    ADD CONSTRAINT "fk_basıteatt_on_basket_attrıbutes" FOREIGN KEY (attributes_id) REFERENCES basket_attributes (id);
-
-ALTER TABLE basket_item_attributes
-    ADD CONSTRAINT "fk_basıteatt_on_basket_ıtem" FOREIGN KEY (basket_item_id) REFERENCES basket_item (id);
+    ADD CONSTRAINT "fk_basket_ıtem_attrıbutes_on_basket_ıtem" FOREIGN KEY (basket_item_id) REFERENCES basket_item (id);
 
 ALTER TABLE companies_address
     ADD CONSTRAINT fk_comadd_on_address FOREIGN KEY (address_id) REFERENCES address (id);
@@ -561,10 +546,10 @@ ALTER TABLE fashion_collection_products
 ALTER TABLE fashion_collection_products
     ADD CONSTRAINT fk_fascolpro_on_product FOREIGN KEY (product_id) REFERENCES products (id);
 
-ALTER TABLE orders_basket_items
-    ADD CONSTRAINT "fk_ordbasıte_on_basket_ıtem" FOREIGN KEY (basket_items_id) REFERENCES basket_item (id);
+ALTER TABLE order_basket_items
+    ADD CONSTRAINT "fk_ordbasıte_on_basket_ıtem" FOREIGN KEY (basket_item_id) REFERENCES basket_item (id);
 
-ALTER TABLE orders_basket_items
+ALTER TABLE order_basket_items
     ADD CONSTRAINT "fk_ordbasıte_on_order" FOREIGN KEY (order_id) REFERENCES orders (id);
 
 ALTER TABLE products_comments

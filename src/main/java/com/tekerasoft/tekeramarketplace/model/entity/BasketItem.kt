@@ -19,8 +19,10 @@ open class BasketItem(
 
     open var attributeId: String,
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    open var attributes: MutableList<BasketAttributes>,
+    @ElementCollection(fetch = FetchType.LAZY) // Lazy yükleme çoğu zaman daha iyidir
+    @CollectionTable(name = "basket_item_attributes", // Bu collection için oluşturulacak yeni tablo adı
+        joinColumns = [JoinColumn(name = "basket_item_id")]) // BasketItem'ı bu tabloya bağlayan sütun
+    open var attributes: MutableList<BasketAttributes> = mutableListOf(),
 
     open var shippingPrice: BigDecimal,
 

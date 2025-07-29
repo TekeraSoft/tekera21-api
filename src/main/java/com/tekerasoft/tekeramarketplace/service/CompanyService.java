@@ -20,10 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,13 +29,16 @@ public class CompanyService {
     private final CategoryRepository categoryRepository;
     private final FileService fileService;
     private final SearchItemService searchItemService;
+    private final ShippingCompanyService shippingCompanyService;
 
     public CompanyService(CompanyRepository companyRepository, CategoryRepository categoryRepository,
-                          FileService fileService, SearchItemService searchItemService) {
+                          FileService fileService, SearchItemService searchItemService,
+                          ShippingCompanyService shippingCompanyService) {
         this.companyRepository = companyRepository;
         this.categoryRepository = categoryRepository;
         this.fileService = fileService;
         this.searchItemService = searchItemService;
+        this.shippingCompanyService = shippingCompanyService;
     }
 
     @Transactional
@@ -47,7 +47,11 @@ public class CompanyService {
         if(companyRepository.existsByNameAndTaxNumber(req.getName(),req.getTaxNumber())) {
             throw new CompanyException("Company already exists");
         }
+
         try {
+            ShippingCompany shippingCompany = shippingCompanyService.getShippingCompany(req.getShippingCompanyId());
+            Set<ShippingCompany> shippingCompanySet = new HashSet<>();
+            shippingCompanySet.add(shippingCompany);
             Company company = new Company();
             company.setName(req.getName());
             company.setSlug(SlugGenerator.generateSlug(company.getName()));
@@ -63,6 +67,7 @@ public class CompanyService {
             company.setContactPersonTitle(req.getContactPersonTitle());
             company.setAddress(req.getAddress());
             company.setBankAccounts(req.getBankAccount());
+            company.setShippingCompanies(shippingCompanySet);
             company.setActive(true);
 
             // Category

@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize // WebSocket izin ver
                         .requestMatchers(
+                                "/v1/api/account/**",
                                 "/v1/api/product/**",
                                 "/v1/api/payment/**",
                                 "/v1/api/category/**",

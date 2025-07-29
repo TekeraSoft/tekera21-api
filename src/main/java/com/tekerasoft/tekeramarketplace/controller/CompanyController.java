@@ -102,4 +102,9 @@ public class CompanyController {
     {
         return ResponseEntity.ok(orderService.findOrdersContainingBasketItemsForCompany(companyId,pageable));
     }
+
+    @GetMapping("findOrdersByPhoneNumberOrUsername")
+    public ResponseEntity<List<OrderDto>>  findOrdersByPhoneNumberOrUsername(@RequestParam String searchParam) {
+        return ResponseEntity.ok(orderService.findOrdersByPhoneNumberOrUsername(searchParam));
+    }
 }

@@ -15,8 +15,13 @@ open class Order(
     @JoinColumn(name = "buyer_id")
     open var buyer: Buyer,
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    open var basketItems: MutableList<BasketItem>,
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true) // FetchType.LAZY varsayılan olarak gelir
+    @JoinTable(
+        name = "order_basket_items", // İlişki için oluşturulacak ara tablo adı
+        joinColumns = [JoinColumn(name = "order_id")], // Bu tablonun Order'a referans veren sütunu
+        inverseJoinColumns = [JoinColumn(name = "basket_item_id")] // Bu tablonun BasketItem'a referans veren sütunu
+    )
+    open var basketItems: MutableList<BasketItem> = mutableListOf(),
 
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open var shippingAddress: Address,

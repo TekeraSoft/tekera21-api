@@ -46,5 +46,8 @@ data class CreateCompanyRequest(
     val address: List<Address>,
 
     @JsonProperty("bankAccount") // JSON'daki isme uygun hale getirildi
-    val bankAccount: List<BankAccount>
+    val bankAccount: List<BankAccount>,
+
+    @JsonProperty("shippingCompanyId")
+    val shippingCompanyId: String
 )

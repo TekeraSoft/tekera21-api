@@ -2,6 +2,7 @@ package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.request.CreateShippingCompanyRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.ShippingCompany;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.ShippingCompanyRepository;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class ShippingCompanyService {
 
     public ShippingCompany getShippingCompany(String id) {
         return shippingCompanyRepository.findById(UUID.fromString(id))
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("Shipping Company not found"));
     }
 
     public ApiResponse<?> createShippingCompany(CreateShippingCompanyRequest req) {

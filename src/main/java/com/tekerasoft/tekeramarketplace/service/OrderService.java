@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -131,6 +132,13 @@ public class OrderService {
 
     public Page<OrderDto> getAllOrder(Pageable pageable) {
         return orderRepository.findAll(pageable).map(OrderDto::toDto);
+    }
+
+    public List<OrderDto> findOrdersByPhoneNumberOrUsername(String searchParam) {
+        return orderRepository.findOrdersByPhoneNumberOrUsername(searchParam)
+                .stream()
+                .map(OrderDto::toDto)
+                .collect(Collectors.toList());
     }
 
     public Page<OrderDto> findOrdersContainingBasketItemsForCompany(String companyId, Pageable pageable) {
