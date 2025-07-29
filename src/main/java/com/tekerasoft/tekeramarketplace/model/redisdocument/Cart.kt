@@ -1,7 +1,6 @@
 package com.tekerasoft.tekeramarketplace.model.redisdocument
 
 import com.tekerasoft.tekeramarketplace.model.entity.CartItem
-import com.tekerasoft.tekeramarketplace.model.entity.CartStatus
 import java.io.Serializable
 import java.math.BigDecimal
 
