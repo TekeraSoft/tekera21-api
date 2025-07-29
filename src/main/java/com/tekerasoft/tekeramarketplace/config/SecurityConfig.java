@@ -72,6 +72,9 @@ public class SecurityConfig {
 
         // Sadece güvenilir frontend origin'lerini burada tanımla
         configuration.setAllowedOrigins(List.of(
+                "https://frontend.beta.tekera21.com",
+                "https://panel.beta.tekera21.com",
+                "https://beta.tekera21.com",
                 "http://localhost:3000",
                 "http://localhost:3002",
                 "http://localhost:3001",
