@@ -60,7 +60,7 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
+#deneme sil
   mind-creator:
     #api: http://localhost:3009/generate
     api: http://mind-generator:3009/generate
