@@ -93,5 +93,3 @@ public class CartService {
         cart.setItemCount(cart.getCartItems().stream().mapToInt(CartItem::getQuantity).sum());
     }
 }
-
-}
