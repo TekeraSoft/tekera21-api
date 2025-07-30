@@ -17,6 +17,6 @@ open class Cart(
 
     open var userId: String,
 
-    open var cartStatus: CartStatus
+    open var cartStatus: CartStatus = CartStatus.WAITING
 
 ): BaseEntity()

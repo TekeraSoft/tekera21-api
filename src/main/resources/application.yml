@@ -78,11 +78,12 @@ spring:
     api_key: sandbox-4mlmZxqqpEvkFn61GClqGpDpt0cYZuA2
     secret_key: sandbox-m4UURbHi8klCbIqCiCWsjlyJG8mTfuG4
     base_url: https://sandbox-api.iyzipay.com
-    callback_url: http://192.168.1.106:8080/v1/api/payment/paymentCheck
+    callback_url: https://beta.tekera21.com/v1-api/payment/paymentCheck
+    #callback_url: http://192.168.1.106:8080/v1/api/payment/paymentCheck
 
 
   origin:
-    url: http:localhost:3001
+    url: https://frontend.beta.tekera21.com/odeme/success
 
 app:
   guest-cart-ttl-days: 7

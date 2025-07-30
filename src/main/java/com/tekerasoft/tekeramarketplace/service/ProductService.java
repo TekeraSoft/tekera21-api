@@ -1,6 +1,5 @@
 package com.tekerasoft.tekeramarketplace.service;
 
-import com.tekerasoft.tekeramarketplace.dto.DiscountStockDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductUiDto;
@@ -8,8 +7,10 @@ import com.tekerasoft.tekeramarketplace.dto.request.*;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
+import com.tekerasoft.tekeramarketplace.model.redisdocument.Cart;
+import com.tekerasoft.tekeramarketplace.model.redisdocument.CartAttributes;
+import com.tekerasoft.tekeramarketplace.model.redisdocument.CartItem;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.*;
-import com.tekerasoft.tekeramarketplace.utils.ResizeProductVideo;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,22 +31,18 @@ public class ProductService {
     private final SubCategoryRepository subCategoryRepository;
     private final CompanyRepository companyRepository;
     private final VariationRepository variationRepository;
-    private final ResizeProductVideo resizeProductVideo;
-
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
                           SubCategoryRepository subCategoryRepository,
                           CompanyRepository companyRepository,
-                          VariationRepository variationRepository,
-                          ResizeProductVideo resizeProductVideo) {
+                          VariationRepository variationRepository) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.companyRepository = companyRepository;
         this.variationRepository = variationRepository;
-        this.resizeProductVideo = resizeProductVideo;
     }
 
     public Product getById(UUID id) {
@@ -428,8 +425,52 @@ public class ProductService {
         return productRepository.findProductBySubCategory(subName,pageable).map(ProductUiDto::toProductUiDto);
     }
 
-    @Transactional
-    public void discountStock(List<DiscountStockDto> discountStocks) {
+    public Cart toCartItem(List<AddToCartRequest> cartItems, String userId) {
 
+        List<CartItem> cartItemList = new ArrayList<>();
+
+        cartItems.forEach(cart -> {
+            Product product = productRepository.findById(UUID.fromString(cart.getProductId()))
+                    .orElseThrow(() -> new NotFoundException("Product not found: " + cart.getProductId()));
+
+            Variation variation = product.getVariations().stream()
+                    .filter(v -> v.getId().equals(cart.getVariationId()))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundException("Variation not found"));
+
+            Attribute attribute = variation.getAttributes().stream()
+                    .filter(attr -> attr.getId().equals(cart.getAttributeId()))
+                    .findFirst()
+                    .orElse(null);
+
+            CartItem cartItem = new CartItem();
+            cartItem.setAttributeId(attribute != null ? attribute.getId().toString() : null);
+            cartItem.setName(product.getName());
+            cartItem.setQuantity(cart.getQuantity());
+            cartItem.setPrice(attribute.getPrice());
+            cartItem.setBrandName(product.getBrandName());
+            cartItem.setImage(!variation.getImages().isEmpty() ? variation.getImages().get(0) : null);
+
+            cartItem.setAttributes(
+                    attribute != null ? attribute.getAttributeDetails().stream()
+                            .map(at -> new CartAttributes(at.getKey(), at.getValue()))
+                            .collect(Collectors.toList()) : Collections.emptyList()
+            );
+
+            cartItemList.add(cartItem); // 🔹 Eksik olan kısım
+        });
+
+        BigDecimal totalPrice = cartItemList.stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Cart cart = new Cart();
+        cart.setCartItems(cartItemList);
+        cart.setTotalPrice(totalPrice);
+        cart.setUserId(userId);
+        cart.setItemCount(cartItemList.stream().mapToInt(CartItem::getQuantity).sum());
+
+        return cart;
     }
+
 }
