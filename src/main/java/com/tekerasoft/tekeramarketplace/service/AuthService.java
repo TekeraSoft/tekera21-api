@@ -92,6 +92,7 @@ public class AuthService {
     private Map<String, Object> addClaims(String email) {
         Optional<User> user = userService.getByUsername(email);
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", user.get().getId());
         claims.put("roles", user.get().getRoles());
         claims.put("email", user.get().getEmail());
         claims.put("phoneNumber", user.get().getGsmNumber());

@@ -5,6 +5,7 @@ import com.tekerasoft.tekeramarketplace.service.UserService;
 import com.tekerasoft.tekeramarketplace.utils.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -54,6 +55,7 @@ public class SecurityConfig {
                                 "/ws/**",
                                 "/v1/api/auth/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/v1/api/company/**").hasAnyAuthority(Role.COMPANY_ADMIN.name(),Role.SUPER_ADMIN.name())
                         .requestMatchers("/v1/api/super-admin/**").hasAnyAuthority(Role.SUPER_ADMIN.name())
                         .anyRequest().authenticated()
