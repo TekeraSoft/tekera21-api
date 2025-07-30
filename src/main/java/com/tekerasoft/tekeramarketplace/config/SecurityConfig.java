@@ -55,7 +55,6 @@ public class SecurityConfig {
                                 "/ws/**",
                                 "/v1/api/auth/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/v1/api/company/**").hasAnyAuthority(Role.COMPANY_ADMIN.name(),Role.SUPER_ADMIN.name())
                         .requestMatchers("/v1/api/super-admin/**").hasAnyAuthority(Role.SUPER_ADMIN.name())
                         .anyRequest().authenticated()
@@ -72,7 +71,6 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Sadece güvenilir frontend origin'lerini burada tanımla
         configuration.setAllowedOrigins(List.of(
                 "https://frontend.beta.tekera21.com",
                 "https://panel.beta.tekera21.com",
@@ -80,14 +78,23 @@ public class SecurityConfig {
                 "http://localhost:3000",
                 "http://localhost:3002",
                 "http://localhost:3001",
-                "https://avm.beta.tekera21.com"));
-
+                "https://avm.beta.tekera21.com"
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(List.of("*")); // İzin verilen header'lar
-        configuration.setAllowCredentials(true); // Token, cookie gibi kimlik doğrulama verilerini taşıyabilmek için
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Tüm endpointler için uygula
+
+        // Normal endpointler için CORS kısıtlı
+        source.registerCorsConfiguration("/**", configuration);
+
+        // İyzico callback için özel config (herkese izin ver)
+        CorsConfiguration callbackCors = new CorsConfiguration();
+        callbackCors.addAllowedOriginPattern("*"); // tüm domainlere izin ver
+        callbackCors.setAllowedMethods(List.of("POST", "OPTIONS"));
+        callbackCors.setAllowedHeaders(List.of("*"));
+        source.registerCorsConfiguration("/v1/api/payment/paymentCheck", callbackCors);
 
         return source;
     }
