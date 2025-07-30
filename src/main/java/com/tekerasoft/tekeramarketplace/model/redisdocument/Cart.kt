@@ -1,8 +1,10 @@
 package com.tekerasoft.tekeramarketplace.model.redisdocument
 
+import com.tekerasoft.tekeramarketplace.config.NoArg
 import java.io.Serializable
 import java.math.BigDecimal
 
+@NoArg
 open class Cart(
     open var id: String,
     open var cartItems: MutableList<CartItem> = mutableListOf(),
@@ -12,6 +14,7 @@ open class Cart(
     open var cartStatus: CartStatus = CartStatus.WAITING
 ): Serializable
 
+@NoArg
 open class CartItem(
     open var attributeId: String,
     open var name: String,
@@ -24,6 +27,7 @@ open class CartItem(
 
 enum class CartStatus { WAITING, COMPLETED }
 
+@NoArg
 data class CartAttributes(
     val key: String,
     val value: String
