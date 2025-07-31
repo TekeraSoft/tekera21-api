@@ -4,8 +4,8 @@ spring:
 
   data:
     redis:
-      host: localhost
-      #host: redis
+      #host: localhost
+      host: redis
       port: 6379
       password: tekera_pass
 
@@ -16,15 +16,15 @@ spring:
       max-request-size: 500MB
 
   elasticsearch:
-    #uris: http://elasticsearch:9200
-    uris: http://localhost:9200
+    uris: http://elasticsearch:9200
+    #uris: http://localhost:9200
     username: elastic
     password: Tekera123
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    #url: jdbc:postgresql://tekera-db:5432/tekera-db
-    url: jdbc:postgresql://localhost:5430/tekera-db
+    url: jdbc:postgresql://tekera-db:5432/tekera-db
+    #url: jdbc:postgresql://localhost:5430/tekera-db
     username: tekera_user
     password: tekera_pass
 
@@ -38,15 +38,15 @@ spring:
     locations: classpath:db/migration
 
   minio:
-    #url: http://minio1:9000
-    url: http://localhost:9003
+    url: http://minio1:9000
+    #url: http://localhost:9003
     user: tekera_user
     password: tekera_pass
     bucket-name: tekera-bucket
 
   kafka:
-    #bootstrap-servers: kafka:9092
-    bootstrap-servers: localhost:29092
+    bootstrap-servers: kafka:9092
+    #bootstrap-servers: localhost:29092
     consumer:
       group-id: tekeraGroup
       auto-offset-reset: earliest
@@ -78,14 +78,14 @@ spring:
     api_key: sandbox-4mlmZxqqpEvkFn61GClqGpDpt0cYZuA2
     secret_key: sandbox-m4UURbHi8klCbIqCiCWsjlyJG8mTfuG4
     base_url: https://sandbox-api.iyzipay.com
-    #callback_url: https://beta.tekera21.com/v1-api/payment/paymentCheck
-    callback_url: http://192.168.1.106:8080/v1/api/payment/paymentCheck
+    callback_url: https://beta.tekera21.com/v1-api/payment/paymentCheck
+    #callback_url: http://192.168.1.106:8080/v1/api/payment/paymentCheck
     #callback_url: http://192.168.1.107:3001/api/payment/paymentCheck
 
 
   origin:
-    #url: https://frontend.beta.tekera21.com
-    url: http://192.168.1.107:3001
+    url: https://frontend.beta.tekera21.com
+    #url: http://192.168.1.107:3001
 
 app:
   guest-cart-ttl-days: 7
