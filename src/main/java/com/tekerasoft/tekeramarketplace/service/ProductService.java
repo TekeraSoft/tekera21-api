@@ -434,17 +434,22 @@ public class ProductService {
                     .orElseThrow(() -> new NotFoundException("Product not found: " + cart.getProductId()));
 
             Variation variation = product.getVariations().stream()
-                    .filter(v -> v.getId().equals(cart.getVariationId()))
+                    .filter(v -> v.getId().equals(UUID.fromString(cart.getVariationId())))
                     .findFirst()
                     .orElseThrow(() -> new NotFoundException("Variation not found"));
 
             Attribute attribute = variation.getAttributes().stream()
-                    .filter(attr -> attr.getId().equals(cart.getAttributeId()))
+                    .filter(attr -> attr.getId().equals(UUID.fromString(cart.getAttributeId())))
                     .findFirst()
                     .orElse(null);
 
             CartItem cartItem = new CartItem();
             cartItem.setAttributeId(attribute != null ? attribute.getId().toString() : null);
+            cartItem.setVariationId(variation.getId().toString());
+            cartItem.setColor(variation.getColor());
+            cartItem.setModelCode(variation.getModelCode());
+            cartItem.setProductSlug(product.getSlug());
+            cartItem.setProductId(product.getId().toString());
             cartItem.setName(product.getName());
             cartItem.setQuantity(cart.getQuantity());
             cartItem.setPrice(attribute.getPrice());
@@ -465,9 +470,9 @@ public class ProductService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Cart cart = new Cart();
+        cart.setId(userId);
         cart.setCartItems(cartItemList);
         cart.setTotalPrice(totalPrice);
-        cart.setUserId(userId);
         cart.setItemCount(cartItemList.stream().mapToInt(CartItem::getQuantity).sum());
 
         return cart;

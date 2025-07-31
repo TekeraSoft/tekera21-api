@@ -28,7 +28,7 @@ open class User (
     @Enumerated(EnumType.STRING)
     open var gender: Gender,
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var orders: MutableList<Order>? = mutableListOf(),
 
     open var gsmNumber: String,

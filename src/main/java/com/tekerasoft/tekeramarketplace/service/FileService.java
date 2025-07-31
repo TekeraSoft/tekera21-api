@@ -151,7 +151,8 @@ public class FileService {
         }
     }
 
-    public String productVideoUpload(InputStream inputStream, long size, String contentType, String extension, String companyName) {
+    public String productVideoUpload(InputStream inputStream, long size, String contentType, String extension,
+                                     String companyName) {
         try {
             // Bucket kontrolü
             if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
@@ -254,7 +255,6 @@ public class FileService {
             try {
                 Item item = itemResult.get();
                 Instant lastModified = item.lastModified().toInstant();
-                System.out.println(lastModified);
                 if (lastModified.isBefore(Instant.now().minus(30, ChronoUnit.MINUTES))) {
                     minioClient.removeObject(RemoveObjectArgs.builder()
                             .bucket(bucketName)

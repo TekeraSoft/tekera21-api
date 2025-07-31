@@ -8,6 +8,8 @@ import com.tekerasoft.tekeramarketplace.model.entity.Address;
 import com.tekerasoft.tekeramarketplace.model.entity.BasketItem;
 import com.tekerasoft.tekeramarketplace.model.entity.Buyer;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.OrderRepository;
+import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,26 +29,27 @@ public class OrderService {
     private final ProductService productService;
     private final VariationService variationService;
     private final CompanyService companyService;
+    private final AuthenticationFacade authenticationFacade;
 
     public OrderService(OrderRepository orderRepository,
                         UserService userService,
                         AttributeService attributeService,
                         ProductService productService,
-                        VariationService variationService, CompanyService companyService) {
+                        VariationService variationService, CompanyService companyService, AuthenticationFacade authenticationFacade) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.attributeService = attributeService;
         this.productService = productService;
         this.variationService = variationService;
         this.companyService = companyService;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Transactional
     public Order createOrder(CreateOrderRequest req) {
         Order order = new Order();
 
-        Optional<User> user = userService.getByUsername(req.getBuyer().getEmail());
-        user.ifPresent(order::setUser);
+        Optional<User> user = userService.getByUsername(authenticationFacade.getCurrentUserEmail());
 
         List<BasketItem> basketItems = req.getBasketItems().stream().map(bi -> {
             Product product = productService.getById(UUID.fromString(bi.getProductId()));
@@ -55,6 +58,7 @@ public class OrderService {
             BasketItem basketItem = new BasketItem();
             basketItem.setName(product.getName());
             basketItem.setProductId(product.getId().toString());
+            basketItem.setAttributeId(attribute.getId().toString());
             basketItem.setCode(product.getCode());
             basketItem.setBrandName(product.getBrandName());
             basketItem.setQuantity(bi.getQuantity());
@@ -109,20 +113,30 @@ public class OrderService {
         order.setPaymentStatus(req.getPaymentStatus());
         order.setPaymentType(req.getPaymentType());
 
+        user.ifPresent(u -> {
+            order.setUser(u);
+            u.getOrders().add(order);
+        });
+
         return orderRepository.save(order);
     }
 
     @Transactional
     public void completeOrder(String conversationId,PaymentStatus paymentStatus) {
-        Order order = orderRepository.findById(UUID.fromString(conversationId))
-                        .orElseThrow(() -> new NotFoundException("Order not found"));
-        if(paymentStatus.equals(PaymentStatus.PAID)) {
-            order.setPaymentStatus(paymentStatus);
-            for(BasketItem bi: order.getBasketItems()) {
-                attributeService.decreaseStock(bi.getAttributeId(), bi.getQuantity());
+        try {
+            Order order = orderRepository.findById(UUID.fromString(conversationId))
+                    .orElseThrow(() -> new NotFoundException("Order not found"));
+            if(paymentStatus.equals(PaymentStatus.PAID)) {
+                order.setPaymentStatus(paymentStatus);
+                for(BasketItem bi: order.getBasketItems()) {
+                    attributeService.decreaseStock(bi.getAttributeId(), bi.getQuantity());
+                }
+                orderRepository.save(order);
             }
-            orderRepository.save(order);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
         }
+
     }
 
     public Order getOrderById(String orderId) {
@@ -139,6 +153,13 @@ public class OrderService {
                 .stream()
                 .map(OrderDto::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public Page<OrderDto> findOrderByUserId(Pageable pageable) {
+        String userId = authenticationFacade.getCurrentUserId();
+        System.out.println(userId);
+        return orderRepository.findOrderByUserId(UUID.fromString(userId), pageable)
+                .map(OrderDto::toDto);
     }
 
     public Page<OrderDto> findOrdersContainingBasketItemsForCompany(String companyId, Pageable pageable) {

@@ -23,7 +23,7 @@ public class AttributeService {
         try {
             attributeRepository.decreaseStock(UUID.fromString(attributeId),quantity);
         } catch (RuntimeException e) {
-            throw new DecreaseStockException("Product sold out");
+            throw new RuntimeException("Product sold out",e);
         }
     }
 }

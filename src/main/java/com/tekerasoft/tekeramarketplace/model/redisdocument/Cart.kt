@@ -9,15 +9,18 @@ open class Cart(
     open var id: String,
     open var cartItems: MutableList<CartItem> = mutableListOf(),
     open var totalPrice: BigDecimal,
-    open var itemCount: Int,
-    open var userId: String,
-    open var cartStatus: CartStatus = CartStatus.WAITING
+    open var itemCount: Int
 ): Serializable
 
 @NoArg
 open class CartItem(
+    open var productId: String,
+    open var variationId: String,
     open var attributeId: String,
+    open var productSlug: String,
     open var name: String,
+    open var color: String,
+    open var modelCode: String,
     open var quantity: Int,
     open var price: BigDecimal,
     open var brandName: String,

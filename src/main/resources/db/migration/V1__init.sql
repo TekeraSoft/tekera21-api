@@ -77,6 +77,24 @@ CREATE TABLE buyer
     CONSTRAINT pk_buyer PRIMARY KEY (id)
 );
 
+CREATE TABLE cart
+(
+    id          UUID    NOT NULL,
+    created_at  TIMESTAMP WITHOUT TIME ZONE,
+    updated_at  TIMESTAMP WITHOUT TIME ZONE,
+    total_price DECIMAL,
+    item_count  INTEGER NOT NULL,
+    user_id     VARCHAR(255),
+    cart_status SMALLINT,
+    CONSTRAINT pk_cart PRIMARY KEY (id)
+);
+
+CREATE TABLE cart_basket_items
+(
+    cart_id         UUID NOT NULL,
+    basket_items_id UUID NOT NULL
+);
+
 CREATE TABLE category
 (
     id         UUID NOT NULL,
@@ -392,12 +410,6 @@ CREATE TABLE users_follow_sellers
     follow_sellers_id UUID NOT NULL
 );
 
-CREATE TABLE users_orders
-(
-    user_id   UUID NOT NULL,
-    orders_id UUID NOT NULL
-);
-
 CREATE TABLE variation_images
 (
     variation_id UUID NOT NULL,
@@ -419,6 +431,9 @@ CREATE TABLE variations
 
 ALTER TABLE users
     ADD CONSTRAINT uc_74165e195b2f7b25de690d14a UNIQUE (email);
+
+ALTER TABLE cart_basket_items
+    ADD CONSTRAINT "uc_cart_basket_ıtems_basketıtems" UNIQUE (basket_items_id);
 
 ALTER TABLE companies_address
     ADD CONSTRAINT "uc_companıes_address_address" UNIQUE (address_id);
@@ -449,9 +464,6 @@ ALTER TABLE users_address
 
 ALTER TABLE users_follow_sellers
     ADD CONSTRAINT uc_users_follow_sellers_followsellers UNIQUE (follow_sellers_id);
-
-ALTER TABLE users_orders
-    ADD CONSTRAINT uc_users_orders_orders UNIQUE (orders_id);
 
 ALTER TABLE attributes
     ADD CONSTRAINT FK_ATTRIBUTES_ON_VARIATION FOREIGN KEY (variation_id) REFERENCES variations (id);
@@ -497,6 +509,12 @@ ALTER TABLE attributes_stock_attributes
 
 ALTER TABLE basket_item_attributes
     ADD CONSTRAINT "fk_basket_ıtem_attrıbutes_on_basket_ıtem" FOREIGN KEY (basket_item_id) REFERENCES basket_item (id);
+
+ALTER TABLE cart_basket_items
+    ADD CONSTRAINT "fk_carbasıte_on_basket_ıtem" FOREIGN KEY (basket_items_id) REFERENCES basket_item (id);
+
+ALTER TABLE cart_basket_items
+    ADD CONSTRAINT "fk_carbasıte_on_cart" FOREIGN KEY (cart_id) REFERENCES cart (id);
 
 ALTER TABLE companies_address
     ADD CONSTRAINT fk_comadd_on_address FOREIGN KEY (address_id) REFERENCES address (id);
@@ -587,12 +605,6 @@ ALTER TABLE users_follow_sellers
 
 ALTER TABLE users_follow_sellers
     ADD CONSTRAINT fk_usefolsel_on_user FOREIGN KEY (user_id) REFERENCES users (id);
-
-ALTER TABLE users_orders
-    ADD CONSTRAINT fk_useord_on_order FOREIGN KEY (orders_id) REFERENCES orders (id);
-
-ALTER TABLE users_orders
-    ADD CONSTRAINT fk_useord_on_user FOREIGN KEY (user_id) REFERENCES users (id);
 
 ALTER TABLE user_fav_products
     ADD CONSTRAINT fk_user_fav_products_on_user FOREIGN KEY (user_id) REFERENCES users (id);

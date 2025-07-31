@@ -24,4 +24,13 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Query("SELECT DISTINCT o FROM Order o JOIN o.basketItems bi WHERE bi.company.id = :companyId")
     Page<Order> findOrdersContainingBasketItemsForCompany(@Param("companyId") UUID companyId, Pageable pageable);
+
+    @Query("""
+    SELECT o
+    FROM Order o
+    WHERE o.user.id = :userId
+      AND o.paymentStatus = com.tekerasoft.tekeramarketplace.model.entity.PaymentStatus.PAID
+""")
+    Page<Order> findOrderByUserId(@Param("userId") UUID userId, Pageable pageable);
+
 }

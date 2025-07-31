@@ -80,11 +80,12 @@ spring:
     base_url: https://sandbox-api.iyzipay.com
     #callback_url: https://beta.tekera21.com/v1-api/payment/paymentCheck
     callback_url: http://192.168.1.106:8080/v1/api/payment/paymentCheck
+    #callback_url: http://192.168.1.107:3001/api/payment/paymentCheck
 
 
   origin:
     #url: https://frontend.beta.tekera21.com
-    url: http://localhost:3001
+    url: http://192.168.1.107:3001
 
 app:
   guest-cart-ttl-days: 7

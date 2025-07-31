@@ -7,6 +7,7 @@ import com.iyzipay.model.Buyer;
 import com.iyzipay.model.Currency;
 import com.iyzipay.model.Locale;
 import com.iyzipay.request.CreatePaymentRequest;
+import com.iyzipay.request.CreateThreedsPaymentRequest;
 import com.iyzipay.request.CreateThreedsPaymentRequestV2;
 import com.tekerasoft.tekeramarketplace.dto.request.BasketItemRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateOrderRequest;
@@ -15,6 +16,7 @@ import com.tekerasoft.tekeramarketplace.exception.PaymentException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,8 +62,7 @@ public class PaymentService {
                         BigDecimal price = productAttribute.getPrice(); // price BigDecimal olmalı
                         BigDecimal quantity = BigDecimal.valueOf(bi.getQuantity()); // quantity int/long ise çeviriyoruz
                         return price.multiply(quantity);
-                    }).reduce(BigDecimal.ZERO, BigDecimal::add)
-                    .setScale(2, RoundingMode.HALF_UP);
+                    }).reduce(BigDecimal.ZERO, BigDecimal::add);
 
             Order order = orderService.createOrder(
                     CreateOrderRequest.convertFromPayRequestToOrderRequest(
@@ -99,9 +100,10 @@ public class PaymentService {
             buyer.setLastLoginDate(req.getBuyer().getLastLoginDate());
             buyer.setRegistrationDate(req.getBuyer().getRegistrationDate());
             buyer.setRegistrationAddress(req.getBuyer().getRegistrationAddress());
-            buyer.setIp(req.getBuyer().getIp());
-            //buyer.setCity(req.getShippingAddress().getCity());
-            buyer.setCity("Antalya");
+            if(req.getBillingAddress() != null) {
+                buyer.setCity(req.getBillingAddress().getCity());
+            }
+            buyer.setCity(req.getShippingAddress().getCity());
             buyer.setCountry(req.getShippingAddress().getCountry());
             buyer.setZipCode(req.getShippingAddress().getZipCode());
             paymentRequest.setBuyer(buyer);
@@ -138,9 +140,9 @@ public class PaymentService {
                 basketItem.setItemType(product.getProductType().name());
                 basketItem.setItemType(BasketItemType.PHYSICAL.name());
 
-                BigDecimal totalItemPrice = new BigDecimal(String.valueOf(productAttribute.getPrice()));
-                System.out.println(totalItemPrice);
-                basketItem.setPrice(totalItemPrice.setScale(2, RoundingMode.HALF_UP));
+                BigDecimal totalItemPrice = new BigDecimal(String.valueOf(productAttribute.getPrice())).multiply(new BigDecimal(bi.getQuantity()));
+
+                basketItem.setPrice(totalItemPrice);
                 basketItems.add(basketItem);
             }
 
@@ -150,29 +152,36 @@ public class PaymentService {
             paymentRequest.setPrice(totalPrice);
             paymentRequest.setPaidPrice(totalPrice);
             paymentRequest.setBasketItems(basketItems);
-            System.out.println(paymentRequest);
             return ThreedsInitialize.create(paymentRequest,options);
         } catch (RuntimeException e) {
             throw new RuntimeException("Error Creating Payment Request",e);
         }
 
-
     }
 
     public ThreedsPayment completePayment(String paymentId, String conversationId) {
         try {
-            CreateThreedsPaymentRequestV2 threedsPaymentRequestV2 = new CreateThreedsPaymentRequestV2();
-            threedsPaymentRequestV2.setPaymentId(paymentId);
-            threedsPaymentRequestV2.setConversationId(conversationId);
-            threedsPaymentRequestV2.setLocale(Locale.TR.getValue());
+            CreateThreedsPaymentRequest threedsPaymentRequest = new CreateThreedsPaymentRequest();
+            threedsPaymentRequest.setPaymentId(paymentId);
+            threedsPaymentRequest.setConversationId(conversationId);
+            threedsPaymentRequest.setLocale(Locale.TR.getValue());
 
-            return ThreedsPayment.createV2(threedsPaymentRequestV2, options);
+            ThreedsPayment threedsPayment = ThreedsPayment.create(threedsPaymentRequest, options);
+            if(threedsPayment.getStatus().equals("success")) {
+                orderService.completeOrder(conversationId, PaymentStatus.PAID);
+            } else {
+                orderService.completeOrder(conversationId, PaymentStatus.FAIL);
+            }
+
+            return threedsPayment;
+
         } catch (RuntimeException e) {
             logger.error(e.getMessage());
             throw new RuntimeException("Error completing 3D Secure Payment");
         }
     }
 
+    @Transactional
     public String paymentCheck (HttpServletRequest request, HttpServletResponse response) {
         try {
             Map<String, String[]> parameters =  request.getParameterMap();
@@ -185,12 +194,10 @@ public class PaymentService {
                 throw new PaymentException("Eksik Ödeme Bilgisi");
             }
 
-            if("success".equalsIgnoreCase(threedsPayment.getStatus())) {
-                orderService.completeOrder(conversationId, PaymentStatus.PAID);
-                response.sendRedirect(originUrl + "/payment-success");
+            if(threedsPayment.getStatus().equals("success")) {
+                response.sendRedirect(originUrl + "/odeme/basarili");
             } else {
-                orderService.completeOrder(conversationId, PaymentStatus.FAIL);
-                response.sendRedirect(originUrl + "/payment-failure");
+                response.sendRedirect(originUrl + "/odeme/basarisiz");
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
