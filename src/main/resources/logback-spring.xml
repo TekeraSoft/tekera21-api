@@ -1,9 +1,19 @@
-<configuration>
+<configuration scan="true">
+
+    <springProperty scope="context"
+                    name="LOGSTASH_HOST"
+                    source="LOGSTASH_HOST"
+                    defaultValue="localhost"/>
+
+    <springProperty scope="context"
+                    name="LOGSTASH_PORT"
+                    source="LOGSTASH_PORT"
+                    defaultValue="50000"/>
 
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>logstash:50000</destination> <!-- Logstash portu -->
+        <destination>${LOGSTASH_HOST}:${LOGSTASH_PORT}</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
     </appender>
 

@@ -17,6 +17,7 @@ public class TekeraMarketplaceApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(TekeraMarketplaceApplication.class, args);
+        System.out.println("Application Working :)");
     }
 
 }

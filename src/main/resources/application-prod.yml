@@ -1,0 +1,84 @@
+spring:
+  data:
+    redis:
+      host: redis
+      port: 6379
+      password: tekera_pass
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 500MB
+      max-request-size: 500MB
+
+  elasticsearch:
+    uris: http://elasticsearch:9200
+    username: elastic
+    password: Tekera123
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://tekera-db:5432/tekera-db
+    username: tekera_user
+    password: tekera_pass
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+  minio:
+    url: http://minio1:9000
+    user: tekera_user
+    password: tekera_pass
+    bucket-name: tekera-bucket
+
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: tekeraGroup
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  #deneme sil
+  mind-creator:
+    api: http://mind-generator:3009/generate
+
+  jwt:
+    secret_keys: "VGhpcy1pcy1hLXN1cGVyLXNlY3JldC1zZWNyZXQta2V5LXdpdGgtNjRieXRlcy1sb25nZXItdGhhbi15b3UtZXhwZWN0Cg=="
+    expiration: 604800000
+    refresh-token:
+      expiration: 604800000
+
+  iyzico:
+    #    api_key: wsXNHznkvp2vwa2uwPkTBatTldHuz0GZ
+    #    secret_key: i00wXXujkkfzsbRFF8W9GDKhqCE8MWSR
+    #    base_url: https://api.iyzipay.com
+    api_key: sandbox-4mlmZxqqpEvkFn61GClqGpDpt0cYZuA2
+    secret_key: sandbox-m4UURbHi8klCbIqCiCWsjlyJG8mTfuG4
+    base_url: https://sandbox-api.iyzipay.com
+    callback_url: https://beta.tekera21.com/v1-api/payment/paymentCheck
+
+
+  origin:
+    url: https://frontend.beta.tekera21.com
+
+app:
+  guest-cart-ttl-days: 7
+
+server:
+  tomcat:
+    max-http-form-post-size: 524288000   # 500MB
+    max-swallow-size: 524288000          # 500MB

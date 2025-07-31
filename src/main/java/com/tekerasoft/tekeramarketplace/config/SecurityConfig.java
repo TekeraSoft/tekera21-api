@@ -58,12 +58,11 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers("/v1/api/company/**").hasAnyAuthority(Role.COMPANY_ADMIN.name(),Role.SUPER_ADMIN.name())
                         .requestMatchers("/v1/api/super-admin/**").hasAnyAuthority(Role.SUPER_ADMIN.name())
-                        //.requestMatchers("/v1/api/user/**").hasAnyAuthority(Role.CUSTOMER.name())
+                        .requestMatchers("/v1/api/user/**").hasAnyAuthority(Role.CUSTOMER.name())
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -81,6 +80,7 @@ public class SecurityConfig {
                 "http://localhost:3002",
                 "http://localhost:3001",
                 "https://avm.beta.tekera21.com",
+                "https://sandbox-api.iyzipay.com",
                 "null"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
@@ -95,13 +95,13 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
-        return  authenticationProvider;
-    }
+//    @Bean
+//    public AuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+//        authenticationProvider.setUserDetailsService(userService);
+//        authenticationProvider.setPasswordEncoder(passwordEncoder);
+//        return  authenticationProvider;
+//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
