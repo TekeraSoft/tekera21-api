@@ -140,9 +140,8 @@ public class DigitalFashionService {
     }
 
     public TargetPictureDto getTargetPictureById(String targetId) {
-        return targetPictureRepository.findById(UUID.fromString(targetId)).map(TargetPictureDto::toDto).orElseThrow(
-                () -> new NotFoundException("Target picture not found for id: " + targetId)
-        );
+        return targetPictureRepository.findById(UUID.fromString(targetId)).map(TargetPictureDto::toDto)
+                .orElse(null);
     }
 
     public ApiResponse<?> deleteTargetPicture(String id) {

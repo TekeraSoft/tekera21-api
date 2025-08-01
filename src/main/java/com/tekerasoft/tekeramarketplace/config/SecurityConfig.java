@@ -54,7 +54,7 @@ public class SecurityConfig {
                                 "/v1/api/user/**",
                                 "/v1/api/cart/**"
                         ).permitAll()
-                        .requestMatchers("/v1/api/company/**").hasAnyAuthority(Role.COMPANY_ADMIN.name(),Role.SUPER_ADMIN.name())
+                        .requestMatchers("/v1/api/company/**").hasAnyAuthority(Role.SELLER.name(),Role.SUPER_ADMIN.name())
                         .requestMatchers("/v1/api/super-admin/**").hasAnyAuthority(Role.SUPER_ADMIN.name())
                         .requestMatchers("/v1/api/user/**").hasAnyAuthority(Role.CUSTOMER.name())
                         .anyRequest().authenticated()
