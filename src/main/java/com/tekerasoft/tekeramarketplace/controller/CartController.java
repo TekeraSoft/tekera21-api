@@ -18,18 +18,18 @@ public class CartController {
     }
 
     @PostMapping("/addToCart")
-    public Cart addToCart(@RequestBody List<AddToCartRequest> req) {
-        return cartService.addToCart(req);
+    public Cart addToCart(@RequestBody List<AddToCartRequest> req, @RequestParam(required = false) String guestUserId) {
+        return cartService.addToCart(req, guestUserId);
     }
 
     @GetMapping("/getCart")
-    public Cart getCart() {
-        return cartService.getCart();
+    public Cart getCart(@RequestParam(required = false) String guestUserId) {
+        return cartService.getCart(guestUserId);
     }
 
     @DeleteMapping("/removeFromCart")
-    public Cart removeItemFromCart(@RequestParam String attributeId) {
-        return cartService.removeFromCart(attributeId);
+    public Cart removeItemFromCart(@RequestParam String attributeId, @RequestParam(required = false) String guestUserId) {
+        return cartService.removeFromCart(attributeId, guestUserId);
     }
 
     @DeleteMapping("/clearCart")

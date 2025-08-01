@@ -22,11 +22,13 @@ public class AuthService {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final CartService cartService;
 
-    public AuthService(UserService userService, AuthenticationManager authenticationManager, JwtService jwtService) {
+    public AuthService(UserService userService, AuthenticationManager authenticationManager, JwtService jwtService, CartService cartService) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.cartService = cartService;
     }
 
     public JwtResponse authenticate(LoginRequest loginRequest) {
@@ -34,12 +36,25 @@ public class AuthService {
         if (user.isEmpty()) {
             throw new UserException("Email or password is incorrect");
         }
+
         try {
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
             );
+
             if (auth.isAuthenticated()) {
                 userService.changeLastLoginUser(loginRequest.getEmail());
+
+                // ✅ Kullanıcı id'sini al
+                String userId = user.get().getId().toString();
+
+                // ✅ UI'dan gelen guestCartId
+                String guestCartId = loginRequest.getCartId();
+
+                // ✅ Sepet birleştirme
+                cartService.mergeGuestCartToUserCart(guestCartId, userId);
+
+                // ✅ JWT döndür
                 return new JwtResponse(
                         jwtService.generateToken(addClaims(loginRequest.getEmail()), loginRequest.getEmail())
                 );
@@ -47,6 +62,7 @@ public class AuthService {
         } catch (Exception e) {
             throw new UserException("Email or password is incorrect");
         }
+
         throw new UserException("Email or password is incorrect");
     }
 

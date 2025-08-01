@@ -9,7 +9,6 @@ import com.tekerasoft.tekeramarketplace.model.entity.BasketItem;
 import com.tekerasoft.tekeramarketplace.model.entity.Buyer;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.OrderRepository;
 import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

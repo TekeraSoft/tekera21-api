@@ -4,5 +4,5 @@ data class AddToCartRequest(
   val productId: String,
   val variationId: String,
   val attributeId: String,
-  val quantity: Int
+  val quantity: Int,
 )
