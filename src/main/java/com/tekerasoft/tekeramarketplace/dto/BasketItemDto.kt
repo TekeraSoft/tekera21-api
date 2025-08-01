@@ -4,7 +4,9 @@ import com.tekerasoft.tekeramarketplace.model.entity.BasketAttributes
 import java.math.BigDecimal
 
 data class BasketItemDto(
+    val id: String,
     val name: String,
+    val slug: String,
     val code: String?,
     val brandName: String,
     val quantity: Int,
@@ -16,4 +18,7 @@ data class BasketItemDto(
     val attributes: MutableList<BasketAttributes>,
     val shippingPrice: BigDecimal,
     val shippingCompanyName: String,
+    val productId: String,
+    val variationId: String,
+    val attributeId: String
 )

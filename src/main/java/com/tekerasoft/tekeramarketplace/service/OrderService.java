@@ -58,6 +58,9 @@ public class OrderService {
             BasketItem basketItem = new BasketItem();
             basketItem.setName(product.getName());
             basketItem.setProductId(product.getId().toString());
+            basketItem.setVariationId(variation.getId().toString());
+            basketItem.setSlug(product.getSlug());
+            basketItem.setProductId(product.getId().toString());
             basketItem.setAttributeId(attribute.getId().toString());
             basketItem.setCode(product.getCode());
             basketItem.setBrandName(product.getBrandName());

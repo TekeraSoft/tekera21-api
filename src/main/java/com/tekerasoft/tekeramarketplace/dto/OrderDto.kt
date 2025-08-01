@@ -16,7 +16,9 @@ data class OrderDto(
             return OrderDto(
                 from.buyer.let { BuyerDto(it.name, it.surname, it.gsmNumber,) },
                 from.basketItems.map { it -> BasketItemDto(
+                    it.id.toString(),
                     it.name,
+                    it.slug,
                     it.code,
                     it.brandName,
                     it.quantity,
@@ -27,7 +29,11 @@ data class OrderDto(
                     it.image,
                     it.attributes,
                     it.shippingPrice,
-                    it.shippingCompany.name
+                    it.shippingCompany.name,
+                    it.productId,
+                    it.variationId,
+                    it.attributeId
+
                 ) }.toMutableList(),
                 from.shippingAddress.let { it -> AddressDto.toDto(it) },
                 from.billingAddress?.let { it -> AddressDto.toDto(it) },
