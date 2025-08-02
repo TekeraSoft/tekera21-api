@@ -1,54 +1,32 @@
 package com.tekerasoft.tekeramarketplace.utils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tekerasoft.tekeramarketplace.dto.CategoryDto;
-import com.tekerasoft.tekeramarketplace.dto.CategoryLoaderDto;
-import com.tekerasoft.tekeramarketplace.dto.SubCategoryDto;
-import com.tekerasoft.tekeramarketplace.dto.SubCategoryLoader;
-import com.tekerasoft.tekeramarketplace.dto.request.VariationRequest;
-import com.tekerasoft.tekeramarketplace.dto.response.ColorSize;
-import com.tekerasoft.tekeramarketplace.dto.response.OldProduct;
-import com.tekerasoft.tekeramarketplace.model.entity.*;
-import com.tekerasoft.tekeramarketplace.repository.jparepository.CategoryRepository;
-import com.tekerasoft.tekeramarketplace.repository.jparepository.CompanyRepository;
-import com.tekerasoft.tekeramarketplace.repository.jparepository.ProductRepository;
-import com.tekerasoft.tekeramarketplace.repository.jparepository.SubCategoryRepository;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStream;
-import java.util.*;
-import java.util.stream.Collectors;
-
-
-@Component
-public class DataLoader implements CommandLineRunner {
-
-    private final CategoryRepository categoryRepository;
-    private final SubCategoryRepository subCategoryRepository;
-    private final ObjectMapper objectMapper;
-    private final ProductRepository productRepository;
-    private final CompanyRepository companyRepository;
-
-    // Constructorı güncelledik
-    public DataLoader(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository,
-                      ObjectMapper objectMapper,
-                      ProductRepository productRepository,
-                      CompanyRepository companyRepository) { // <<-- 2. DEĞİŞİKLİK: Bu parametreyi ekledik
-        this.categoryRepository = categoryRepository;
-        this.subCategoryRepository = subCategoryRepository; // <<-- Bu satırı ekledik (2. değişikliğin parçası)
-        this.objectMapper = objectMapper;
-        this.productRepository = productRepository;
-        this.companyRepository = companyRepository;
-    }
-
-    @Override
-    @Transactional
-    public void run(String... args) throws Exception {
+//@Component
+//public class DataLoader implements CommandLineRunner {
+//
+//    private final CategoryRepository categoryRepository;
+//    private final SubCategoryRepository subCategoryRepository;
+//    private final ObjectMapper objectMapper;
+//    private final ProductRepository productRepository;
+//    private final CompanyRepository companyRepository;
+//    private final SearchItemRepository searchItemRepository;
+//
+//    // Constructorı güncelledik
+//    public DataLoader(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository,
+//                      ObjectMapper objectMapper,
+//                      ProductRepository productRepository,
+//                      CompanyRepository companyRepository, SearchItemRepository searchItemRepository) { // <<-- 2. DEĞİŞİKLİK: Bu parametreyi ekledik
+//        this.categoryRepository = categoryRepository;
+//        this.subCategoryRepository = subCategoryRepository; // <<-- Bu satırı ekledik (2. değişikliğin parçası)
+//        this.objectMapper = objectMapper;
+//        this.productRepository = productRepository;
+//        this.companyRepository = companyRepository;
+//        this.searchItemRepository = searchItemRepository;
+//    }
+//
+//    @Override
+//    @Transactional
+//    public void run(String... args) throws Exception {
 
 //      InputStream inputStream = getClass().getClassLoader().getResourceAsStream("arzuamber-products.json");
 //      System.out.println("Veriler yükleniyor...");
@@ -169,5 +147,31 @@ public class DataLoader implements CommandLineRunner {
 //            }
 //        }
 
-    }
-}
+//        List<Product> products = productRepository.findAll();
+//        products.forEach(product -> {
+//            searchItemRepository.save(new SearchItem(
+//                    product.getId().toString(),
+//                    product.getName(),
+//                    product.getSlug(),
+//                    product.getCompany().getId().toString(),
+//                    product.getVariations().get(0).getImages().get(0),
+//                    SearchItemType.PRODUCT,
+//                    0.0
+//            ));
+//        });
+
+//        List<Category> categories = categoryRepository.findAll();
+//        categories.forEach(category -> {
+//            searchItemRepository.save(new SearchItem(
+//                    category.getId().toString(),
+//                    category.getName(),
+//                    category.getSlug(),
+//                    null,
+//                    category.getImage(),
+//                    SearchItemType.CATEGORY,
+//                    0.0
+//            ));
+//        });
+
+//    }
+//}

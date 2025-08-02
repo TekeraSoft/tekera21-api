@@ -22,7 +22,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     """)
     List<Order> findOrdersByPhoneNumberOrUsername(@Param("searchParam") String searchParam);
 
-    @Query("SELECT DISTINCT o FROM Order o JOIN o.basketItems bi WHERE bi.company.id = :companyId")
+    @Query("SELECT DISTINCT o FROM Order o JOIN o.basketItems bi WHERE bi.seller.id = :companyId")
     Page<Order> findOrdersContainingBasketItemsForCompany(@Param("companyId") UUID companyId, Pageable pageable);
 
     @Query("""

@@ -34,7 +34,7 @@ open class User (
     open var gsmNumber: String,
 
     @OneToMany(fetch = FetchType.LAZY)
-    open var followSellers: MutableList<Company>? = mutableListOf(),
+    open var followSellers: MutableList<Seller>? = mutableListOf(),
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "user_topics", joinColumns = [JoinColumn(name = "user_id")])

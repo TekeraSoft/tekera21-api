@@ -13,7 +13,7 @@ public interface FashionCollectionRepository extends JpaRepository<FashionCollec
     @Query("SELECT fc FROM FashionCollection fc WHERE fc.isActive = true")
     Page<FashionCollection> findActiveCollections(Pageable pageable);
 
-    @Query("SELECT fc FROM FashionCollection fc WHERE fc.company.id = :companyId")
+    @Query("SELECT fc FROM FashionCollection fc WHERE fc.seller.id = :companyId")
     Page<FashionCollection> findCompanyCollection(@Param("companyId") UUID companyId, Pageable pageable);
 
 }

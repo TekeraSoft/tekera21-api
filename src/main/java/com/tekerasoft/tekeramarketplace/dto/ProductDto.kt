@@ -38,7 +38,7 @@ data class ProductDto(
                 from.brandName,
                 from.category?.let { AdminCategoryDto(it.id,it.name, it.slug,it.image) },
                 from.subCategories?.map { AdminSubCategoryDto(it.id, it.name, it.slug ,it.image) }?.toList() ?: mutableListOf(),
-                from.company.let {
+                from.seller.let {
                     ProductCompanyDto(it.id,it.name,it.logo, it.rate ) },
                 from.description,
                 from.variations.map {

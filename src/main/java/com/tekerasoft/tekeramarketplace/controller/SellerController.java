@@ -22,19 +22,19 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/api/company")
+@RequestMapping("/v1/api/seller")
 @Tag(name = "Products", description = "Product management APIs")
-public class CompanyController {
+public class SellerController {
     private final ProductService productService;
-    private final CompanyService companyService;
+    private final SellerService sellerService;
     private final FileService fileService;
     private final VariationService variationService;
     private final DigitalFashionService digitalFashionService;
     private final OrderService orderService;
 
-    public CompanyController(ProductService productService, CompanyService companyService, FileService fileService, VariationService variationService, DigitalFashionService digitalFashionService, OrderService orderService) {
+    public SellerController(ProductService productService, SellerService sellerService, FileService fileService, VariationService variationService, DigitalFashionService digitalFashionService, OrderService orderService) {
         this.productService = productService;
-        this.companyService = companyService;
+        this.sellerService = sellerService;
         this.fileService = fileService;
         this.variationService = variationService;
         this.digitalFashionService = digitalFashionService;
@@ -67,7 +67,7 @@ public class CompanyController {
 
     @GetMapping("/sellerGallery")
     public ResponseEntity<Page<String>> sellerGallery(@RequestParam String companyId, Pageable pageable) throws Exception {
-        return ResponseEntity.ok(companyService.getAllCompanyMedia(companyId,pageable));
+        return ResponseEntity.ok(sellerService.getAllCompanyMedia(companyId,pageable));
     }
 
     @GetMapping("/getPresignedUrl")

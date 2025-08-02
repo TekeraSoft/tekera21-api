@@ -23,15 +23,15 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
        """)
     Page<Product> findActiveProducts(Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.isActive = true AND p.company.id = :companyId")
+    @Query("SELECT p FROM Product p WHERE p.isActive = true AND p.seller.id = :companyId")
     Page<Product> findActiveProductsByCompanyId(@Param("companyId") UUID companyId, Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE :tag MEMBER OF p.tags AND p.company.id = :companyId")
+    @Query("SELECT p FROM Product p WHERE :tag MEMBER OF p.tags AND p.seller.id = :companyId")
     Page<Product> findPopularOrNewSeasonProducts(@Param("companyId") UUID companyId,
                                                  @Param("tag") String tag,
                                                  Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.isActive = true AND p.company.id = :companyId AND p.slug = :slug")
+    @Query("SELECT p FROM Product p WHERE p.isActive = true AND p.seller.id = :companyId AND p.slug = :slug")
     Optional<Product> findActiveProductByCompanyIdAndSlug(@Param("companyId") UUID companyId, @Param("slug") String slug);
 
     @Query("""

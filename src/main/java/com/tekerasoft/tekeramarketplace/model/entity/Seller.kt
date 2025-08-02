@@ -4,8 +4,8 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "companies")
-open class Company(
+@Table(name = "sellers")
+open class Seller(
     open var name: String,
     open var slug: String,
     open var logo: String,
@@ -25,34 +25,34 @@ open class Company(
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "company_categories",
-        joinColumns = [JoinColumn(name = "company_id")],
+        name = "seller_categories",
+        joinColumns = [JoinColumn(name = "seller_id")],
         inverseJoinColumns = [JoinColumn(name = "category_id")])
     open var categories: MutableSet<Category> = mutableSetOf(),
 
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     open var products: MutableList<Product> = mutableListOf(),
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [(CascadeType.ALL)])
+    @OneToMany(fetch = FetchType.LAZY)
     open var users: MutableSet<User> = mutableSetOf(),
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
     open var address: MutableList<Address> = mutableListOf(),
 
     @ElementCollection
-    @CollectionTable(name = "company_bank_accounts",
-        joinColumns = [JoinColumn(name = "company_id")])
+    @CollectionTable(name = "seller_bank_accounts",
+        joinColumns = [JoinColumn(name = "seller_id")])
     open var bankAccounts: MutableList<BankAccount> = mutableListOf(),
 
     @ElementCollection
-    @CollectionTable(name= "company_document_paths",
-        joinColumns = [JoinColumn(name = "company_id")])
+    @CollectionTable(name= "seller_document_paths",
+        joinColumns = [JoinColumn(name = "seller_id")])
     open var identityDocumentPaths: List<CompanyDocument>,
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "company_shipping_companies",
-        joinColumns = [JoinColumn(name = "company_id")],
+        name = "seller_shipping_companies",
+        joinColumns = [JoinColumn(name = "seller_id")],
         inverseJoinColumns = [JoinColumn(name = "shipping_company_id")]
     )
     open var shippingCompanies: MutableSet<ShippingCompany> = mutableSetOf(),

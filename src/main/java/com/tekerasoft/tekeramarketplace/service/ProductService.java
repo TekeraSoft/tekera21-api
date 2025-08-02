@@ -29,19 +29,19 @@ public class ProductService {
     private final FileService fileService;
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
-    private final CompanyRepository companyRepository;
+    private final SellerRepository sellerRepository;
     private final VariationRepository variationRepository;
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
                           SubCategoryRepository subCategoryRepository,
-                          CompanyRepository companyRepository,
+                          SellerRepository sellerRepository,
                           VariationRepository variationRepository) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
-        this.companyRepository = companyRepository;
+        this.sellerRepository = sellerRepository;
         this.variationRepository = variationRepository;
     }
 
@@ -65,9 +65,9 @@ public class ProductService {
             product.setActive(true);
 
             // Company
-            Company company = companyRepository.findById(UUID.fromString(req.getCompanyId()))
+            Seller seller = sellerRepository.findById(UUID.fromString(req.getCompanyId()))
                     .orElseThrow(() -> new RuntimeException("Company not found"));
-            product.setCompany(company);
+            product.setSeller(seller);
 
             // Category
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
@@ -125,7 +125,7 @@ public class ProductService {
 
                             String imageUrl = fileService.productFileUpload(
                                     image,
-                                    company.getSlug(),
+                                    seller.getSlug(),
                                     SlugGenerator.generateSlug(req.getName()),
                                     imageColor
                             );
@@ -251,7 +251,7 @@ public class ProductService {
 
                             String imageUrl = fileService.productFileUpload(
                                     image,
-                                    product.getCompany().getSlug(),
+                                    product.getSeller().getSlug(),
                                     SlugGenerator.generateSlug(req.getName()),
                                     imageColor
                             );
@@ -283,7 +283,7 @@ public class ProductService {
             }
             if(req.getVideoUrl() != null) {
                 if(req.getVideoUrl().startsWith("temp")) {
-                    String newPath = req.getVideoUrl().replace("temp/", "products/"+product.getCompany().getSlug()+"/");
+                    String newPath = req.getVideoUrl().replace("temp/", "products/"+product.getSeller().getSlug()+"/");
                     fileService.copyObject(req.getVideoUrl(), newPath);
                     product.setVideoUrl(newPath);
                     fileService.deleteInFolderFile(req.getVideoUrl());

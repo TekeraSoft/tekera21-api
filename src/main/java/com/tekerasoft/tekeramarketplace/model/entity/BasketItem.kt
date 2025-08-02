@@ -2,7 +2,6 @@ package com.tekerasoft.tekeramarketplace.model.entity
 
 import jakarta.persistence.*
 import java.math.BigDecimal
-import java.util.UUID
 
 @Entity
 open class BasketItem(
@@ -28,8 +27,8 @@ open class BasketItem(
     open var shippingPrice: BigDecimal,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    open var company: Company,
+    @JoinColumn(name = "seller_id")
+    open var seller: Seller,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shipping_company_id")

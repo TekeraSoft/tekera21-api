@@ -6,7 +6,7 @@ import com.tekerasoft.tekeramarketplace.dto.request.CreateFashionCollectionReque
 import com.tekerasoft.tekeramarketplace.dto.request.UpdateFashionCollectionRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
-import com.tekerasoft.tekeramarketplace.model.entity.Company;
+import com.tekerasoft.tekeramarketplace.model.entity.Seller;
 import com.tekerasoft.tekeramarketplace.model.entity.FashionCollection;
 import com.tekerasoft.tekeramarketplace.model.entity.Product;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.FashionCollectionRepository;
@@ -25,14 +25,14 @@ public class FashionCollectionService {
     private final FashionCollectionRepository fashionCollectionRepository;
     private final ProductService productService;
     private final FileService fileService;
-    private final CompanyService companyService;
+    private final SellerService sellerService;
 
     public FashionCollectionService(FashionCollectionRepository fashionCollectionRepository,
-                                    ProductService productService, FileService fileService, CompanyService companyService) {
+                                    ProductService productService, FileService fileService, SellerService sellerService) {
         this.fashionCollectionRepository = fashionCollectionRepository;
         this.productService = productService;
         this.fileService = fileService;
-        this.companyService = companyService;
+        this.sellerService = sellerService;
     }
 
     public ApiResponse<?> createFashionCollection(CreateFashionCollectionRequest req) {
@@ -41,7 +41,7 @@ public class FashionCollectionService {
         req.getProducts().forEach(product -> {
             productList.add(productService.getById(UUID.fromString(product)));
         });
-        Company company = companyService.getCompanyById(req.getCompanyId());
+        Seller seller = sellerService.getCompanyById(req.getCompanyId());
         FashionCollection collection = new FashionCollection();
         String imagePath = fileService.folderFileUpload(req.getImage(), "fashion-collection-images");
         collection.setImage(imagePath);
@@ -50,7 +50,7 @@ public class FashionCollectionService {
         collection.setCollectionName(req.getCollectionName());
         collection.setDescription(req.getDescription());
         collection.setActive(true);
-        collection.setCompany(company);
+        collection.setSeller(seller);
         fashionCollectionRepository.save(collection);
         return new ApiResponse<>("Collection Created", HttpStatus.CREATED.value());
     }

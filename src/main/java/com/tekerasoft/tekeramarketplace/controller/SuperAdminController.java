@@ -18,7 +18,7 @@ import java.util.List;
 public class SuperAdminController {
     private final CategoryService categoryService;
     private final SubCategoryService subCategoryService;
-    private final CompanyService companyService;
+    private final SellerService sellerService;
     private final ProductService productService;
     private final ThemeService themeService;
     private final OrderService orderService;
@@ -26,14 +26,14 @@ public class SuperAdminController {
     private final ShippingCompanyService shippingCompanyService;
 
     public SuperAdminController(CategoryService categoryService, SubCategoryService subCategoryService,
-                                CompanyService companyService, ProductService productService,
+                                SellerService sellerService, ProductService productService,
                                 ThemeService themeService, OrderService orderService,
                                 FashionCollectionService fashionCollectionService,
                                 ShippingCompanyService shippingCompanyService)
     {
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
-        this.companyService = companyService;
+        this.sellerService = sellerService;
         this.productService = productService;
         this.themeService = themeService;
         this.orderService = orderService;
@@ -63,7 +63,7 @@ public class SuperAdminController {
 
     @GetMapping("/getAllCompany")
     public Page<CompanyAdminDto> getAllCompany(Pageable pageable) {
-        return companyService.getAllCompanies(pageable);
+        return sellerService.getAllCompanies(pageable);
     }
 
     @DeleteMapping("/deleteCategory")
@@ -78,13 +78,13 @@ public class SuperAdminController {
 
     @DeleteMapping("/deleteCompany")
     public ResponseEntity<ApiResponse<?>> deleteCompany(@RequestParam("companyId") String companyId) {
-        return ResponseEntity.ok(companyService.deleteCompany(companyId));
+        return ResponseEntity.ok(sellerService.deleteCompany(companyId));
     }
 
     @PutMapping("/changeCompanyStatusCode")
     public ResponseEntity<ApiResponse<?>> changeCompanyActiveStatus(@RequestParam("companyId") String companyId,
                                                                     @RequestParam("status") Boolean status) {
-        return ResponseEntity.ok(companyService.changeCompanyActiveStatus(companyId,status));
+        return ResponseEntity.ok(sellerService.changeCompanyActiveStatus(companyId,status));
     }
 
     @PutMapping("/changeProductActiveStatus")

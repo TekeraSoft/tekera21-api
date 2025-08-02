@@ -7,7 +7,6 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.JoinTable
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
 
 @Entity
 open class FashionCollection(
@@ -28,9 +27,9 @@ open class FashionCollection(
     open var description: String? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="company_id")
-    open var company: Company? = null,
+    @JoinColumn(name="seller_id")
+    open var seller: Seller? = null,
 
     open var isActive: Boolean = true,
 
-): BaseEntity()
+    ): BaseEntity()

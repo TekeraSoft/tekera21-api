@@ -27,20 +27,22 @@ public class OrderService {
     private final AttributeService attributeService;
     private final ProductService productService;
     private final VariationService variationService;
-    private final CompanyService companyService;
+    private final SellerService sellerService;
     private final AuthenticationFacade authenticationFacade;
 
     public OrderService(OrderRepository orderRepository,
                         UserService userService,
                         AttributeService attributeService,
                         ProductService productService,
-                        VariationService variationService, CompanyService companyService, AuthenticationFacade authenticationFacade) {
+                        VariationService variationService,
+                        SellerService sellerService,
+                        AuthenticationFacade authenticationFacade) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.attributeService = attributeService;
         this.productService = productService;
         this.variationService = variationService;
-        this.companyService = companyService;
+        this.sellerService = sellerService;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -71,9 +73,9 @@ public class OrderService {
             basketItem.setImage(variation.getImages().get(0));
             basketItem.setAttributes(attribute.getAttributeDetails().stream().map(it ->
                     new BasketAttributes(it.getKey(),it.getValue())).toList());
-            basketItem.setShippingPrice(product.getCompany().getShippingCompanies().stream().findFirst().get().getPrice());
-            basketItem.setCompany(product.getCompany());
-            basketItem.setShippingCompany(product.getCompany().getShippingCompanies().stream().findFirst().get());
+            basketItem.setShippingPrice(product.getSeller().getShippingCompanies().stream().findFirst().get().getPrice());
+            basketItem.setSeller(product.getSeller());
+            basketItem.setShippingCompany(product.getSeller().getShippingCompanies().stream().findFirst().get());
             return basketItem;
         }).toList();
         order.setBasketItems(basketItems);

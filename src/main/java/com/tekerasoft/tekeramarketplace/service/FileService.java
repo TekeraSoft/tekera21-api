@@ -1,11 +1,8 @@
 package com.tekerasoft.tekeramarketplace.service;
 
-import com.tekerasoft.tekeramarketplace.model.entity.Company;
 import io.minio.*;
-import io.minio.errors.*;
 import io.minio.http.Method;
 import io.minio.messages.Item;
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,15 +13,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -33,9 +26,6 @@ public class FileService {
 
     @Value("${spring.minio.bucket-name}")
     private String bucketName;
-
-    @Value("${spring.minio.url}")
-    private String minioUrl;
 
     private final MinioClient minioClient;
     private static Logger logger = LoggerFactory.getLogger(FileService.class);

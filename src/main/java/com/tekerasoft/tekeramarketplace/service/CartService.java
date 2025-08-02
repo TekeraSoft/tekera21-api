@@ -3,7 +3,6 @@ package com.tekerasoft.tekeramarketplace.service;
 import com.tekerasoft.tekeramarketplace.dto.request.AddToCartRequest;
 import com.tekerasoft.tekeramarketplace.model.redisdocument.Cart;
 import com.tekerasoft.tekeramarketplace.model.redisdocument.CartItem;
-import com.tekerasoft.tekeramarketplace.repository.jparepository.CartRepository;
 import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,14 +20,12 @@ public class CartService {
     @Value("${app.guest-cart-ttl-days}")
     private long guestCartTtlDays;
 
-    private final CartRepository cartRepository;
     private final UserService userService;
     private final RedisTemplate<String, Object> redisTemplate;
     private final AuthenticationFacade  authenticationFacade;
 
-    public CartService(CartRepository cartRepository, UserService userService,
+    public CartService(UserService userService,
                        RedisTemplate<String, Object> redisTemplate, ProductService productService, AuthenticationFacade authenticationFacade) {
-        this.cartRepository = cartRepository;
         this.userService = userService;
         this.redisTemplate = redisTemplate;
         this.productService = productService;

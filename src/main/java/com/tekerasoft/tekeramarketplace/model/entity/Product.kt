@@ -14,7 +14,6 @@ import jakarta.persistence.JoinTable
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
-import jakarta.persistence.OneToOne
 import jakarta.persistence.OrderColumn
 import jakarta.persistence.Table
 
@@ -48,8 +47,8 @@ open class Product(
     open var currencyType: CurrencyType,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    open var company: Company,
+    @JoinColumn(name = "seller_id")
+    open var seller: Seller,
 
     open var shippingPreparationDays: Int? = 0,
 

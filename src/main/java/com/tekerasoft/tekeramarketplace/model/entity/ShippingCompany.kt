@@ -21,6 +21,6 @@ open class ShippingCompany(
     open var orders: MutableList<Order> = mutableListOf(),
 
     @ManyToMany(mappedBy = "shippingCompanies", fetch = FetchType.LAZY)
-    open var companies: MutableSet<Company> = mutableSetOf(),
+    open var companies: MutableSet<Seller> = mutableSetOf(),
 
-): BaseEntity()
+    ): BaseEntity()

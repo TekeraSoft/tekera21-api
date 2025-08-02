@@ -2,8 +2,7 @@ package com.tekerasoft.tekeramarketplace.controller;
 
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCompanyRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
-import com.tekerasoft.tekeramarketplace.service.CompanyService;
-import org.springframework.http.ResponseEntity;
+import com.tekerasoft.tekeramarketplace.service.SellerService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -16,10 +15,10 @@ import java.util.List;
 @RequestMapping("/v1/api/account")
 public class AccountController {
 
-    private final CompanyService companyService;
+    private final SellerService sellerService;
 
-    public AccountController(CompanyService companyService) {
-        this.companyService = companyService;
+    public AccountController(SellerService sellerService) {
+        this.sellerService = sellerService;
     }
 
     @PostMapping("/createCompany")
@@ -27,6 +26,6 @@ public class AccountController {
                                                         @RequestPart("files") List<MultipartFile> files,
                                                         @RequestPart("logo") MultipartFile logo)
     {
-        return companyService.createCompany(req,files,logo);
+        return sellerService.createCompany(req,files,logo);
     }
 }

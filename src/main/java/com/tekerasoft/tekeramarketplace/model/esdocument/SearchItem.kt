@@ -15,11 +15,16 @@ import org.springframework.data.elasticsearch.annotations.Setting
 @NoArg
 open class SearchItem(
     @Id
-    @JsonIgnore
-    open var id: String = "",
+    open var id: String,
 
     @Field("name", type = FieldType.Text, analyzer = "custom_index", searchAnalyzer = "custom_search")
     open var name: String,
+
+    @Field("slug", type = FieldType.Text, analyzer = "custom_index", searchAnalyzer = "custom_search")
+    open var slug: String,
+
+    @Field("companyId", type = FieldType.Text, analyzer = "custom_index", searchAnalyzer = "custom_search")
+    open var companyId: String? = null,
 
     @Field("image_url", type = FieldType.Text)
     open var imageUrl: String? = null,
