@@ -1,7 +1,6 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import jakarta.persistence.Embeddable
 import jakarta.persistence.Entity
 
 @Entity
@@ -19,5 +18,7 @@ open class Address (
     @JsonProperty("detailAddress")
     open var detailAddress: String,
     @JsonProperty("country")
-    open var country: String,
-): BaseEntity()
+    open var country: String
+): BaseEntity() {
+    constructor() : this("","","","","","","")
+}

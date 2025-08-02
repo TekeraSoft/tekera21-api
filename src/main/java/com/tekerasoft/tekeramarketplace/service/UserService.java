@@ -1,15 +1,12 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.request.CreateUserRequest;
+import com.tekerasoft.tekeramarketplace.dto.request.SellerVerificationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
-import com.tekerasoft.tekeramarketplace.model.entity.Role;
 import com.tekerasoft.tekeramarketplace.model.entity.User;
+import com.tekerasoft.tekeramarketplace.model.enums.Role;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.UserRepository;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,12 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-
-import static java.util.Collections.emptyMap;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -40,7 +34,6 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         Optional<User> user = userRepository.findByEmail(username);
         return user.orElseThrow(() -> new UsernameNotFoundException(username));
     }
@@ -62,6 +55,13 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(username);
     }
 
+    public ApiResponse<?> activeUserSellerRole(SellerVerificationRequest req) {
+        User user = userRepository.findById(UUID.fromString(req.getUserId()))
+                .orElseThrow(() -> new UsernameNotFoundException(req.getUserId()));
+        userRepository.save(user);
+        return new ApiResponse<>("Seller verification Successfully", HttpStatus.OK.value());
+    }
+
     public void changeLastLoginUser(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User Not Found"));
@@ -69,18 +69,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public String createToken(String email) {
-        try {
-            Optional<User> user = userRepository.findByEmail(email);
-            if (user.isPresent()) {
-                return jwtService.generateToken(emptyMap(),email);
-            }else {
-                throw new UsernameNotFoundException(email);
-            }
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
+
 
     public ApiResponse<?> forgotPassword(String email, String password, String token) {
         try {

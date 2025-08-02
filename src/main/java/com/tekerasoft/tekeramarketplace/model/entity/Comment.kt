@@ -11,4 +11,6 @@ open class Comment(
     @Column(columnDefinition = "TEXT")
     open var message: String,
 
-): BaseEntity()
+): BaseEntity() {
+    constructor() : this("",0.0,"")
+}

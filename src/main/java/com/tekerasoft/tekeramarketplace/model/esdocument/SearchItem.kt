@@ -35,4 +35,14 @@ open class SearchItem(
     @Field("rate", type = FieldType.Double)
     open var rate: Double? = 0.0,
 
+    ) {
+    constructor(): this(
+        id = "",
+        name = "",
+        slug = "",
+        companyId = null,
+        imageUrl = null,
+        itemType = SearchItemType.PRODUCT,
+        rate = 0.0,
     )
+}

@@ -31,4 +31,13 @@ open class Variation(
     @JoinColumn(name = "product_id")
     open var product: Product,
 
-    ): BaseEntity()
+    ): BaseEntity() {
+        constructor(): this(
+            modelName = "",
+            modelCode = "",
+            color = "",
+            images = listOf(),
+            attributes = mutableListOf(),
+            product = Product(),
+        )
+    }

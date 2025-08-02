@@ -1,9 +1,9 @@
 package com.tekerasoft.tekeramarketplace.dto
 
 import com.tekerasoft.tekeramarketplace.model.entity.AttributeDetail
-import com.tekerasoft.tekeramarketplace.model.entity.CurrencyType
 import com.tekerasoft.tekeramarketplace.model.entity.Product
-import com.tekerasoft.tekeramarketplace.model.entity.ProductType
+import com.tekerasoft.tekeramarketplace.model.enums.CurrencyType
+import com.tekerasoft.tekeramarketplace.model.enums.ProductType
 import java.util.UUID
 
 data class ProductListDto(

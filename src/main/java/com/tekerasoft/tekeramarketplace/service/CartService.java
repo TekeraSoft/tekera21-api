@@ -1,11 +1,10 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.request.AddToCartRequest;
-import com.tekerasoft.tekeramarketplace.model.redisdocument.Cart;
-import com.tekerasoft.tekeramarketplace.model.redisdocument.CartItem;
+import com.tekerasoft.tekeramarketplace.model.document.Cart;
+import com.tekerasoft.tekeramarketplace.model.document.CartItem;
+import com.tekerasoft.tekeramarketplace.repository.mongorepository.CartRepository;
 import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,56 +16,44 @@ import java.util.UUID;
 public class CartService {
 
     private final ProductService productService;
-    @Value("${app.guest-cart-ttl-days}")
-    private long guestCartTtlDays;
 
-    private final UserService userService;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final CartRepository cartRepository;
     private final AuthenticationFacade  authenticationFacade;
 
-    public CartService(UserService userService,
-                       RedisTemplate<String, Object> redisTemplate, ProductService productService, AuthenticationFacade authenticationFacade) {
-        this.userService = userService;
-        this.redisTemplate = redisTemplate;
+    public CartService(ProductService productService,
+                       CartRepository cartRepository,
+                       AuthenticationFacade authenticationFacade) {
+        this.cartRepository = cartRepository;
         this.productService = productService;
         this.authenticationFacade = authenticationFacade;
     }
 
-    private String getCartKey(String userId) {
-        return "cart:" + userId;
+    private Cart getCartFromDb(String cartOwnerId) {
+        return cartRepository.findById(cartOwnerId).orElse(null);
     }
 
     public Cart getCart(String guestUserId) {
-        String currentOwnerId;
-        if(guestUserId.isEmpty()){
-            currentOwnerId = authenticationFacade.getCurrentUserId();
-        }else {
-            currentOwnerId = guestUserId;
-        }
-        Object value = redisTemplate.opsForValue().get(getCartKey(currentOwnerId));
-        return (value instanceof Cart) ? (Cart) value : null;
+        String currentOwnerId = (guestUserId == null || guestUserId.isEmpty())
+                ? authenticationFacade.getCurrentUserId()
+                : guestUserId;
+        return getCartFromDb(currentOwnerId);
     }
 
     public void saveCart(String userId, Cart cart) {
-        redisTemplate.opsForValue().set(getCartKey(userId), cart, Duration.ofDays(guestCartTtlDays));
+        cart.setId(userId);
+        cartRepository.save(cart);
     }
 
     public Cart addToCart(List<AddToCartRequest> req, String cartId) {
         String userId = authenticationFacade.getCurrentUserId();
         boolean isLoggedIn = userId != null && !userId.isEmpty();
 
-        String cartOwnerId;
-        if (isLoggedIn) {
-            cartOwnerId = userId;
-        } else {
-            if (cartId != null && !cartId.isEmpty() && !cartId.equals("undefined")) {
-                cartOwnerId = cartId;
-            } else {
-                cartOwnerId = UUID.randomUUID().toString();
-            }
-        }
+        String cartOwnerId = isLoggedIn ? userId
+                : (cartId != null && !cartId.isEmpty() && !"undefined".equals(cartId)
+                ? cartId
+                : UUID.randomUUID().toString());
 
-        Cart existingCart = getCart(cartOwnerId);
+        Cart existingCart = getCartFromDb(cartOwnerId);
 
         if (existingCart == null) {
             existingCart = productService.toCartItem(req, cartOwnerId);
@@ -90,30 +77,27 @@ public class CartService {
         }
 
         saveCart(cartOwnerId, existingCart);
-
-        // 🔹 UI'nin localStorage'a kaydedebilmesi için ID'yi döndür
         existingCart.setId(cartOwnerId);
 
         return existingCart;
     }
 
-    public Cart removeFromCart(String attributeId,String guestUserId) {
-        String cartOwnerId;
-        if(guestUserId.isEmpty()){
-            cartOwnerId = authenticationFacade.getCurrentUserId();
-        } else {
-            cartOwnerId = guestUserId;
-        }
-        Cart cart = getCart(cartOwnerId);
+    public Cart removeFromCart(String attributeId, String guestUserId) {
+        String cartOwnerId = (guestUserId == null || guestUserId.isEmpty())
+                ? authenticationFacade.getCurrentUserId()
+                : guestUserId;
+
+        Cart cart = getCartFromDb(cartOwnerId);
         if (cart != null) {
-            if(cart.getCartItems().isEmpty()){
-                clearCart();
-            }
             cart.getCartItems().removeIf(item -> item.getAttributeId().equals(attributeId));
-            updateCartTotals(cart);
-            saveCart(cartOwnerId, cart);
+            if (cart.getCartItems().isEmpty()) {
+                clearCart(cartOwnerId);
+            } else {
+                updateCartTotals(cart);
+                saveCart(cartOwnerId, cart);
+            }
         }
-        return cart; // Güncel sepeti dön
+        return cart;
     }
 
     public void mergeGuestCartToUserCart(String guestCartId, String userId) {
@@ -121,18 +105,17 @@ public class CartService {
             return;
         }
 
-        Cart guestCart = getCart(guestCartId);
-        Cart userCart = getCart(userId);
+        Cart guestCart = getCartFromDb(guestCartId);
+        Cart userCart = getCartFromDb(userId);
 
         if (guestCart == null) {
-            return; // Guest sepet yoksa işlem yapmaya gerek yok
+            return;
         }
 
         if (userCart == null) {
-            // Kullanıcının sepeti yok → guest sepetini direkt userId ile kaydet
+            guestCart.setId(userId);
             saveCart(userId, guestCart);
         } else {
-            // Mevcut user sepeti ile guest sepeti birleştir
             for (CartItem guestItem : guestCart.getCartItems()) {
                 CartItem existingItem = userCart.getCartItems().stream()
                         .filter(ci -> ci.getAttributeId().equals(guestItem.getAttributeId()))
@@ -140,27 +123,22 @@ public class CartService {
                         .orElse(null);
 
                 if (existingItem != null) {
-                    // UI zaten güncel quantity gönderiyorsa direk set yap
                     existingItem.setQuantity(guestItem.getQuantity());
                 } else {
                     userCart.getCartItems().add(guestItem);
                 }
             }
-
             updateCartTotals(userCart);
             saveCart(userId, userCart);
         }
 
-        // ✅ Guest sepeti sil
-        redisTemplate.delete(getCartKey(guestCartId));
+        cartRepository.deleteById(guestCartId);
     }
 
-    public void clearCart() {
-        String userId = authenticationFacade.getCurrentUserId();
-        redisTemplate.delete(getCartKey(userId));
+    public void clearCart(String cartOwnerId) {
+        cartRepository.deleteById(cartOwnerId);
     }
 
-    // Toplam fiyat ve itemCount güncelleme
     private void updateCartTotals(Cart cart) {
         BigDecimal totalPrice = cart.getCartItems().stream()
                 .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))

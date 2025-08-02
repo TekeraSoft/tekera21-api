@@ -1,7 +1,7 @@
 package com.tekerasoft.tekeramarketplace.dto
 
-import com.tekerasoft.tekeramarketplace.model.entity.CurrencyType
 import com.tekerasoft.tekeramarketplace.model.entity.Product
+import com.tekerasoft.tekeramarketplace.model.enums.CurrencyType
 import java.math.BigDecimal
 import java.util.UUID
 

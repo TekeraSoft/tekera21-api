@@ -1,6 +1,8 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
 import com.tekerasoft.tekeramarketplace.config.NoArg
+import com.tekerasoft.tekeramarketplace.model.enums.CurrencyType
+import com.tekerasoft.tekeramarketplace.model.enums.ProductType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.CollectionTable
 import jakarta.persistence.Column
@@ -54,7 +56,7 @@ open class Product(
 
     @ElementCollection
     @CollectionTable(name= "product_tags", joinColumns = [JoinColumn(name = "product_fk")])
-    open var tags: List<String>? = mutableListOf(),
+    open var tags: MutableList<String>? = mutableListOf(),
 
     @Enumerated(EnumType.STRING)
     open var productType: ProductType,
@@ -73,4 +75,24 @@ open class Product(
     @Column(nullable = false)
     open var isActive: Boolean = true
 
-    ): BaseEntity()
+    ): BaseEntity() {
+        constructor(): this(
+            name = "",
+            slug = "",
+            code = null,
+            brandName = null,
+            description = null,
+            category = null,
+            subCategories = null,
+            variations = mutableListOf(),
+            currencyType = CurrencyType.TRY,
+            seller = Seller(),
+            shippingPreparationDays = 0,
+            tags = mutableListOf(),
+            productType = ProductType.PHYSICAL,
+            rate = 0.0,
+            videoUrl = null,
+            comments = mutableListOf(),
+            isActive = false
+        )
+    }

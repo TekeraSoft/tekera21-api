@@ -1,7 +1,7 @@
 package com.tekerasoft.tekeramarketplace.dto.request
 
-import com.tekerasoft.tekeramarketplace.model.entity.PaymentStatus
-import com.tekerasoft.tekeramarketplace.model.entity.PaymentType
+import com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus
+import com.tekerasoft.tekeramarketplace.model.enums.PaymentType
 import java.math.BigDecimal
 
 data class CreateOrderRequest(

@@ -11,4 +11,6 @@ open class TargetPicture(
     open var mindPath: String? = null,
     open var defaultContent: String? = null,
     open var specialContent: String? = null
-): BaseEntity()
+): BaseEntity() {
+    constructor() : this("","","","","")
+}

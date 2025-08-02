@@ -6,4 +6,6 @@ import jakarta.persistence.Embeddable
 data class AttributeDetail(
     val key: String = "",
     val value: String = "",
-)
+) {
+    constructor() : this("","")
+}

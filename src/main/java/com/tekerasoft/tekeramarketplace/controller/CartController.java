@@ -1,7 +1,7 @@
 package com.tekerasoft.tekeramarketplace.controller;
 
 import com.tekerasoft.tekeramarketplace.dto.request.AddToCartRequest;
-import com.tekerasoft.tekeramarketplace.model.redisdocument.Cart;
+import com.tekerasoft.tekeramarketplace.model.document.Cart;
 import com.tekerasoft.tekeramarketplace.service.CartService;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +33,6 @@ public class CartController {
     }
 
     @DeleteMapping("/clearCart")
-    public void clearCart() {cartService.clearCart();}
+    public void clearCart(@RequestParam String cartOwnerId) {cartService.clearCart(cartOwnerId);}
 
 }

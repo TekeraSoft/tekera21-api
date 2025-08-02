@@ -6,4 +6,6 @@ import jakarta.persistence.Embeddable
 open class BasketAttributes(
     open var key: String,
     open var value: String,
-)
+) {
+    constructor() : this("","")
+}

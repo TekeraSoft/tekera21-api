@@ -2,12 +2,9 @@ package com.tekerasoft.tekeramarketplace.dto.request
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.tekerasoft.tekeramarketplace.model.entity.Attribute
 import com.tekerasoft.tekeramarketplace.model.entity.AttributeDetail
-import com.tekerasoft.tekeramarketplace.model.entity.CurrencyType
-import com.tekerasoft.tekeramarketplace.model.entity.ProductType
-import jakarta.validation.constraints.NotBlank
-import org.jetbrains.annotations.NotNull
+import com.tekerasoft.tekeramarketplace.model.enums.CurrencyType
+import com.tekerasoft.tekeramarketplace.model.enums.ProductType
 
 data class CreateProductRequest(
 

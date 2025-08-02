@@ -32,4 +32,14 @@ open class FashionCollection(
 
     open var isActive: Boolean = true,
 
-    ): BaseEntity()
+    ): BaseEntity() {
+        constructor() : this(
+            "",
+            "",
+            mutableSetOf(),
+            null,
+            "",
+            Seller(),
+            false
+        )
+    }

@@ -19,4 +19,6 @@ open class New(
 
     open var isActive: Boolean
 
-): BaseEntity()
+): BaseEntity() {
+    constructor() : this("","","","",false)
+}

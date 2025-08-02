@@ -1,6 +1,6 @@
 package com.tekerasoft.tekeramarketplace.dto
 
-import com.tekerasoft.tekeramarketplace.model.entity.Gender
+import com.tekerasoft.tekeramarketplace.model.enums.Gender
 import java.time.LocalDate
 
 data class UserDto(

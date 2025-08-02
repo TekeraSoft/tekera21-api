@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
+import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus
 import jakarta.persistence.Embeddable
 
 @Embeddable

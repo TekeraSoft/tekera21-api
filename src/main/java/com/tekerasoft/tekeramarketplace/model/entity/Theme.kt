@@ -8,4 +8,6 @@ import jakarta.persistence.Table
 open class Theme(
     open var name: String,
     open var image: String,
-): BaseEntity()
+): BaseEntity() {
+    constructor() : this("","")
+}

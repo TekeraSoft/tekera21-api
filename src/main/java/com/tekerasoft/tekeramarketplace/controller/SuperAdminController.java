@@ -24,12 +24,13 @@ public class SuperAdminController {
     private final OrderService orderService;
     private final FashionCollectionService fashionCollectionService;
     private final ShippingCompanyService shippingCompanyService;
+    private final UserService userService;
 
     public SuperAdminController(CategoryService categoryService, SubCategoryService subCategoryService,
                                 SellerService sellerService, ProductService productService,
                                 ThemeService themeService, OrderService orderService,
                                 FashionCollectionService fashionCollectionService,
-                                ShippingCompanyService shippingCompanyService)
+                                ShippingCompanyService shippingCompanyService, UserService userService)
     {
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
@@ -39,6 +40,7 @@ public class SuperAdminController {
         this.orderService = orderService;
         this.fashionCollectionService = fashionCollectionService;
         this.shippingCompanyService = shippingCompanyService;
+        this.userService = userService;
     }
 
     @PostMapping(value = "/createCategory", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -49,6 +51,11 @@ public class SuperAdminController {
     @PostMapping(value = "/createSubCategory", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> createSubCategory(@Valid @ModelAttribute CreateSubCategoryRequest req) {
         return subCategoryService.createSubCategory(req);
+    }
+
+    @PutMapping("/activeUserSellerRole")
+    public ResponseEntity<ApiResponse<?>> activeUserSellerRole(@RequestBody SellerVerificationRequest req) {
+        return ResponseEntity.ok(userService.activeUserSellerRole(req));
     }
 
     @GetMapping("/getCustomerProduct")

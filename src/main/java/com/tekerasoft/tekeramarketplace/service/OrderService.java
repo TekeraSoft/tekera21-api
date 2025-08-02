@@ -7,9 +7,11 @@ import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.model.entity.Address;
 import com.tekerasoft.tekeramarketplace.model.entity.BasketItem;
 import com.tekerasoft.tekeramarketplace.model.entity.Buyer;
+import com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.OrderRepository;
 import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -126,7 +128,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void completeOrder(String conversationId,PaymentStatus paymentStatus) {
+    public void completeOrder(String conversationId, PaymentStatus paymentStatus) {
         try {
             Order order = orderRepository.findById(UUID.fromString(conversationId))
                     .orElseThrow(() -> new NotFoundException("Order not found"));

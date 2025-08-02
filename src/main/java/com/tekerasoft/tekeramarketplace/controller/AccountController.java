@@ -21,11 +21,11 @@ public class AccountController {
         this.sellerService = sellerService;
     }
 
-    @PostMapping("/createCompany")
+    @PostMapping("/createSeller")
     public ApiResponse<?> createCompany(@RequestPart("data") CreateCompanyRequest req,
                                                         @RequestPart("files") List<MultipartFile> files,
                                                         @RequestPart("logo") MultipartFile logo)
     {
-        return sellerService.createCompany(req,files,logo);
+        return sellerService.createSeller(req,files,logo);
     }
 }

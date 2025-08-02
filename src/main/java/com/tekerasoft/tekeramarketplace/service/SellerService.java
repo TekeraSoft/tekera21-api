@@ -6,10 +6,12 @@ import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.CompanyException;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
+import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.CategoryRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.SellerRepository;
+import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -28,19 +30,23 @@ public class SellerService {
     private final FileService fileService;
     private final SearchItemService searchItemService;
     private final ShippingCompanyService shippingCompanyService;
+    private final UserService userService;
+    private final AuthenticationFacade authenticationFacade;
 
     public SellerService(SellerRepository sellerRepository, CategoryRepository categoryRepository,
                          FileService fileService, SearchItemService searchItemService,
-                         ShippingCompanyService shippingCompanyService) {
+                         ShippingCompanyService shippingCompanyService, UserService userService, AuthenticationFacade authenticationFacade) {
         this.sellerRepository = sellerRepository;
         this.categoryRepository = categoryRepository;
         this.fileService = fileService;
         this.searchItemService = searchItemService;
         this.shippingCompanyService = shippingCompanyService;
+        this.userService = userService;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Transactional
-    public ApiResponse<?> createCompany(CreateCompanyRequest req, List<MultipartFile> files, MultipartFile logo) {
+    public ApiResponse<?> createSeller(CreateCompanyRequest req, List<MultipartFile> files, MultipartFile logo) {
 
         if(sellerRepository.existsByNameAndTaxNumber(req.getName(),req.getTaxNumber())) {
             throw new CompanyException("Company already exists");
@@ -48,6 +54,8 @@ public class SellerService {
 
         try {
             ShippingCompany shippingCompany = shippingCompanyService.getShippingCompany(req.getShippingCompanyId());
+            User user = userService.getByUsername(authenticationFacade.getCurrentUserEmail())
+                    .orElseThrow(() -> new NotFoundException("User not found"));
             Set<ShippingCompany> shippingCompanySet = new HashSet<>();
             shippingCompanySet.add(shippingCompany);
             Seller seller = new Seller();
@@ -67,7 +75,7 @@ public class SellerService {
             seller.setBankAccounts(req.getBankAccount());
             seller.setShippingCompanies(shippingCompanySet);
             seller.setActive(true);
-
+            seller.setUsers(Set.of(user));
             // Category
             Set<Category> categoryList = req.getCategoryId()
                     .stream()
@@ -174,7 +182,4 @@ public class SellerService {
         return sellerRepository.findActiveCompanies(pageable).map(CompanyAdminDto::toDto);
     }
 
-//    public Page<OrderDto> getAllOrders(String companyId, Pageable pageable) {
-//        return companyRepository.findById(UUID.fromString(companyId)).get().getOrders().map(OrderDto::toDto);
-//    }
 }

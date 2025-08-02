@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.persistence.Embeddable
 
 @Embeddable
-open class BankAccount(
+data class BankAccount(
     @JsonProperty("iban")
-    open var iban: String,
+    var iban: String,
     @JsonProperty("accountName")
-    open var accountName: String,
+    var accountName: String,
     @JsonProperty("bankName")
-    open var bankName: String,
+    var bankName: String,
     @JsonProperty("isActive")
-    open var isActive: Boolean,
-)
+    var isActive: Boolean,
+) {
+    constructor() : this("","","",false)
+}

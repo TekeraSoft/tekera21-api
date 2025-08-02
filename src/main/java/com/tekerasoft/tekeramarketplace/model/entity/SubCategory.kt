@@ -24,4 +24,6 @@ open class SubCategory(
     @OneToMany(mappedBy = "parent", cascade = [CascadeType.ALL], orphanRemoval = true)
     open var children: MutableList<SubCategory> = mutableListOf()
 
-) : BaseEntity()
+) : BaseEntity() {
+    constructor() : this("","","", Category())
+}

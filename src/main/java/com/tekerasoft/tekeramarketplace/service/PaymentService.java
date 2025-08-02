@@ -8,12 +8,13 @@ import com.iyzipay.model.Currency;
 import com.iyzipay.model.Locale;
 import com.iyzipay.request.CreatePaymentRequest;
 import com.iyzipay.request.CreateThreedsPaymentRequest;
-import com.iyzipay.request.CreateThreedsPaymentRequestV2;
 import com.tekerasoft.tekeramarketplace.dto.request.BasketItemRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateOrderRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreatePayRequest;
 import com.tekerasoft.tekeramarketplace.exception.PaymentException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
+import com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus;
+import com.tekerasoft.tekeramarketplace.model.enums.PaymentType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 
 @Service

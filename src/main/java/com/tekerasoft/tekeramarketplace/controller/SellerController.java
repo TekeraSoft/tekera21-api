@@ -9,8 +9,6 @@ import com.tekerasoft.tekeramarketplace.dto.request.CreateTargetPictureRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.UpdateProductRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.service.*;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +21,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/api/seller")
-@Tag(name = "Products", description = "Product management APIs")
 public class SellerController {
     private final ProductService productService;
     private final SellerService sellerService;
@@ -41,7 +38,6 @@ public class SellerController {
         this.orderService = orderService;
     }
 
-    @Operation(summary = "Company create product action")
     @PostMapping(value = "/createProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> createProduct(@Valid @RequestPart("data") CreateProductRequest req,
                                                  @RequestPart(value = "images") List<MultipartFile> images)
@@ -55,7 +51,7 @@ public class SellerController {
         return productService.update(req,images);
     }
 
-    @GetMapping("/findCompanyReturnProducts/{companyId}")
+    @GetMapping("/findSellerReturnProducts/{companyId}")
     public ResponseEntity<Page<ProductListDto>> findCompanyReturnProducts(@PathVariable String companyId, Pageable pageable) {
         return ResponseEntity.ok(productService.findCompanyReturnProducts(companyId,pageable));
     }
@@ -96,7 +92,7 @@ public class SellerController {
         return digitalFashionService.deleteTargetPicture(id);
     }
 
-    @GetMapping("/findOrdersContainingBasketItemsForCompany")
+    @GetMapping("/findOrdersContainingBasketItemsForSeller")
     public ResponseEntity<Page<OrderDto>> findOrdersContainingBasketItemsForCompany(@RequestParam String companyId,
                                                                                     Pageable pageable)
     {

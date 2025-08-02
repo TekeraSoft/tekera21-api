@@ -23,4 +23,15 @@ open class ShippingCompany(
     @ManyToMany(mappedBy = "shippingCompanies", fetch = FetchType.LAZY)
     open var companies: MutableSet<Seller> = mutableSetOf(),
 
-    ): BaseEntity()
+    ): BaseEntity() {
+        constructor(): this(
+            name="",
+            gsmNumber="",
+            email="",
+            price=BigDecimal.ZERO,
+            minDeliveryDay=0,
+            maxDeliveryDay=0,
+            orders = mutableListOf(),
+            companies = mutableSetOf()
+        )
+    }

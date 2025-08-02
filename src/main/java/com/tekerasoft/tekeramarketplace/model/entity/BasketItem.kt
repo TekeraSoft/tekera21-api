@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
+import com.tekerasoft.tekeramarketplace.config.NoArg
 import jakarta.persistence.*
 import java.math.BigDecimal
 
@@ -34,4 +35,24 @@ open class BasketItem(
     @JoinColumn(name = "shipping_company_id")
     open var shippingCompany: ShippingCompany,
 
-    ): BaseEntity()
+    ): BaseEntity() {
+        constructor() : this(
+            productId = "",
+            variationId = "",
+            attributeId = "",
+            name = "",
+            slug = "",
+            code = null,
+            brandName = "",
+            quantity = 0,
+            modelCode = "",
+            price = BigDecimal.ZERO,
+            sku = "",
+            barcode = "",
+            image = "",
+            attributes = mutableListOf(),
+            shippingPrice = BigDecimal.ZERO,
+            seller = Seller(),
+            shippingCompany = ShippingCompany(),
+        )
+    }

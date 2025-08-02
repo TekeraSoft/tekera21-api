@@ -31,4 +31,14 @@ open class Attribute(
     @JoinColumn(name = "variation_id")
     open var variation: Variation? = null,
 
-    ): BaseEntity()
+    ): BaseEntity() {
+        constructor() : this(
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            0,
+            "",
+            "",
+            mutableListOf(),
+            Variation()
+        )
+    }

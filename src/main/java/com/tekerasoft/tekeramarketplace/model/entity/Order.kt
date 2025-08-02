@@ -1,5 +1,7 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
+import com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus
+import com.tekerasoft.tekeramarketplace.model.enums.PaymentType
 import jakarta.persistence.*
 import java.math.BigDecimal
 
@@ -38,4 +40,15 @@ open class Order(
     open var paymentStatus: PaymentStatus? = null,
 
 
-): BaseEntity()
+    ): BaseEntity() {
+        constructor() : this(
+            user = null,
+            buyer = Buyer(),
+            shippingAddress = Address(),
+            billingAddress = null,
+            totalPrice = BigDecimal.ZERO,
+            shippingPrice = BigDecimal.ZERO,
+            paymentType = null,
+            paymentStatus = null
+        )
+    }

@@ -1,6 +1,6 @@
 package com.tekerasoft.tekeramarketplace.dto
 
-import com.tekerasoft.tekeramarketplace.model.redisdocument.Cart
+import com.tekerasoft.tekeramarketplace.model.document.Cart
 import java.math.BigDecimal
 
 data class CartDto(

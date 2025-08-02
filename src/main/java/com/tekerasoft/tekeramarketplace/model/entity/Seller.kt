@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
+import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -47,7 +48,7 @@ open class Seller(
     @ElementCollection
     @CollectionTable(name= "seller_document_paths",
         joinColumns = [JoinColumn(name = "seller_id")])
-    open var identityDocumentPaths: List<CompanyDocument>,
+    open var identityDocumentPaths: MutableList<CompanyDocument> = mutableListOf(),
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -69,4 +70,34 @@ open class Seller(
     @Enumerated(EnumType.STRING)
     open var verificationStatus: VerificationStatus = VerificationStatus.PENDING
 
-    ): BaseEntity()
+    ): BaseEntity() {
+
+        constructor() : this(
+            name = "",
+            slug = "",
+            logo = "",
+            email = "",
+            gsmNumber = "",
+            estimatedDeliveryTime = "",
+            alternativePhoneNumber = "",
+            supportPhoneNumber = "",
+            taxNumber = "",
+            taxOffice = "",
+            merisNumber = "",
+            registrationDate = LocalDateTime.now(),
+            contactPersonNumber = "",
+            contactPersonTitle = "",
+            categories = mutableSetOf(),
+            products = mutableListOf(),
+            users = mutableSetOf(),
+            address = mutableListOf(),
+            bankAccounts = mutableListOf(),
+            identityDocumentPaths = mutableListOf(),
+            shippingCompanies = mutableSetOf(),
+            orders = mutableListOf(),
+            rate = 0.0,
+            isVerified = false,
+            isActive = false,
+            verificationStatus = VerificationStatus.PENDING,
+        )
+    }

@@ -1,6 +1,6 @@
 package com.tekerasoft.tekeramarketplace.config;
 
-import com.tekerasoft.tekeramarketplace.model.entity.Role;
+import com.tekerasoft.tekeramarketplace.model.enums.Role;
 import com.tekerasoft.tekeramarketplace.service.UserService;
 import com.tekerasoft.tekeramarketplace.utils.Filter;
 import org.springframework.context.annotation.Bean;

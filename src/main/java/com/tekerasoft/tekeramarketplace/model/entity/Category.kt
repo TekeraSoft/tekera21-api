@@ -15,4 +15,6 @@ open class Category(
     @OneToMany(mappedBy = "category",cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     open var subCategories: MutableList<SubCategory> = mutableListOf(),
 
-    ): BaseEntity()
+    ): BaseEntity() {
+        constructor() : this("","","",mutableListOf())
+    }

@@ -11,4 +11,13 @@ open class Buyer(
     open var identityNumber: String,
     open var isRegistered: Boolean? = false,
 
-): BaseEntity()
+): BaseEntity() {
+    constructor() : this(
+        name = "",
+        surname = "",
+        email = "",
+        gsmNumber = "",
+        identityNumber = "",
+        isRegistered = false
+    )
+}

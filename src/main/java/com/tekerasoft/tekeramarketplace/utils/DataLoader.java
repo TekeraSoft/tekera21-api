@@ -1,6 +1,18 @@
 package com.tekerasoft.tekeramarketplace.utils;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tekerasoft.tekeramarketplace.repository.esrepository.SearchItemRepository;
+import com.tekerasoft.tekeramarketplace.repository.jparepository.CategoryRepository;
+import com.tekerasoft.tekeramarketplace.repository.jparepository.ProductRepository;
+import com.tekerasoft.tekeramarketplace.repository.jparepository.SellerRepository;
+import com.tekerasoft.tekeramarketplace.repository.jparepository.SubCategoryRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
 //@Component
 //public class DataLoader implements CommandLineRunner {
 //
@@ -8,19 +20,19 @@ package com.tekerasoft.tekeramarketplace.utils;
 //    private final SubCategoryRepository subCategoryRepository;
 //    private final ObjectMapper objectMapper;
 //    private final ProductRepository productRepository;
-//    private final CompanyRepository companyRepository;
+//    private final SellerRepository sellerRepository;
 //    private final SearchItemRepository searchItemRepository;
 //
 //    // Constructorı güncelledik
 //    public DataLoader(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository,
 //                      ObjectMapper objectMapper,
 //                      ProductRepository productRepository,
-//                      CompanyRepository companyRepository, SearchItemRepository searchItemRepository) { // <<-- 2. DEĞİŞİKLİK: Bu parametreyi ekledik
+//                      SellerRepository sellerRepository, SearchItemRepository searchItemRepository) { // <<-- 2. DEĞİŞİKLİK: Bu parametreyi ekledik
 //        this.categoryRepository = categoryRepository;
 //        this.subCategoryRepository = subCategoryRepository; // <<-- Bu satırı ekledik (2. değişikliğin parçası)
 //        this.objectMapper = objectMapper;
 //        this.productRepository = productRepository;
-//        this.companyRepository = companyRepository;
+//        this.sellerRepository = sellerRepository;
 //        this.searchItemRepository = searchItemRepository;
 //    }
 //
@@ -153,7 +165,7 @@ package com.tekerasoft.tekeramarketplace.utils;
 //                    product.getId().toString(),
 //                    product.getName(),
 //                    product.getSlug(),
-//                    product.getCompany().getId().toString(),
+//                    product.getSeller().getId().toString(),
 //                    product.getVariations().get(0).getImages().get(0),
 //                    SearchItemType.PRODUCT,
 //                    0.0
@@ -172,6 +184,6 @@ package com.tekerasoft.tekeramarketplace.utils;
 //                    0.0
 //            ));
 //        });
-
+//
 //    }
 //}
