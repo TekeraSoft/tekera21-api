@@ -28,8 +28,8 @@ open class SellerVerification(
     constructor(): this(User(),
         User(),
         Seller(),
-        false,
-        false,
+        setOf(),
+        setOf(),
         false
     )
 }

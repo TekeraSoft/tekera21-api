@@ -43,24 +43,24 @@ services:
       - tekera-network
 
 
-#  tekera-api:
-#    build:
-#      context: .
-#    container_name: tekera-api
-#    depends_on:
-#      tekera-db:
-#        condition: service_started
-#      minio1:
-#        condition: service_started
-#    environment:
-#      SPRING_PROFILES_ACTIVE: prod
-#      LOGSTASH_HOST: logstash
-#      LOGSTASH_PORT: 50000
-#    ports:
-#      - "9091:8080"
-#    networks:
-#      - tekera-network
-#    restart: unless-stopped
+  tekera-api:
+    build:
+      context: .
+    container_name: tekera-api
+    depends_on:
+      tekera-db:
+        condition: service_started
+      minio1:
+        condition: service_started
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      LOGSTASH_HOST: logstash
+      LOGSTASH_PORT: 50000
+    ports:
+      - "9091:8080"
+    networks:
+      - tekera-network
+    restart: unless-stopped
 
   minio1:
     image: minio/minio:latest
