@@ -69,7 +69,7 @@ public class SuperAdminController {
     }
 
     @GetMapping("/getAllCompany")
-    public Page<CompanyAdminDto> getAllCompany(Pageable pageable) {
+    public Page<SellerAdminDto> getAllCompany(Pageable pageable) {
         return sellerService.getAllCompanies(pageable);
     }
 

@@ -25,7 +25,8 @@ open class SellerVerification(
     open var checkESignature: Boolean,
 
     ): BaseEntity() {
-    constructor(): this(User(),
+    constructor(): this(
+        User(),
         User(),
         Seller(),
         setOf(),

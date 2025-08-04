@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.UUID;
 
@@ -17,4 +18,7 @@ public interface SellerRepository extends JpaRepository<Seller, UUID> {
     Page<Product> findById(UUID id, Pageable pageable);
 
     boolean existsByNameAndTaxNumber(String name, String taxNumber);
+
+    @Query("SELECT s FROM Seller s JOIN s.users u WHERE u.id = :userId")
+    Seller findSellerByUserId(@Param("userId") UUID userId);
 }

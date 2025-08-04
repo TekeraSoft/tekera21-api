@@ -4,10 +4,12 @@ import com.tekerasoft.tekeramarketplace.model.entity.Address
 import com.tekerasoft.tekeramarketplace.model.entity.BankAccount
 import com.tekerasoft.tekeramarketplace.model.entity.Seller
 import com.tekerasoft.tekeramarketplace.model.entity.SellerDocument
+import com.tekerasoft.tekeramarketplace.model.entity.ShippingCompany
+import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus
 import java.time.LocalDateTime
 import java.util.UUID
 
-data class CompanyAdminDto(
+data class SellerAdminDto(
     val id: UUID?,
     val name: String,
     val slug: String,
@@ -24,14 +26,16 @@ data class CompanyAdminDto(
     val contactPersonNumber: String,
     val contactPersonTitle: String,
     val address: List<Address>,
+    val shippingCompanies: List<ShippingCompanyDto>,
     val bankAccounts: List<BankAccount>,
     val identityDocumentPaths: List<SellerDocument>,
     val rate: Double,
+    val verificationStatus: VerificationStatus,
 ) {
     companion object {
         @JvmStatic
-        fun toDto(from:Seller): CompanyAdminDto {
-            return CompanyAdminDto(
+        fun toDto(from:Seller): SellerAdminDto {
+            return SellerAdminDto(
                 from.id,
                 from.name,
                 from.slug,
@@ -48,9 +52,11 @@ data class CompanyAdminDto(
                 from.contactPersonNumber,
                 from.contactPersonTitle,
                 from.address,
+                from.shippingCompanies.map { ShippingCompanyDto.toDto(it) },
                 from.bankAccounts,
                 from.identityDocumentPaths,
-                from.rate
+                from.rate,
+                from.verificationStatus,
             )
         }
     }

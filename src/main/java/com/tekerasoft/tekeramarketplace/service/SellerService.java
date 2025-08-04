@@ -1,11 +1,12 @@
 package com.tekerasoft.tekeramarketplace.service;
 
-import com.tekerasoft.tekeramarketplace.dto.CompanyAdminDto;
+import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCompanyRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.CompanyException;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
+import com.tekerasoft.tekeramarketplace.model.enums.Role;
 import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
@@ -117,21 +118,25 @@ public class SellerService {
                 sellerDocuments.add(document);
             }
 
-            // Bu companyDocuments listesini company entity’sine kaydeder
+            // Bu selerDocuments listesini company entity’sine kaydeder
             seller.setIdentityDocumentPaths(sellerDocuments);
             seller.setVerificationStatus(VerificationStatus.PENDING);
-            // Company kaydını veritabanına kaydet
+            // Seller kaydını veritabanına kaydet
             sellerRepository.save(seller);
-
+            user.setRoles(Set.of(Role.SELLER));
             return new ApiResponse<>("Create Company", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
-    public Seller getCompanyById(String id) {
+    public Seller getSellerById(String id) {
         return sellerRepository.findById(UUID.fromString(id)).orElseThrow(() ->
                 new NotFoundException("Company not found: " + id));
+    }
+
+    public void assignToSupervisorSeller(String sellerId, String supervisorId) {
+
     }
 
     public ApiResponse<?> deleteCompany(String id) {
@@ -174,13 +179,18 @@ public class SellerService {
         }
     }
 
+    public SellerAdminDto getSellerInformation(){
+        String sellerUserId = authenticationFacade.getCurrentUserId();
+        return SellerAdminDto.toDto(sellerRepository.findSellerByUserId(UUID.fromString(sellerUserId)));
+    }
+
     public Page<String> getAllCompanyMedia(String id, Pageable pageable) throws Exception {
         Seller seller = sellerRepository.findById(UUID.fromString(id)).orElseThrow(() -> new NotFoundException("Company not found: " + id));
         return fileService.listUserMedia(seller.getSlug(),pageable);
     }
 
-    public Page<CompanyAdminDto> getAllCompanies(Pageable pageable) {
-        return sellerRepository.findActiveCompanies(pageable).map(CompanyAdminDto::toDto);
+    public Page<SellerAdminDto> getAllCompanies(Pageable pageable) {
+        return sellerRepository.findActiveCompanies(pageable).map(SellerAdminDto::toDto);
     }
 
     public void sellerActive() {

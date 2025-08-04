@@ -1,9 +1,6 @@
 package com.tekerasoft.tekeramarketplace.controller;
 
-import com.tekerasoft.tekeramarketplace.dto.OrderDto;
-import com.tekerasoft.tekeramarketplace.dto.ProductDto;
-import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
-import com.tekerasoft.tekeramarketplace.dto.TargetPictureDto;
+import com.tekerasoft.tekeramarketplace.dto.*;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateProductRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateTargetPictureRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.UpdateProductRequest;
@@ -100,7 +97,12 @@ public class SellerController {
     }
 
     @GetMapping("findOrdersByPhoneNumberOrUsername")
-    public ResponseEntity<List<OrderDto>>  findOrdersByPhoneNumberOrUsername(@RequestParam String searchParam) {
+    public ResponseEntity<List<OrderDto>> findOrdersByPhoneNumberOrUsername(@RequestParam String searchParam) {
         return ResponseEntity.ok(orderService.findOrdersByPhoneNumberOrUsername(searchParam));
+    }
+
+    @GetMapping("/getSellerByUserId")
+    public ResponseEntity<SellerAdminDto> getSellerByUserId() {
+        return ResponseEntity.ok(sellerService.getSellerInformation());
     }
 }

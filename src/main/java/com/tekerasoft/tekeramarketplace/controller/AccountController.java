@@ -1,12 +1,13 @@
 package com.tekerasoft.tekeramarketplace.controller;
 
+import com.tekerasoft.tekeramarketplace.dto.ShippingCompanyDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateCompanyRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.model.entity.ShippingCompany;
 import com.tekerasoft.tekeramarketplace.service.SellerService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import com.tekerasoft.tekeramarketplace.service.ShippingCompanyService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -16,9 +17,11 @@ import java.util.List;
 public class AccountController {
 
     private final SellerService sellerService;
+    private final ShippingCompanyService shippingCompanyService;
 
-    public AccountController(SellerService sellerService) {
+    public AccountController(SellerService sellerService, ShippingCompanyService shippingCompanyService) {
         this.sellerService = sellerService;
+        this.shippingCompanyService = shippingCompanyService;
     }
 
     @PostMapping("/createSeller")
@@ -27,5 +30,10 @@ public class AccountController {
                                                         @RequestPart("logo") MultipartFile logo)
     {
         return sellerService.createSeller(req,files,logo);
+    }
+
+    @GetMapping("/getAllShippingCompany")
+    public ResponseEntity<List<ShippingCompanyDto>> getAllShippingCompany() {
+        return ResponseEntity.ok(shippingCompanyService.getAllShippingCompany());
     }
 }

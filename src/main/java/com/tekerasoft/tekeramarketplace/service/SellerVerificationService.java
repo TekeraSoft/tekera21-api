@@ -1,11 +1,15 @@
 package com.tekerasoft.tekeramarketplace.service;
 
+import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.request.SellerVerificationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.model.entity.Seller;
 import com.tekerasoft.tekeramarketplace.model.entity.SellerVerification;
 import com.tekerasoft.tekeramarketplace.model.entity.User;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.SellerVerificationRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 public class SellerVerificationService {
@@ -20,10 +24,21 @@ public class SellerVerificationService {
         this.userService = userService;
     }
 
+    public void assignToSupervisorSeller(String sellerUserId, String supervisorId,String sellerId) {
+        SellerVerification sellerVerification = new SellerVerification();
+        User sellerUser = userService.getUserInformation(sellerUserId);
+        User supervisorUser = userService.getUserInformation(supervisorId);
+        Seller seller = sellerService.getSellerById(sellerId);
+        sellerVerification.setSellerUser(sellerUser);
+        sellerVerification.setSupervisor(supervisorUser);
+        sellerVerification.setSeller(seller);
+        sellerVerificationRepository.save(sellerVerification);
+    }
+
 //    public ApiResponse<?> checkDocumentVerification(String sellerVerificationId) {
 //
 //    }
-//
+
 //    public ApiResponse<?> sellerVerification(SellerVerificationRequest req) {
 //        try {
 //            User sellerUser = userService.getUserInformation(req.getUserId());

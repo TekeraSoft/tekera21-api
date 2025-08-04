@@ -48,4 +48,8 @@ public class SubCategoryService {
         }
     }
 
+    public SubCategory getSubCategory(String subCategoryId) {
+        return subCategoryRepository.findById(UUID.fromString(subCategoryId)).orElseThrow();
+    }
+
 }

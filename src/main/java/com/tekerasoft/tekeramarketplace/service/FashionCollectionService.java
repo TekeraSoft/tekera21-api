@@ -41,7 +41,7 @@ public class FashionCollectionService {
         req.getProducts().forEach(product -> {
             productList.add(productService.getById(UUID.fromString(product)));
         });
-        Seller seller = sellerService.getCompanyById(req.getCompanyId());
+        Seller seller = sellerService.getSellerById(req.getCompanyId());
         FashionCollection collection = new FashionCollection();
         String imagePath = fileService.folderFileUpload(req.getImage(), "fashion-collection-images");
         collection.setImage(imagePath);

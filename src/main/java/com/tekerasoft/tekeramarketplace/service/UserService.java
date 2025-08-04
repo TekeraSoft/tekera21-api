@@ -61,6 +61,10 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(userId));
     }
 
+//    public User assignToSeller() {
+//
+//    }
+
     public ApiResponse<?> activeUserSellerRole(SellerVerificationRequest req) {
         User user = userRepository.findById(UUID.fromString(req.getUserId()))
                 .orElseThrow(() -> new UsernameNotFoundException(req.getUserId()));

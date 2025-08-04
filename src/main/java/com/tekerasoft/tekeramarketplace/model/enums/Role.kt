@@ -9,7 +9,7 @@ enum class Role : GrantedAuthority {
     DEVELOPER,
     SELLER,
     SELLER_EMPLOYEE,
-    SUPPORT_AGENT,
+    SELLER_SUPPORT,
     FINANCE_MANAGER,
     MARKETING_MANAGER,
     AUDITOR,

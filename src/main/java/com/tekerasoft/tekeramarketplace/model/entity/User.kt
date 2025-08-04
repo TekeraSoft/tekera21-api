@@ -54,6 +54,8 @@ data class User (
     var birthDate: LocalDate? = null,
     var lastLogin: LocalDateTime,
 
+    var assignCount: Int? = 0,
+
     ): BaseEntity() , UserDetails {
 
     override fun getAuthorities()= this.roles
@@ -85,6 +87,7 @@ data class User (
         mutableListOf(),
         listOf(),
         null,
-        LocalDateTime.now())
+        LocalDateTime.now(),
+        0)
 
 }
