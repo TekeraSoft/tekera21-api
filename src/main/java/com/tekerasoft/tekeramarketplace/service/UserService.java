@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.service;
 
+import com.tekerasoft.tekeramarketplace.dto.UserDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateUserRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.SellerVerificationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
@@ -53,6 +54,11 @@ public class UserService implements UserDetailsService {
 
     public Optional<User> getByUsername(String username) {
         return userRepository.findByEmail(username);
+    }
+
+    public User getUserInformation(String userId) {
+        return userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new UsernameNotFoundException(userId));
     }
 
     public ApiResponse<?> activeUserSellerRole(SellerVerificationRequest req) {

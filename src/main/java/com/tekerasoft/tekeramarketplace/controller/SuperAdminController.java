@@ -58,7 +58,7 @@ public class SuperAdminController {
         return ResponseEntity.ok(userService.activeUserSellerRole(req));
     }
 
-    @GetMapping("/getCustomerProduct")
+    @GetMapping("/getSellerProducts")
     public ResponseEntity<ProductDto> getCustomerProduct(@RequestParam String id) {
         return ResponseEntity.ok(productService.getCustomerProduct(id));
     }
@@ -89,9 +89,8 @@ public class SuperAdminController {
     }
 
     @PutMapping("/changeCompanyStatusCode")
-    public ResponseEntity<ApiResponse<?>> changeCompanyActiveStatus(@RequestParam("companyId") String companyId,
-                                                                    @RequestParam("status") Boolean status) {
-        return ResponseEntity.ok(sellerService.changeCompanyActiveStatus(companyId,status));
+    public ResponseEntity<ApiResponse<?>> changeCompanyActiveStatus(@RequestParam("companyId") String companyId) {
+        return ResponseEntity.ok(sellerService.changeSellerActiveStatus(companyId));
     }
 
     @PutMapping("/changeProductActiveStatus")

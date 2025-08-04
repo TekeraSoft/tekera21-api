@@ -3,7 +3,7 @@ package com.tekerasoft.tekeramarketplace.dto
 import com.tekerasoft.tekeramarketplace.model.entity.Address
 import com.tekerasoft.tekeramarketplace.model.entity.BankAccount
 import com.tekerasoft.tekeramarketplace.model.entity.Seller
-import com.tekerasoft.tekeramarketplace.model.entity.CompanyDocument
+import com.tekerasoft.tekeramarketplace.model.entity.SellerDocument
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -25,7 +25,7 @@ data class CompanyAdminDto(
     val contactPersonTitle: String,
     val address: List<Address>,
     val bankAccounts: List<BankAccount>,
-    val identityDocumentPaths: List<CompanyDocument>,
+    val identityDocumentPaths: List<SellerDocument>,
     val rate: Double,
 ) {
     companion object {

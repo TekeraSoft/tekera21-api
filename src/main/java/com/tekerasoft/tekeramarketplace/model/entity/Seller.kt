@@ -48,7 +48,7 @@ open class Seller(
     @ElementCollection
     @CollectionTable(name= "seller_document_paths",
         joinColumns = [JoinColumn(name = "seller_id")])
-    open var identityDocumentPaths: MutableList<CompanyDocument> = mutableListOf(),
+    open var identityDocumentPaths: MutableList<SellerDocument> = mutableListOf(),
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -65,7 +65,7 @@ open class Seller(
 
     open var isVerified: Boolean = false,
 
-    open var isActive: Boolean = true,
+    open var isActive: Boolean = false,
 
     @Enumerated(EnumType.STRING)
     open var verificationStatus: VerificationStatus = VerificationStatus.PENDING

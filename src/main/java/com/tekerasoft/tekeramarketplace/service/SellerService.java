@@ -35,7 +35,8 @@ public class SellerService {
 
     public SellerService(SellerRepository sellerRepository, CategoryRepository categoryRepository,
                          FileService fileService, SearchItemService searchItemService,
-                         ShippingCompanyService shippingCompanyService, UserService userService, AuthenticationFacade authenticationFacade) {
+                         ShippingCompanyService shippingCompanyService, UserService userService,
+                         AuthenticationFacade authenticationFacade) {
         this.sellerRepository = sellerRepository;
         this.categoryRepository = categoryRepository;
         this.fileService = fileService;
@@ -92,7 +93,7 @@ public class SellerService {
                 throw new CompanyException("Logo could not be loaded");
             }
 
-            List<CompanyDocument> companyDocuments = new ArrayList<>();
+            List<SellerDocument> sellerDocuments = new ArrayList<>();
 
             for (MultipartFile file : files) {
                 String originalFilename = file.getOriginalFilename();
@@ -108,16 +109,16 @@ public class SellerService {
                         String.format("/company/documents/%s", companyReplaceName));
 
                 // CompanyDocument nesnesi oluştur
-                CompanyDocument document = new CompanyDocument(
+                SellerDocument document = new SellerDocument(
                         documentTitle,
                         documentPath,
                         VerificationStatus.PENDING
                 );
-                companyDocuments.add(document);
+                sellerDocuments.add(document);
             }
 
             // Bu companyDocuments listesini company entity’sine kaydeder
-            seller.setIdentityDocumentPaths(companyDocuments);
+            seller.setIdentityDocumentPaths(sellerDocuments);
             seller.setVerificationStatus(VerificationStatus.PENDING);
             // Company kaydını veritabanına kaydet
             sellerRepository.save(seller);
@@ -150,21 +151,21 @@ public class SellerService {
         }
     }
 
-    public ApiResponse<?> changeCompanyActiveStatus(String companyId, Boolean active) {
-        Seller seller = sellerRepository.findById(UUID.fromString(companyId))
-                .orElseThrow(() -> new NotFoundException("Company not found: " + companyId));
+    public ApiResponse<?> changeSellerActiveStatus(String sellerId) {
+        Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
+                .orElseThrow(() -> new NotFoundException("Company not found: " + sellerId));
+        seller.setActive(!seller.isActive());
+        Seller changedStatusSeller = sellerRepository.save(seller);
         try {
-            seller.setActive(active);
-            Seller comp = sellerRepository.save(seller);
-            if(active) {
+            if(changedStatusSeller.isActive()) {
                 SearchItem searchItem = new SearchItem();
-                searchItem.setId(comp.getId().toString());
+                searchItem.setId(changedStatusSeller.getId().toString());
                 searchItem.setName(seller.getName());
                 searchItem.setImageUrl(seller.getLogo());
                 searchItem.setItemType(SearchItemType.SELLER);
                 searchItemService.createIndex(searchItem);
             } else {
-                searchItemService.deleteItem(comp.getId().toString());
+                searchItemService.deleteItem(changedStatusSeller.getId().toString());
             }
 
             return new ApiResponse<>("Company Status Updated", HttpStatus.OK.value());
@@ -180,6 +181,15 @@ public class SellerService {
 
     public Page<CompanyAdminDto> getAllCompanies(Pageable pageable) {
         return sellerRepository.findActiveCompanies(pageable).map(CompanyAdminDto::toDto);
+    }
+
+    public void sellerActive() {
+        Seller seller =  sellerRepository.findById(UUID.fromString("sellerId"))
+                .orElseThrow(() -> new NotFoundException("Seller not found"));
+        seller.setActive(true);
+        seller.setVerified(true);
+        seller.setVerificationStatus(VerificationStatus.VERIFIED);
+        sellerRepository.save(seller);
     }
 
 }
