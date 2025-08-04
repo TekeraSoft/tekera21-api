@@ -5,6 +5,15 @@ spring:
       port: 6379
       password: tekera_pass
 
+    mongodb:
+      host: tekera-document-db
+      port: 27017
+      username: tekera_user
+      password: tekera_pass
+      authentication-database: admin
+      database: tekera-document-db
+      auto-index-creation: true
+
   servlet:
     multipart:
       enabled: true
