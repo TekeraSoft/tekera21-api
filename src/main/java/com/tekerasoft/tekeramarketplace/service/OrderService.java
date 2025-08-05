@@ -163,7 +163,6 @@ public class OrderService {
 
     public Page<OrderDto> findOrderByUserId(Pageable pageable) {
         String userId = authenticationFacade.getCurrentUserId();
-        System.out.println(userId);
         return orderRepository.findOrderByUserId(UUID.fromString(userId), pageable)
                 .map(OrderDto::toDto);
     }

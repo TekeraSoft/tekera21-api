@@ -134,9 +134,7 @@ public class DigitalFashionService {
     }
 
     public TargetPictureDto getTargetPictureByProductId(String productId) {
-        return targetPictureRepository.findByProductId(productId).map(TargetPictureDto::toDto).orElseThrow(
-                () -> new NotFoundException("Target picture not found for productId: " + productId)
-        );
+        return targetPictureRepository.findByProductId(productId).map(TargetPictureDto::toDto).orElse(null);
     }
 
     public TargetPictureDto getTargetPictureById(String targetId) {

@@ -5,7 +5,7 @@ import com.tekerasoft.tekeramarketplace.model.entity.Address
 import com.tekerasoft.tekeramarketplace.model.entity.BankAccount
 import java.time.LocalDateTime
 
-data class CreateCompanyRequest(
+data class SellerInformationUpdateRequest(
     @JsonProperty("name")
     val name: String,
 
@@ -48,6 +48,6 @@ data class CreateCompanyRequest(
     @JsonProperty("bankAccount") // JSON'daki isme uygun hale getirildi
     val bankAccount: List<BankAccount>,
 
-    @JsonProperty("shippingCompanyId")
-    val shippingCompanyId: String
+    @JsonProperty("shippingCompanies")
+    val shippingCompanies: List<String>
 )

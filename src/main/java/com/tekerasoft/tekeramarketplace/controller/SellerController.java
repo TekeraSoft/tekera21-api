@@ -101,7 +101,7 @@ public class SellerController {
         return ResponseEntity.ok(orderService.findOrdersByPhoneNumberOrUsername(searchParam));
     }
 
-    @GetMapping("/getSellerByUserId")
+    @GetMapping("/getSellerInformation")
     public ResponseEntity<SellerAdminDto> getSellerByUserId() {
         return ResponseEntity.ok(sellerService.getSellerInformation());
     }

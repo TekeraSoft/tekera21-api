@@ -6,6 +6,7 @@ import com.tekerasoft.tekeramarketplace.dto.ProductUiDto;
 import com.tekerasoft.tekeramarketplace.dto.request.*;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
+import com.tekerasoft.tekeramarketplace.exception.StockException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.model.document.Cart;
 import com.tekerasoft.tekeramarketplace.model.document.CartAttributes;
@@ -430,6 +431,7 @@ public class ProductService {
         List<CartItem> cartItemList = new ArrayList<>();
 
         cartItems.forEach(cart -> {
+
             Product product = productRepository.findById(UUID.fromString(cart.getProductId()))
                     .orElseThrow(() -> new NotFoundException("Product not found: " + cart.getProductId()));
 
@@ -442,6 +444,10 @@ public class ProductService {
                     .filter(attr -> attr.getId().equals(UUID.fromString(cart.getAttributeId())))
                     .findFirst()
                     .orElse(null);
+
+            if(cart.getQuantity() > attribute.getStock()) {
+                throw new StockException("Quantity exceeded");
+            }
 
             CartItem cartItem = new CartItem();
             cartItem.setAttributeId(attribute != null ? attribute.getId().toString() : null);

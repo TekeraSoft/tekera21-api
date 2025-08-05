@@ -1,12 +1,11 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
-import com.tekerasoft.tekeramarketplace.dto.request.CreateCompanyRequest;
+import com.tekerasoft.tekeramarketplace.dto.request.CreateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.CompanyException;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
-import com.tekerasoft.tekeramarketplace.model.enums.Role;
 import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
@@ -33,11 +32,12 @@ public class SellerService {
     private final ShippingCompanyService shippingCompanyService;
     private final UserService userService;
     private final AuthenticationFacade authenticationFacade;
+    private final SellerVerificationService sellerVerificationService;
 
     public SellerService(SellerRepository sellerRepository, CategoryRepository categoryRepository,
                          FileService fileService, SearchItemService searchItemService,
                          ShippingCompanyService shippingCompanyService, UserService userService,
-                         AuthenticationFacade authenticationFacade) {
+                         AuthenticationFacade authenticationFacade, SellerVerificationService sellerVerificationService) {
         this.sellerRepository = sellerRepository;
         this.categoryRepository = categoryRepository;
         this.fileService = fileService;
@@ -45,21 +45,26 @@ public class SellerService {
         this.shippingCompanyService = shippingCompanyService;
         this.userService = userService;
         this.authenticationFacade = authenticationFacade;
+        this.sellerVerificationService = sellerVerificationService;
     }
 
     @Transactional
-    public ApiResponse<?> createSeller(CreateCompanyRequest req, List<MultipartFile> files, MultipartFile logo) {
+    public ApiResponse<?> createSeller(CreateSellerRequest req, List<MultipartFile> files, MultipartFile logo) {
 
         if(sellerRepository.existsByNameAndTaxNumber(req.getName(),req.getTaxNumber())) {
             throw new CompanyException("Company already exists");
         }
 
         try {
-            ShippingCompany shippingCompany = shippingCompanyService.getShippingCompany(req.getShippingCompanyId());
+
             User user = userService.getByUsername(authenticationFacade.getCurrentUserEmail())
                     .orElseThrow(() -> new NotFoundException("User not found"));
             Set<ShippingCompany> shippingCompanySet = new HashSet<>();
-            shippingCompanySet.add(shippingCompany);
+            for(String sc: req.getShippingCompanies()) {
+                ShippingCompany shippingCompany = shippingCompanyService.getShippingCompany(sc);
+                shippingCompanySet.add(shippingCompany);
+            }
+
             Seller seller = new Seller();
             seller.setName(req.getName());
             seller.setSlug(SlugGenerator.generateSlug(seller.getName()));
@@ -76,7 +81,7 @@ public class SellerService {
             seller.setAddress(req.getAddress());
             seller.setBankAccounts(req.getBankAccount());
             seller.setShippingCompanies(shippingCompanySet);
-            seller.setActive(true);
+            seller.setActive(false);
             seller.setUsers(Set.of(user));
             // Category
             Set<Category> categoryList = req.getCategoryId()
@@ -121,22 +126,24 @@ public class SellerService {
             // Bu selerDocuments listesini company entity’sine kaydeder
             seller.setIdentityDocumentPaths(sellerDocuments);
             seller.setVerificationStatus(VerificationStatus.PENDING);
+
             // Seller kaydını veritabanına kaydet
-            sellerRepository.save(seller);
-            user.setRoles(Set.of(Role.SELLER));
+            Seller savedSeller = sellerRepository.save(seller);
+            sellerVerificationService.assignToSupervisorSeller(user.getId().toString(),savedSeller);
             return new ApiResponse<>("Create Company", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
+//    @Transactional
+//    public ApiResponse<?> sellerInformationUpdate(SellerInformationUpdateRequest req) {
+//
+//    }
+
     public Seller getSellerById(String id) {
         return sellerRepository.findById(UUID.fromString(id)).orElseThrow(() ->
-                new NotFoundException("Company not found: " + id));
-    }
-
-    public void assignToSupervisorSeller(String sellerId, String supervisorId) {
-
+                new NotFoundException("Seller not found: " + id));
     }
 
     public ApiResponse<?> deleteCompany(String id) {
@@ -181,6 +188,7 @@ public class SellerService {
 
     public SellerAdminDto getSellerInformation(){
         String sellerUserId = authenticationFacade.getCurrentUserId();
+        System.out.println("sellerUserId = " + sellerUserId);
         return SellerAdminDto.toDto(sellerRepository.findSellerByUserId(UUID.fromString(sellerUserId)));
     }
 
@@ -190,7 +198,7 @@ public class SellerService {
     }
 
     public Page<SellerAdminDto> getAllCompanies(Pageable pageable) {
-        return sellerRepository.findActiveCompanies(pageable).map(SellerAdminDto::toDto);
+        return sellerRepository.findAll(pageable).map(SellerAdminDto::toDto);
     }
 
     public void sellerActive() {

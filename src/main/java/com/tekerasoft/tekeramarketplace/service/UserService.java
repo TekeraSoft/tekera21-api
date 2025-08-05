@@ -8,6 +8,7 @@ import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.User;
 import com.tekerasoft.tekeramarketplace.model.enums.Role;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,9 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -26,6 +25,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final Random random = new Random();  // burası eksik olabilir
 
     public UserService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -61,9 +61,33 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(userId));
     }
 
-//    public User assignToSeller() {
-//
-//    }
+    @Transactional
+    public User assignSupport() {
+        // Öncelikle assignCount < 7 olan supportları al
+        List<User> eligibleSupports = userRepository.findEligibleSupports();
+
+        List<User> candidateList;
+        if (!eligibleSupports.isEmpty()) {
+            candidateList = eligibleSupports;
+        } else {
+            // Yoksa tüm supportlar arasından seç
+            candidateList = userRepository.findAllSupports();
+        }
+
+        if (candidateList.isEmpty()) {
+            throw new RuntimeException("Not found support!");
+        }
+
+        // Random bir support seç
+        User selectedSupport = candidateList.get(random.nextInt(candidateList.size()));
+
+        // assignCount artır
+        Integer currentCount = selectedSupport.getAssignCount();
+        if (currentCount == null) currentCount = 0;
+        selectedSupport.setAssignCount(currentCount + 1);
+
+        return selectedSupport;
+    }
 
     public ApiResponse<?> activeUserSellerRole(SellerVerificationRequest req) {
         User user = userRepository.findById(UUID.fromString(req.getUserId()))

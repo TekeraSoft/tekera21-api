@@ -5,14 +5,17 @@ import org.springframework.security.core.GrantedAuthority
 enum class Role : GrantedAuthority {
     SUPER_ADMIN,
     ADMIN,
+    AUDITOR,
+    FINANCE_MANAGER,
+    MARKETING_MANAGER,
     MODERATOR,
     DEVELOPER,
+
     SELLER,
     SELLER_EMPLOYEE,
     SELLER_SUPPORT,
-    FINANCE_MANAGER,
-    MARKETING_MANAGER,
-    AUDITOR,
+    SELLER_MARKETING_MANAGER,
+    SELLER_FINANCE_MANAGER,
     CUSTOMER,
     COURIER;
 

@@ -4,6 +4,7 @@ import com.tekerasoft.tekeramarketplace.model.entity.Order
 import java.math.BigDecimal
 
 data class OrderDto(
+    val id: String,
     val buyer: BuyerDto,
     val basketItems: MutableList<BasketItemDto>,
     val shippingAddress: AddressDto,
@@ -14,6 +15,7 @@ data class OrderDto(
         @JvmStatic
         fun toDto(from: Order): OrderDto {
             return OrderDto(
+                from.id.toString(),
                 from.buyer.let { BuyerDto(it.name, it.surname, it.gsmNumber,) },
                 from.basketItems.map { it -> BasketItemDto(
                     it.id.toString(),
@@ -37,7 +39,8 @@ data class OrderDto(
                 ) }.toMutableList(),
                 from.shippingAddress.let { it -> AddressDto.toDto(it) },
                 from.billingAddress?.let { it -> AddressDto.toDto(it) },
-                from.totalPrice
+                from.totalPrice,
+
             )
         }
     }
