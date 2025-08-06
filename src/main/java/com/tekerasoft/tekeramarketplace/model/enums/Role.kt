@@ -11,6 +11,7 @@ enum class Role : GrantedAuthority {
     MODERATOR,
     DEVELOPER,
 
+    WITHOUT_APPROVAL_SELLER,
     SELLER,
     SELLER_EMPLOYEE,
     SELLER_SUPPORT,

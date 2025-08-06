@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 
 @Service
@@ -66,10 +67,8 @@ public class KafkaConsumer {
     }
 
     @KafkaListener(topics = "delete-image-processing", groupId = "tekeraGroup")
-    public void processDeleteImage(DeletePathList pathList) {
-        for (String path : pathList.getPaths()) {
-            fileService.deleteInFolderFile(path);
-        }
+    public void processDeleteImage(List<String> pathList) {
+        pathList.forEach(fileService::deleteInFolderFile);
     }
 
 

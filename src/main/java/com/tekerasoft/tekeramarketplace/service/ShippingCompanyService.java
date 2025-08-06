@@ -9,7 +9,9 @@ import com.tekerasoft.tekeramarketplace.repository.jparepository.ShippingCompany
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,6 +31,13 @@ public class ShippingCompanyService {
 
     public List<ShippingCompanyDto> getAllShippingCompany() {
         return shippingCompanyRepository.findAll().stream().map(ShippingCompanyDto::toDto).collect(Collectors.toList());
+    }
+
+    public Set<ShippingCompany> getShippingCompanies(List<String> ids) {
+        List<UUID> uuidList = ids.stream()
+                .map(UUID::fromString) // String → UUID
+                .toList();
+        return new HashSet<>(shippingCompanyRepository.findAllById(uuidList));
     }
 
     public ApiResponse<?> createShippingCompany(CreateShippingCompanyRequest req) {

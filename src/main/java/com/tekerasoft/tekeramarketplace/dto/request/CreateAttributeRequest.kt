@@ -9,6 +9,8 @@ data class CreateAttributeRequest(
     val attributeDetails: MutableList<AttributeDetail>,
     @JsonProperty("stock")
     val stock: Int,
+    @JsonProperty("maxPurchaseStock")
+    val maxPurchaseStock: Int,
     @JsonProperty("price")
     val price: BigDecimal,
     @JsonProperty("discountPrice")

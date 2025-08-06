@@ -1,11 +1,14 @@
 package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
+import com.tekerasoft.tekeramarketplace.dto.payload.DeletePathList;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateSellerRequest;
+import com.tekerasoft.tekeramarketplace.dto.request.UpdateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.CompanyException;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
+import com.tekerasoft.tekeramarketplace.model.enums.Role;
 import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
@@ -17,6 +20,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,11 +37,13 @@ public class SellerService {
     private final UserService userService;
     private final AuthenticationFacade authenticationFacade;
     private final SellerVerificationService sellerVerificationService;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public SellerService(SellerRepository sellerRepository, CategoryRepository categoryRepository,
                          FileService fileService, SearchItemService searchItemService,
                          ShippingCompanyService shippingCompanyService, UserService userService,
-                         AuthenticationFacade authenticationFacade, SellerVerificationService sellerVerificationService) {
+                         AuthenticationFacade authenticationFacade, SellerVerificationService sellerVerificationService,
+                         KafkaTemplate<String, Object> kafkaTemplate) {
         this.sellerRepository = sellerRepository;
         this.categoryRepository = categoryRepository;
         this.fileService = fileService;
@@ -46,6 +52,7 @@ public class SellerService {
         this.userService = userService;
         this.authenticationFacade = authenticationFacade;
         this.sellerVerificationService = sellerVerificationService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Transactional
@@ -54,11 +61,10 @@ public class SellerService {
         if(sellerRepository.existsByNameAndTaxNumber(req.getName(),req.getTaxNumber())) {
             throw new CompanyException("Company already exists");
         }
-
         try {
-
             User user = userService.getByUsername(authenticationFacade.getCurrentUserEmail())
                     .orElseThrow(() -> new NotFoundException("User not found"));
+            userService.changeUserRole(String.valueOf(user.getId()),Role.WITHOUT_APPROVAL_SELLER);
             Set<ShippingCompany> shippingCompanySet = new HashSet<>();
             for(String sc: req.getShippingCompanies()) {
                 ShippingCompany shippingCompany = shippingCompanyService.getShippingCompany(sc);
@@ -114,9 +120,12 @@ public class SellerService {
                 String documentPath = fileService.folderFileUpload(file,
                         String.format("/company/documents/%s", companyReplaceName));
 
+                com.tekerasoft.tekeramarketplace.model.enums.SellerDocument documentTitleEnum =
+                        com.tekerasoft.tekeramarketplace.model.enums.SellerDocument.valueOf(documentTitle.toUpperCase());
+
                 // CompanyDocument nesnesi oluştur
                 SellerDocument document = new SellerDocument(
-                        documentTitle,
+                        documentTitleEnum,
                         documentPath,
                         VerificationStatus.PENDING
                 );
@@ -136,10 +145,143 @@ public class SellerService {
         }
     }
 
-//    @Transactional
-//    public ApiResponse<?> sellerInformationUpdate(SellerInformationUpdateRequest req) {
-//
-//    }
+    @Transactional
+    public ApiResponse<?> updateSeller(UpdateSellerRequest req,
+                                       List<MultipartFile> files, MultipartFile logo) {
+
+        // Var olan seller'ı bul
+        Seller seller = sellerRepository.findById(UUID.fromString(req.getId()))
+                .orElseThrow(() -> new NotFoundException("Seller not found"));
+
+        // Güncellenecek alanlar
+        seller.setName(req.getName());
+        seller.setSlug(SlugGenerator.generateSlug(seller.getName()));
+        seller.setEmail(req.getEmail());
+        seller.setGsmNumber(req.getGsmNumber());
+        seller.setAlternativePhoneNumber(req.getAlternativePhoneNumber());
+        seller.setSupportPhoneNumber(req.getSupportPhoneNumber());
+        seller.setTaxNumber(req.getTaxNumber());
+        seller.setTaxOffice(req.getTaxOffice());
+        seller.setMerisNumber(req.getMerisNumber());
+        seller.setRegistrationDate(req.getRegistrationDate());
+        seller.setContactPersonNumber(req.getContactPersonNumber());
+        seller.setContactPersonTitle(req.getContactPersonTitle());
+        seller.setAddress(req.getAddress());
+        seller.setBankAccounts(req.getBankAccount());
+
+        // ShippingCompanies güncelle
+        if (req.getShippingCompanies() != null) {
+            Set<ShippingCompany> shippingCompanySet = req.getShippingCompanies().stream()
+                    .map(sc -> shippingCompanyService.getShippingCompany(sc))
+                    .collect(Collectors.toSet());
+            seller.setShippingCompanies(shippingCompanySet);
+        }
+
+        // Category güncelle
+        if (req.getCategoryId() != null) {
+            Set<Category> categoryList = req.getCategoryId().stream()
+                    .map(id -> categoryRepository.findById(UUID.fromString(id))
+                            .orElseThrow(() -> new NotFoundException("Category not found")))
+                    .collect(Collectors.toSet());
+            seller.setCategories(categoryList);
+        }
+
+        String companyReplaceName = seller.getName().toLowerCase().replaceAll("\\s+", "_");
+
+        // Logo güncelle
+        if (logo != null && !logo.isEmpty()) {
+            String logoPath = fileService.folderFileUpload(logo,
+                    String.format("/company/logo/%s", companyReplaceName));
+            if (logoPath != null) {
+                seller.setLogo(logoPath);
+            } else {
+                throw new CompanyException("Logo could not be loaded");
+            }
+        }
+
+        // Belgeler güncelle
+        if (files != null && !files.isEmpty()) {
+            List<SellerDocument> existingDocs = new ArrayList<>(seller.getIdentityDocumentPaths());
+
+            // Sadece boş olmayan dosyaları filtrele
+            List<MultipartFile> nonEmptyFiles = files.stream()
+                    .filter(f -> f != null && !f.isEmpty())
+                    .toList();
+
+            if (!nonEmptyFiles.isEmpty()) {
+                List<SellerDocument> newDocs = new ArrayList<>();
+
+                for (MultipartFile file : nonEmptyFiles) {
+                    String originalFilename = file.getOriginalFilename();
+                    assert originalFilename != null;
+                    String documentTitle = originalFilename.contains(".")
+                            ? originalFilename.substring(0, originalFilename.lastIndexOf('.'))
+                            : originalFilename;
+
+                    try {
+                        com.tekerasoft.tekeramarketplace.model.enums.SellerDocument documentTitleEnum =
+                                com.tekerasoft.tekeramarketplace.model.enums.SellerDocument
+                                        .valueOf(documentTitle.toUpperCase());
+
+                        String documentPath = fileService.folderFileUpload(file,
+                                String.format("/company/documents/%s", companyReplaceName));
+
+                        SellerDocument document = new SellerDocument(
+                                documentTitleEnum,
+                                documentPath,
+                                VerificationStatus.PENDING
+                        );
+                        newDocs.add(document);
+
+                    } catch (IllegalArgumentException e) {
+                        throw new CompanyException("Geçersiz belge tipi: " + documentTitle);
+                    }
+                }
+
+                // Eski görselleri tespit et
+                List<String> oldPathsToDelete = existingDocs.stream()
+                        .filter(oldDoc -> newDocs.stream()
+                                .anyMatch(newDoc ->
+                                        newDoc.getDocumentTitle() == oldDoc.getDocumentTitle() &&
+                                                !newDoc.getDocumentPath().equals(oldDoc.getDocumentPath())))
+                        .map(SellerDocument::getDocumentPath)
+                        .toList();
+
+                // Kafka ile eski görselleri sil
+                if (!oldPathsToDelete.isEmpty()) {
+                    kafkaTemplate.send("delete-image-processing", oldPathsToDelete);
+                }
+
+                // Sadece yeni belgeler varsa güncelle
+                if (!newDocs.isEmpty()) {
+                    seller.setIdentityDocumentPaths(newDocs);
+                }
+            }
+        }
+
+        // VerificationStatus update’de de PENDING yapabilirsin ya da koruyabilirsin
+        seller.setVerificationStatus(VerificationStatus.PENDING);
+
+        // Kaydet
+        sellerRepository.save(seller);
+
+        return new ApiResponse<>("Seller updated successfully", HttpStatus.OK.value());
+    }
+
+    public ApiResponse<?> changeStatusFaultyDocument(String sellerId,
+                                                     com.tekerasoft.tekeramarketplace.model.enums.SellerDocument documentName ,
+                                                     VerificationStatus status)
+    {
+        Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
+                .orElseThrow(() -> new NotFoundException("Seller not found"));
+        seller.getIdentityDocumentPaths().forEach(path -> {
+            if(documentName.equals(path.getDocumentTitle())) {
+                path.setVerificationStatus(status);
+            }
+        });
+        sellerRepository.save(seller);
+        return new ApiResponse<>("Changed document status", HttpStatus.OK.value());
+    }
 
     public Seller getSellerById(String id) {
         return sellerRepository.findById(UUID.fromString(id)).orElseThrow(() ->

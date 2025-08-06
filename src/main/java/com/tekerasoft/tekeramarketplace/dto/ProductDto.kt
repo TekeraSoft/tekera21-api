@@ -51,6 +51,7 @@ data class ProductDto(
                             it.id,
                             it.attributeDetails,
                             it.stock,
+                            it.maxPurchaseStock,
                             it.price,
                             it.discountPrice,
                             it.sku,

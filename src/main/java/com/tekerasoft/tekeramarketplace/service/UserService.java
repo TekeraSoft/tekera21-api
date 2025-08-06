@@ -103,7 +103,12 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-
+    public void changeUserRole(String userId, Role role) {
+        User user = userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new NotFoundException("User Not Found"));
+        user.setRoles(Set.of(role));
+        userRepository.save(user);
+    }
 
     public ApiResponse<?> forgotPassword(String email, String password, String token) {
         try {

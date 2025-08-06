@@ -8,6 +8,7 @@ data class AttributeDto(
     val id: UUID?,
     val attributeDetails: List<AttributeDetail>,
     val stock: Int,
+    val maxPurchaseStock: Int?,
     val price: BigDecimal,
     val discountPrice: BigDecimal?,
     val sku: String?,

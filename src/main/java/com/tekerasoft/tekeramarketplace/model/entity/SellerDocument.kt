@@ -1,14 +1,17 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
-import com.tekerasoft.tekeramarketplace.config.NoArg
+import com.tekerasoft.tekeramarketplace.model.enums.SellerDocument
 import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus
 import jakarta.persistence.Embeddable
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 
 @Embeddable
-data class SellerDocument(
-    val documentTitle: String,
-    val documentPath: String,
-    val verificationStatus: VerificationStatus = VerificationStatus.PENDING,
+open class SellerDocument(
+    @Enumerated(EnumType.STRING)
+    open var documentTitle: SellerDocument?,
+    open var documentPath: String,
+    open var verificationStatus: VerificationStatus = VerificationStatus.PENDING,
 ) {
-    constructor(): this("", "", VerificationStatus.PENDING)
+    constructor(): this(null, "", VerificationStatus.PENDING)
 }

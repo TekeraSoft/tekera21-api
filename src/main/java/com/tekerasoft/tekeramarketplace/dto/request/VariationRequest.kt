@@ -19,13 +19,11 @@ data class VariationRequest(
     @JsonProperty("color")
     val color: String,
 
-    @JsonProperty("imagesUrls")
-    val imagesUrls: List<String>,
+    @JsonProperty("imageUrls")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val imageUrls: List<String>? = listOf(),
 
     @JsonProperty("attributes")
     val attributes: List<CreateAttributeRequest>,
 
-    @JsonProperty("subCategories")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    val imageUrls: List<String>? = null,
 )

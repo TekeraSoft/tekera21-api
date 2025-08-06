@@ -26,7 +26,9 @@ public class SellerController {
     private final DigitalFashionService digitalFashionService;
     private final OrderService orderService;
 
-    public SellerController(ProductService productService, SellerService sellerService, FileService fileService, VariationService variationService, DigitalFashionService digitalFashionService, OrderService orderService) {
+    public SellerController(ProductService productService, SellerService sellerService, FileService fileService,
+                            VariationService variationService, DigitalFashionService digitalFashionService,
+                            OrderService orderService) {
         this.productService = productService;
         this.sellerService = sellerService;
         this.fileService = fileService;
@@ -49,7 +51,8 @@ public class SellerController {
     }
 
     @GetMapping("/findSellerReturnProducts/{companyId}")
-    public ResponseEntity<Page<ProductListDto>> findCompanyReturnProducts(@PathVariable String companyId, Pageable pageable) {
+    public ResponseEntity<Page<ProductListDto>> findCompanyReturnProducts(@PathVariable String companyId,
+                                                                          Pageable pageable) {
         return ResponseEntity.ok(productService.findCompanyReturnProducts(companyId,pageable));
     }
 
@@ -59,7 +62,8 @@ public class SellerController {
     }
 
     @GetMapping("/sellerGallery")
-    public ResponseEntity<Page<String>> sellerGallery(@RequestParam String companyId, Pageable pageable) throws Exception {
+    public ResponseEntity<Page<String>> sellerGallery(@RequestParam String companyId, Pageable pageable)
+            throws Exception {
         return ResponseEntity.ok(sellerService.getAllCompanyMedia(companyId,pageable));
     }
 

@@ -17,6 +17,7 @@ open class Attribute(
     open var price: BigDecimal = BigDecimal.ZERO,
     open var discountPrice: BigDecimal? = BigDecimal.ZERO,
     open var stock: Int,
+    open var maxPurchaseStock: Int? = null,
     open var sku: String? = null,
     open var barcode: String? = null,
 
@@ -35,6 +36,7 @@ open class Attribute(
         constructor() : this(
             BigDecimal.ZERO,
             BigDecimal.ZERO,
+            0,
             0,
             "",
             "",

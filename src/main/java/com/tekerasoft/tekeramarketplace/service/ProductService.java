@@ -11,6 +11,8 @@ import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.model.document.Cart;
 import com.tekerasoft.tekeramarketplace.model.document.CartAttributes;
 import com.tekerasoft.tekeramarketplace.model.document.CartItem;
+import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
+import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.*;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
@@ -32,18 +34,20 @@ public class ProductService {
     private final SubCategoryRepository subCategoryRepository;
     private final SellerRepository sellerRepository;
     private final VariationRepository variationRepository;
+    private final SearchItemService searchItemService;
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
                           SubCategoryRepository subCategoryRepository,
                           SellerRepository sellerRepository,
-                          VariationRepository variationRepository) {
+                          VariationRepository variationRepository, SearchItemService searchItemService) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.sellerRepository = sellerRepository;
         this.variationRepository = variationRepository;
+        this.searchItemService = searchItemService;
     }
 
     public Product getById(UUID id) {
@@ -97,6 +101,7 @@ public class ProductService {
                                 attr.getPrice(),
                                 attr.getDiscountPrice(),
                                 attr.getStock(),
+                                attr.getMaxPurchaseStock(),
                                 attr.getSku(),
                                 attr.getBarcode(),
                                 attr.getAttributeDetails(),
@@ -220,6 +225,7 @@ public class ProductService {
                                 attr.getPrice(),
                                 attr.getDiscountPrice(),
                                 attr.getStock(),
+                                attr.getMaxPurchaseStock(),
                                 attr.getSku(),
                                 attr.getBarcode(),
                                 attr.getAttributeDetails(),
@@ -404,17 +410,17 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("Product not found: " + productId));
         try {
             product.setActive(active);
-            productRepository.save(product);
+            Product savedProduct =  productRepository.save(product);
 
-//            if(active) {
-//                SearchItem searchItem = new SearchItem();
-//                searchItem.setId(saveProduct.getId().toString());
-//                searchItem.setName(saveProduct.getName());
-//                searchItem.setItemType(SearchItemType.PRODUCT);
-//                searchItemService.createIndex(searchItem);
-//            } else {
-//                searchItemService.deleteItem(saveProduct.getId().toString());
-//            }
+            if(active) {
+                SearchItem searchItem = new SearchItem();
+                searchItem.setId(savedProduct.getId().toString());
+                searchItem.setName(savedProduct.getName());
+                searchItem.setItemType(SearchItemType.PRODUCT);
+                searchItemService.createIndex(searchItem);
+            } else {
+                searchItemService.deleteItem(savedProduct.getId().toString());
+            }
 
             return new ApiResponse<>("Product Status Updated", HttpStatus.OK.value());
         } catch (RuntimeException e) {
@@ -456,6 +462,7 @@ public class ProductService {
             cartItem.setModelCode(variation.getModelCode());
             cartItem.setProductSlug(product.getSlug());
             cartItem.setProductId(product.getId().toString());
+            cartItem.setMaxPurchaseStock(attribute.getMaxPurchaseStock());
             cartItem.setName(product.getName());
             cartItem.setQuantity(cart.getQuantity());
             cartItem.setPrice(attribute.getPrice());

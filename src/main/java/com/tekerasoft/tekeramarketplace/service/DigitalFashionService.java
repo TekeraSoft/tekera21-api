@@ -153,7 +153,7 @@ public class DigitalFashionService {
             pathList.add(tp.getDefaultContent());
             pathList.add(tp.getSpecialContent());
 
-            kafkaTemplate.send("delete-image-processing", new DeletePathList(pathList));
+            kafkaTemplate.send("delete-image-processing", pathList);
 
             targetPictureRepository.deleteById(UUID.fromString(id));
             return new ApiResponse<>("Target Picture Deleted", HttpStatus.OK.value());
