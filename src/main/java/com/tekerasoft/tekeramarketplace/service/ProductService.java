@@ -379,6 +379,7 @@ public class ProductService {
 
     public Page<ProductUiDto> filterProduct(String color,String clothSize, List<String> tags,String style,
                                               String subCategoryName,
+                                              String searchParam,
                                               Pageable pageable) {
 
         color = (color == null || color.isEmpty() ? null : color);
@@ -386,13 +387,15 @@ public class ProductService {
         tags = (tags == null || tags.isEmpty() ? null : tags);
         style = (style == null || style.isEmpty() ? null : style);
         subCategoryName = (subCategoryName == null || subCategoryName.isEmpty() ? null : subCategoryName);
+        searchParam = (searchParam == null || searchParam.isEmpty() ? null : searchParam);
 
-        return productRepository.findByQueryField(color, clothSize, tags, style,subCategoryName, pageable)
+        return productRepository.findByQueryField(color, clothSize, tags, style,subCategoryName,searchParam,pageable)
                 .map(ProductUiDto::toProductUiDto);
     }
 
     public Page<ProductDto> filterAdminProduct(String color,String clothSize, List<String> tags,String style,
                                                String subCategoryName,
+                                               String searchParam,
                                                Pageable pageable) {
 
         color = (color == null || color.isEmpty() ? null : color);
@@ -400,8 +403,9 @@ public class ProductService {
         tags = (tags == null || tags.isEmpty() ? null : tags);
         style = (style == null || style.isEmpty() ? null : style);
         subCategoryName = (subCategoryName == null || subCategoryName.isEmpty() ? null : subCategoryName);
+        searchParam = (searchParam == null || searchParam.isEmpty() ? null : searchParam);
 
-        return productRepository.findByQueryField(color, clothSize, tags, style,subCategoryName, pageable)
+        return productRepository.findByQueryField(color, clothSize, tags, style,subCategoryName,searchParam,pageable)
                 .map(ProductDto::toDto);
     }
 

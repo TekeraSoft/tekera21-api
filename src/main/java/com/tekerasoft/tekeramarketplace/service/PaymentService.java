@@ -56,6 +56,7 @@ public class PaymentService {
     public ThreedsInitialize payment(CreatePayRequest req) {
         try {
             // Calculate total price map !
+            // TODO: toplam fiyat burada hesaplanacak main order ve payment getwey e gönderilecek
             BigDecimal totalPrice = req.getBasketItems().stream()
                     .map(bi -> {
                         Attribute productAttribute = attributeService.getAttributeById(bi.getAttributeId());
@@ -64,6 +65,8 @@ public class PaymentService {
                         return price.multiply(quantity);
                     }).reduce(BigDecimal.ZERO, BigDecimal::add);
 
+            // TODO: Main order burada oluşacak kullanıcıların kendi ürünleri paylaştırılmış bir şekilde
+            // TODO: Paylaştırılan ürünlerin status durumları pending atanacak
             Order order = orderService.createOrder(
                     CreateOrderRequest.convertFromPayRequestToOrderRequest(
                             req,
@@ -140,7 +143,8 @@ public class PaymentService {
                 basketItem.setItemType(product.getProductType().name());
                 basketItem.setItemType(BasketItemType.PHYSICAL.name());
 
-                BigDecimal totalItemPrice = new BigDecimal(String.valueOf(productAttribute.getPrice())).multiply(new BigDecimal(bi.getQuantity()));
+                BigDecimal totalItemPrice = new BigDecimal(String.valueOf(productAttribute.getPrice()))
+                        .multiply(new BigDecimal(bi.getQuantity()));
 
                 basketItem.setPrice(totalItemPrice);
                 basketItems.add(basketItem);
@@ -181,6 +185,7 @@ public class PaymentService {
         }
     }
 
+    // TODO: Ödeme onayı gelir gelmez order status durumları bu method da PAID olacak
     @Transactional
     public String paymentCheck (HttpServletRequest request, HttpServletResponse response) {
         try {

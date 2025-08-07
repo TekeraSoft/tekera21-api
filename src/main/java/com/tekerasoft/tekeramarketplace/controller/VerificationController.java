@@ -27,9 +27,4 @@ public class VerificationController {
                                                        @RequestPart(name = "logo", required = false) MultipartFile logo) {
         return ResponseEntity.ok(sellerService.updateSeller(req,files,logo));
     }
-
-    @GetMapping("/getAllShippingCompany")
-    public ResponseEntity<List<ShippingCompanyDto>> getAllShippingCompany() {
-        return ResponseEntity.ok(shippingCompanyService.getAllShippingCompany());
-    }
 }

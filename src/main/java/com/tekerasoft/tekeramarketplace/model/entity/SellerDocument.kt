@@ -12,6 +12,7 @@ open class SellerDocument(
     open var documentTitle: SellerDocument?,
     open var documentPath: String,
     open var verificationStatus: VerificationStatus = VerificationStatus.PENDING,
+    open var faultyDocumentDescription: String? = null,
 ) {
     constructor(): this(null, "", VerificationStatus.PENDING)
 }

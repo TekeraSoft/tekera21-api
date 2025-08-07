@@ -40,20 +40,24 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
      JOIN p.variations v
      JOIN v.attributes a
      JOIN a.attributeDetails ad
-     JOIN p.tags t
      JOIN p.subCategories sc
     WHERE p.isActive = TRUE
       AND (:subCategoryName IS NULL OR sc.name = :subCategoryName)
       AND (:color IS NULL OR v.color = :color)
-      AND (:size  IS NULL OR (ad.key = 'size'  AND ad.value = :size))
+      AND (:size IS NULL OR (ad.key = 'size' AND ad.value = :size))
       AND (:style IS NULL OR (ad.key = 'style' AND ad.value = :style))
-      AND (:tags  IS NULL OR t IN :tags)
+      AND (:tags IS NULL OR EXISTS (
+          SELECT t FROM Product p2 JOIN p2.tags t
+          WHERE p2.id = p.id AND t IN :tags
+      ))
+      AND (COALESCE(:searchParam, '') = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :searchParam, '%')))
 """)
     Page<Product> findByQueryField(@Param("color")  String color,
                                    @Param("size")   String size,
-                                   @Param("tags") List<String> tags,  // <‑‑ List!
+                                   @Param("tags") List<String> tags,
                                    @Param("style")  String style,
                                    @Param("subCategoryName") String subCategoryName,
+                                   @Param("searchParam") String searchParam,
                                    Pageable pageable);
 
     Optional<Product> findBySlug(String slug);

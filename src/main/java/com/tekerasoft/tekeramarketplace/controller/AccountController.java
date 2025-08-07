@@ -31,4 +31,8 @@ public class AccountController {
         return sellerService.createSeller(req,files,logo);
     }
 
+    @GetMapping("/getAllShippingCompany")
+    public ResponseEntity<List<ShippingCompanyDto>> getAllShippingCompany() {
+        return ResponseEntity.ok(shippingCompanyService.getAllShippingCompany());
+    }
 }

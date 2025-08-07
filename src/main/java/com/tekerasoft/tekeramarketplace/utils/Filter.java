@@ -90,8 +90,6 @@ public class Filter extends OncePerRequestFilter {
                 }
             }
         } catch (ExpiredJwtException e) {
-            logger.warn("JWT token süresi doldu. Kullanıcı: {}", username, e);
-            // 7. Token süresi dolduğunda çerezleri temizle ve 401 Unauthorized yanıtı dön
             clearAuthCookies(response);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("{\"error\": \"Session expired. Please log in again.\"}");
@@ -119,18 +117,6 @@ public class Filter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7); // "Bearer " sonrası
         }
-
-        // 2. Cookie'lerden al
-//        Cookie[] cookies = request.getCookies();
-//        if (cookies != null) {
-//            return Arrays.stream(cookies)
-//                    .filter(cookie -> "session-token".equals(cookie.getName()))
-//                    .map(Cookie::getValue)
-//                    .findFirst()
-//                    .orElse(null);
-//        }
-
-        // 3. Hiçbir yerde yoksa null
         return null;
     }
 

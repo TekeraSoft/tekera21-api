@@ -62,9 +62,8 @@ public class SellerService {
             throw new CompanyException("Company already exists");
         }
         try {
-            User user = userService.getByUsername(authenticationFacade.getCurrentUserEmail())
-                    .orElseThrow(() -> new NotFoundException("User not found"));
-            userService.changeUserRole(String.valueOf(user.getId()),Role.WITHOUT_APPROVAL_SELLER);
+            User user = userService.getUserInformation(authenticationFacade.getCurrentUserId());
+            userService.changeUserRole(user);
             Set<ShippingCompany> shippingCompanySet = new HashSet<>();
             for(String sc: req.getShippingCompanies()) {
                 ShippingCompany shippingCompany = shippingCompanyService.getShippingCompany(sc);
@@ -127,7 +126,8 @@ public class SellerService {
                 SellerDocument document = new SellerDocument(
                         documentTitleEnum,
                         documentPath,
-                        VerificationStatus.PENDING
+                        VerificationStatus.PENDING,
+                        null
                 );
                 sellerDocuments.add(document);
             }
@@ -141,7 +141,7 @@ public class SellerService {
             sellerVerificationService.assignToSupervisorSeller(user.getId().toString(),savedSeller);
             return new ApiResponse<>("Create Company", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -149,11 +149,9 @@ public class SellerService {
     public ApiResponse<?> updateSeller(UpdateSellerRequest req,
                                        List<MultipartFile> files, MultipartFile logo) {
 
-        // Var olan seller'ı bul
         Seller seller = sellerRepository.findById(UUID.fromString(req.getId()))
                 .orElseThrow(() -> new NotFoundException("Seller not found"));
 
-        // Güncellenecek alanlar
         seller.setName(req.getName());
         seller.setSlug(SlugGenerator.generateSlug(seller.getName()));
         seller.setEmail(req.getEmail());
@@ -169,7 +167,6 @@ public class SellerService {
         seller.setAddress(req.getAddress());
         seller.setBankAccounts(req.getBankAccount());
 
-        // ShippingCompanies güncelle
         if (req.getShippingCompanies() != null) {
             Set<ShippingCompany> shippingCompanySet = req.getShippingCompanies().stream()
                     .map(sc -> shippingCompanyService.getShippingCompany(sc))
@@ -177,7 +174,6 @@ public class SellerService {
             seller.setShippingCompanies(shippingCompanySet);
         }
 
-        // Category güncelle
         if (req.getCategoryId() != null) {
             Set<Category> categoryList = req.getCategoryId().stream()
                     .map(id -> categoryRepository.findById(UUID.fromString(id))
@@ -199,70 +195,70 @@ public class SellerService {
             }
         }
 
-        // Belgeler güncelle
+        // Belgeleri güncelle
         if (files != null && !files.isEmpty()) {
-            List<SellerDocument> existingDocs = new ArrayList<>(seller.getIdentityDocumentPaths());
-
-            // Sadece boş olmayan dosyaları filtrele
             List<MultipartFile> nonEmptyFiles = files.stream()
                     .filter(f -> f != null && !f.isEmpty())
                     .toList();
 
             if (!nonEmptyFiles.isEmpty()) {
-                List<SellerDocument> newDocs = new ArrayList<>();
+                List<SellerDocument> existingDocs = new ArrayList<>(seller.getIdentityDocumentPaths());
+                Map<com.tekerasoft.tekeramarketplace.model.enums.SellerDocument, SellerDocument> docMap =
+                        existingDocs.stream().collect(Collectors.toMap(SellerDocument::getDocumentTitle, d -> d));
+
+                List<String> oldPathsToDelete = new ArrayList<>();
 
                 for (MultipartFile file : nonEmptyFiles) {
                     String originalFilename = file.getOriginalFilename();
                     assert originalFilename != null;
+
                     String documentTitle = originalFilename.contains(".")
                             ? originalFilename.substring(0, originalFilename.lastIndexOf('.'))
                             : originalFilename;
 
+                    com.tekerasoft.tekeramarketplace.model.enums.SellerDocument documentTitleEnum;
                     try {
-                        com.tekerasoft.tekeramarketplace.model.enums.SellerDocument documentTitleEnum =
-                                com.tekerasoft.tekeramarketplace.model.enums.SellerDocument
-                                        .valueOf(documentTitle.toUpperCase());
-
-                        String documentPath = fileService.folderFileUpload(file,
-                                String.format("/company/documents/%s", companyReplaceName));
-
-                        SellerDocument document = new SellerDocument(
-                                documentTitleEnum,
-                                documentPath,
-                                VerificationStatus.PENDING
-                        );
-                        newDocs.add(document);
-
+                        documentTitleEnum = com.tekerasoft.tekeramarketplace.model.enums.SellerDocument
+                                .valueOf(documentTitle.toUpperCase());
                     } catch (IllegalArgumentException e) {
                         throw new CompanyException("Geçersiz belge tipi: " + documentTitle);
                     }
+
+                    String newDocumentPath = fileService.folderFileUpload(file,
+                            String.format("/company/documents/%s", companyReplaceName));
+
+                    // Eğer eski belge varsa, path değişmişse silinmek üzere işaretle
+                    if (docMap.containsKey(documentTitleEnum)) {
+                        SellerDocument oldDoc = docMap.get(documentTitleEnum);
+                        if (!oldDoc.getDocumentPath().equals(newDocumentPath)) {
+                            oldPathsToDelete.add(oldDoc.getDocumentPath());
+                        }
+                        // Güncelle
+                        oldDoc.setDocumentPath(newDocumentPath);
+                        oldDoc.setVerificationStatus(VerificationStatus.PENDING);
+                    } else {
+                        // Yeni belge ekleniyor
+                        SellerDocument newDoc = new SellerDocument(
+                                documentTitleEnum,
+                                newDocumentPath,
+                                VerificationStatus.PENDING,
+                                null
+                        );
+                        existingDocs.add(newDoc);
+                    }
                 }
 
-                // Eski görselleri tespit et
-                List<String> oldPathsToDelete = existingDocs.stream()
-                        .filter(oldDoc -> newDocs.stream()
-                                .anyMatch(newDoc ->
-                                        newDoc.getDocumentTitle() == oldDoc.getDocumentTitle() &&
-                                                !newDoc.getDocumentPath().equals(oldDoc.getDocumentPath())))
-                        .map(SellerDocument::getDocumentPath)
-                        .toList();
-
-                // Kafka ile eski görselleri sil
+                // Kafka ile silinecek dosyaları gönder
                 if (!oldPathsToDelete.isEmpty()) {
                     kafkaTemplate.send("delete-image-processing", oldPathsToDelete);
                 }
 
-                // Sadece yeni belgeler varsa güncelle
-                if (!newDocs.isEmpty()) {
-                    seller.setIdentityDocumentPaths(newDocs);
-                }
+                // Mevcut seller belgelerini set et
+                seller.setIdentityDocumentPaths(existingDocs);
             }
         }
 
-        // VerificationStatus update’de de PENDING yapabilirsin ya da koruyabilirsin
         seller.setVerificationStatus(VerificationStatus.PENDING);
-
-        // Kaydet
         sellerRepository.save(seller);
 
         return new ApiResponse<>("Seller updated successfully", HttpStatus.OK.value());
@@ -281,6 +277,13 @@ public class SellerService {
         });
         sellerRepository.save(seller);
         return new ApiResponse<>("Changed document status", HttpStatus.OK.value());
+    }
+
+    public void addSellerOrder (String sellerId, Order order) {
+        Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
+                .orElseThrow(() -> new NotFoundException("Seller not found"));
+        seller.getOrders().add(order);
+        sellerRepository.save(seller);
     }
 
     public Seller getSellerById(String id) {
@@ -330,7 +333,6 @@ public class SellerService {
 
     public SellerAdminDto getSellerInformation(){
         String sellerUserId = authenticationFacade.getCurrentUserId();
-        System.out.println("sellerUserId = " + sellerUserId);
         return SellerAdminDto.toDto(sellerRepository.findSellerByUserId(UUID.fromString(sellerUserId)));
     }
 
