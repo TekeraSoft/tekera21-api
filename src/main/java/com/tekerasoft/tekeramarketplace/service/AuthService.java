@@ -1,10 +1,12 @@
 package com.tekerasoft.tekeramarketplace.service;
 
+import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateUserRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.LoginRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.dto.response.JwtResponse;
 import com.tekerasoft.tekeramarketplace.exception.UserException;
+import com.tekerasoft.tekeramarketplace.model.entity.Seller;
 import com.tekerasoft.tekeramarketplace.model.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,12 +25,14 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final CartService cartService;
+    private final SellerService sellerService;
 
-    public AuthService(UserService userService, AuthenticationManager authenticationManager, JwtService jwtService, CartService cartService) {
+    public AuthService(UserService userService, AuthenticationManager authenticationManager, JwtService jwtService, CartService cartService, SellerService sellerService) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.cartService = cartService;
+        this.sellerService = sellerService;
     }
 
     public JwtResponse authenticate(LoginRequest loginRequest) {
@@ -41,7 +45,6 @@ public class AuthService {
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
             );
-
             if (auth.isAuthenticated()) {
                 userService.changeLastLoginUser(loginRequest.getEmail());
 
@@ -80,33 +83,34 @@ public class AuthService {
         }
     }
 
-    public JwtResponse refreshToken(String refreshToken) {
-        try {
-            // Token'ın geçerliliğini kontrol et
-            if (jwtService.isTokenExpired(refreshToken)) {
-                throw new UserException("Refresh token expired. Please log in again.");
-            }
-
-            // Token geçerli ise, içinden kullanıcı bilgilerini al
-            String email = jwtService.extractUser(refreshToken);
-            Optional<User> user = userService.getByUsername(email);
-
-            if (user.isEmpty()) {
-                throw new UserException("User not found");
-            }
-
-            // Yeni Access Token ve Refresh Token oluştur
-            String newAccessToken = jwtService.generateToken(addClaims(email), email);
-            String newRefreshToken = jwtService.generateRefreshToken(addClaims(email), email);
-
-            return new JwtResponse(newAccessToken);
-        } catch (Exception e) {
-            throw new UserException("Invalid refresh token");
-        }
-    }
+//    public JwtResponse refreshToken(String refreshToken) {
+//        try {
+//            // Token'ın geçerliliğini kontrol et
+//            if (jwtService.isTokenExpired(refreshToken)) {
+//                throw new UserException("Refresh token expired. Please log in again.");
+//            }
+//
+//            // Token geçerli ise, içinden kullanıcı bilgilerini al
+//            String email = jwtService.extractUser(refreshToken);
+//            Optional<User> user = userService.getByUsername(email);
+//
+//            if (user.isEmpty()) {
+//                throw new UserException("User not found");
+//            }
+//
+//            // Yeni Access Token ve Refresh Token oluştur
+//            String newAccessToken = jwtService.generateToken(addClaims(email), email);
+//            String newRefreshToken = jwtService.generateRefreshToken(addClaims(email), email);
+//
+//            return new JwtResponse(newAccessToken);
+//        } catch (Exception e) {
+//            throw new UserException("Invalid refresh token");
+//        }
+//    }
 
     private Map<String, Object> addClaims(String email) {
         Optional<User> user = userService.getByUsername(email);
+        sellerService.getSellerByUserId(user.get().getId().toString());
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", user.get().getId());
         claims.put("roles", user.get().getRoles());

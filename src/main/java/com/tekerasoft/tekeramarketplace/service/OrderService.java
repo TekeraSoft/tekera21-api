@@ -16,9 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,21 +48,19 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(CreateOrderRequest req) {
-        Order order = new Order();
-
+    public List<Order> createOrder(CreateOrderRequest req) {
         Optional<User> user = userService.getByUsername(authenticationFacade.getCurrentUserEmail());
 
         List<BasketItem> basketItems = req.getBasketItems().stream().map(bi -> {
             Product product = productService.getById(UUID.fromString(bi.getProductId()));
             Attribute attribute = attributeService.getAttributeById(bi.getAttributeId());
             Variation variation = variationService.getVariation(bi.getVariationId());
+
             BasketItem basketItem = new BasketItem();
             basketItem.setName(product.getName());
             basketItem.setProductId(product.getId().toString());
             basketItem.setVariationId(variation.getId().toString());
             basketItem.setSlug(product.getSlug());
-            basketItem.setProductId(product.getId().toString());
             basketItem.setAttributeId(attribute.getId().toString());
             basketItem.setCode(product.getCode());
             basketItem.setBrandName(product.getBrandName());
@@ -73,58 +70,95 @@ public class OrderService {
             basketItem.setSku(attribute.getSku());
             basketItem.setBarcode(attribute.getBarcode());
             basketItem.setImage(variation.getImages().get(0));
-            basketItem.setAttributes(attribute.getAttributeDetails().stream().map(it ->
-                    new BasketAttributes(it.getKey(),it.getValue())).toList());
-            basketItem.setShippingPrice(product.getSeller().getShippingCompanies().stream().findFirst().get().getPrice());
+            basketItem.setAttributes(attribute.getAttributeDetails().stream()
+                    .map(it -> new BasketAttributes(it.getKey(), it.getValue()))
+                    .toList());
+            // seller & shipping info
             basketItem.setSeller(product.getSeller());
             basketItem.setShippingCompany(product.getSeller().getShippingCompanies().stream().findFirst().get());
+            basketItem.setShippingPrice(product.getSeller().getShippingCompanies().stream().findFirst().get().getPrice());
+
             return basketItem;
         }).toList();
-        order.setBasketItems(basketItems);
 
-        Buyer buyer = new Buyer();
-        buyer.setName(req.getBuyer().getName());
-        buyer.setSurname(req.getBuyer().getSurname());
-        buyer.setEmail(req.getBuyer().getEmail());
-        buyer.setGsmNumber(req.getBuyer().getGsmNumber());
-        buyer.setIdentityNumber(req.getBuyer().getIdentityNumber());
-        buyer.setRegistered(user.isPresent());
-        order.setBuyer(buyer);
+        // TODO: group basket items by seller (use seller id as key to avoid relying on Seller.equals/hashCode)
+        Map<String, List<BasketItem>> itemsBySeller = basketItems.stream()
+                .collect(Collectors.groupingBy(bi -> bi.getSeller().getId().toString()));
 
-        Address shippingAddress = new Address();
-        shippingAddress.setCity(req.getShippingAddress().getCity());
-        shippingAddress.setCountry(req.getShippingAddress().getCountry());
-        shippingAddress.setPostalCode(req.getShippingAddress().getPostalCode());
-        shippingAddress.setStreet(req.getShippingAddress().getStreet());
-        shippingAddress.setBuildNo(req.getShippingAddress().getBuildNo());
-        shippingAddress.setDoorNumber(req.getShippingAddress().getDoorNumber());
-        shippingAddress.setDetailAddress(req.getShippingAddress().getDetailAddress());
-        order.setShippingAddress(shippingAddress);
+        List<Order> ordersToSave = new ArrayList<>();
 
-        if(req.getBillingAddress() != null) {
-            Address billingAddress = new Address();
-            billingAddress.setCity(req.getBillingAddress().getCity());
-            billingAddress.setCountry(req.getBillingAddress().getCountry());
-            billingAddress.setPostalCode(req.getBillingAddress().getPostalCode());
-            billingAddress.setStreet(req.getBillingAddress().getStreet());
-            billingAddress.setBuildNo(req.getBillingAddress().getBuildNo());
-            billingAddress.setDoorNumber(req.getBillingAddress().getDoorNumber());
-            billingAddress.setDetailAddress(req.getBillingAddress().getDetailAddress());
-            order.setBillingAddress(billingAddress);
-        } else {
-            order.setBillingAddress(shippingAddress);
+        // For each seller create a separate order
+        for (Map.Entry<String, List<BasketItem>> entry : itemsBySeller.entrySet()) {
+            List<BasketItem> sellerItems = entry.getValue();
+            // seller object (all items belong to same seller)
+            Seller seller = sellerItems.get(0).getSeller();
+
+            Order order = new Order();
+            order.setBasketItems(sellerItems);
+
+            // Buyer (new instance per order to avoid shared state issues with ORM)
+            Buyer buyer = new Buyer();
+            buyer.setName(req.getBuyer().getName());
+            buyer.setSurname(req.getBuyer().getSurname());
+            buyer.setEmail(req.getBuyer().getEmail());
+            buyer.setGsmNumber(req.getBuyer().getGsmNumber());
+            buyer.setIdentityNumber(req.getBuyer().getIdentityNumber());
+            buyer.setRegistered(user.isPresent());
+            order.setBuyer(buyer);
+
+            // Shipping address (new instance)
+            Address shippingAddress = new Address();
+            shippingAddress.setCity(req.getShippingAddress().getCity());
+            shippingAddress.setCountry(req.getShippingAddress().getCountry());
+            shippingAddress.setPostalCode(req.getShippingAddress().getPostalCode());
+            shippingAddress.setStreet(req.getShippingAddress().getStreet());
+            shippingAddress.setBuildNo(req.getShippingAddress().getBuildNo());
+            shippingAddress.setDoorNumber(req.getShippingAddress().getDoorNumber());
+            shippingAddress.setDetailAddress(req.getShippingAddress().getDetailAddress());
+            order.setShippingAddress(shippingAddress);
+
+            // Billing address (either provided or same as shipping)
+            if (req.getBillingAddress() != null) {
+                Address billingAddress = new Address();
+                billingAddress.setCity(req.getBillingAddress().getCity());
+                billingAddress.setCountry(req.getBillingAddress().getCountry());
+                billingAddress.setPostalCode(req.getBillingAddress().getPostalCode());
+                billingAddress.setStreet(req.getBillingAddress().getStreet());
+                billingAddress.setBuildNo(req.getBillingAddress().getBuildNo());
+                billingAddress.setDoorNumber(req.getBillingAddress().getDoorNumber());
+                billingAddress.setDetailAddress(req.getBillingAddress().getDetailAddress());
+                order.setBillingAddress(billingAddress);
+            } else {
+                order.setBillingAddress(shippingAddress);
+            }
+
+            // total price for this seller's order: sum(price * qty) + sum(shippingPrice * qty)
+            // assumes BasketItem.price and BasketItem.shippingPrice are BigDecimal
+            BigDecimal itemsTotal = sellerItems.stream()
+                    .map(it -> it.getPrice().multiply(BigDecimal.valueOf(it.getQuantity())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal shippingTotal = sellerItems.stream()
+                    .map(it -> it.getShippingPrice().multiply(BigDecimal.valueOf(it.getQuantity())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            order.setTotalPrice(itemsTotal.add(shippingTotal)); // assumes Order.totalPrice is BigDecimal
+
+            // payment fields (carried from request; adjust if payment per-seller differs)
+            order.setPaymentStatus(req.getPaymentStatus());
+            order.setPaymentType(req.getPaymentType());
+
+            // attach user if present
+            user.ifPresent(u -> {
+                order.setUser(u);
+                u.getOrders().add(order);
+            });
+
+            ordersToSave.add(order);
         }
 
-        order.setTotalPrice(req.getTotalPrice());
-        order.setPaymentStatus(req.getPaymentStatus());
-        order.setPaymentType(req.getPaymentType());
-
-        user.ifPresent(u -> {
-            order.setUser(u);
-            u.getOrders().add(order);
-        });
-
-        return orderRepository.save(order);
+        // persist all orders in one shot (transactional)
+        return orderRepository.saveAll(ordersToSave);
     }
 
     @Transactional

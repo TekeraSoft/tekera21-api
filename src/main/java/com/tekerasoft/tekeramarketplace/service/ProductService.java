@@ -73,6 +73,7 @@ public class ProductService {
             Seller seller = sellerRepository.findById(UUID.fromString(req.getCompanyId()))
                     .orElseThrow(() -> new RuntimeException("Company not found"));
             product.setSeller(seller);
+            seller.getProducts().add(product);
 
             // Category
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))

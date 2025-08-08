@@ -31,7 +31,7 @@ open class Seller(
         inverseJoinColumns = [JoinColumn(name = "category_id")])
     open var categories: MutableSet<Category> = mutableSetOf(),
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open var products: MutableList<Product> = mutableListOf(),
 
     @OneToMany(fetch = FetchType.LAZY)

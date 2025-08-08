@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.service;
 
+import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.payload.DeletePathList;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateSellerRequest;
@@ -291,6 +292,10 @@ public class SellerService {
                 new NotFoundException("Seller not found: " + id));
     }
 
+    public Seller getSellerByUserId(String userId) {
+        return sellerRepository.findSellerByUserId(UUID.fromString(userId));
+    }
+
     public ApiResponse<?> deleteCompany(String id) {
         Seller seller = sellerRepository.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Company not found")
@@ -334,6 +339,11 @@ public class SellerService {
     public SellerAdminDto getSellerInformation(){
         String sellerUserId = authenticationFacade.getCurrentUserId();
         return SellerAdminDto.toDto(sellerRepository.findSellerByUserId(UUID.fromString(sellerUserId)));
+    }
+
+    public Page<ProductListDto> getSellerProducts(Pageable pageable) {
+        return sellerRepository.findProductsByUserId(UUID.fromString(authenticationFacade.getCurrentUserId()),pageable)
+                .map(ProductListDto::toDto);
     }
 
     public Page<String> getAllCompanyMedia(String id, Pageable pageable) throws Exception {

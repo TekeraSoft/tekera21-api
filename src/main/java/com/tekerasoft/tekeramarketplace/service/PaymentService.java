@@ -55,6 +55,11 @@ public class PaymentService {
 
     public ThreedsInitialize payment(CreatePayRequest req) {
         try {
+            String orderNumber = "ORD-" + UUID.randomUUID()
+                    .toString()
+                    .substring(0, 6)
+                    .toUpperCase();
+
             // Calculate total price map !
             // TODO: toplam fiyat burada hesaplanacak main order ve payment getwey e gönderilecek
             BigDecimal totalPrice = req.getBasketItems().stream()
@@ -67,7 +72,7 @@ public class PaymentService {
 
             // TODO: Main order burada oluşacak kullanıcıların kendi ürünleri paylaştırılmış bir şekilde
             // TODO: Paylaştırılan ürünlerin status durumları pending atanacak
-            Order order = orderService.createOrder(
+            List<Order> orders = orderService.createOrder(
                     CreateOrderRequest.convertFromPayRequestToOrderRequest(
                             req,
                             totalPrice,
@@ -78,10 +83,10 @@ public class PaymentService {
 
             CreatePaymentRequest paymentRequest = new CreatePaymentRequest();
             paymentRequest.setLocale(Locale.TR.getValue());
-            paymentRequest.setConversationId(order.getId().toString());
+            paymentRequest.setConversationId(orderNumber);
             paymentRequest.setCurrency(Currency.TRY.name());
             paymentRequest.setInstallment(1);
-            paymentRequest.setBasketId(order.getId().toString());
+            paymentRequest.setBasketId(orderNumber);
             paymentRequest.setPaymentGroup(PaymentGroup.PRODUCT.name());
 
             PaymentCard paymentCard = new PaymentCard();
@@ -94,7 +99,7 @@ public class PaymentService {
             paymentRequest.setPaymentCard(paymentCard);
 
             Buyer buyer = new Buyer();
-            buyer.setId(order.getBuyer().getId().toString());
+            buyer.setId(orders.get(0).getBuyer().getId().toString());
             buyer.setName(req.getBuyer().getName());
             buyer.setSurname(req.getBuyer().getSurname());
             buyer.setGsmNumber(req.getBuyer().getGsmNumber());
@@ -150,7 +155,6 @@ public class PaymentService {
                 basketItems.add(basketItem);
             }
 
-
             paymentRequest.setCallbackUrl(paymentCallbackUrl);
 
             paymentRequest.setPrice(totalPrice);
@@ -160,9 +164,9 @@ public class PaymentService {
         } catch (RuntimeException e) {
             throw new RuntimeException("Error Creating Payment Request",e);
         }
-
     }
 
+    // TODO: ORDER ID LER TESPIT EDILECEK VE STOK ADETİ QUANTİTY KADAR DÜŞÜRÜLECEK
     public ThreedsPayment completePayment(String paymentId, String conversationId) {
         try {
             CreateThreedsPaymentRequest threedsPaymentRequest = new CreateThreedsPaymentRequest();
@@ -170,18 +174,11 @@ public class PaymentService {
             threedsPaymentRequest.setConversationId(conversationId);
             threedsPaymentRequest.setLocale(Locale.TR.getValue());
 
-            ThreedsPayment threedsPayment = ThreedsPayment.create(threedsPaymentRequest, options);
-            if(threedsPayment.getStatus().equals("success")) {
-                orderService.completeOrder(conversationId, PaymentStatus.PAID);
-            } else {
-                orderService.completeOrder(conversationId, PaymentStatus.FAIL);
-            }
-
-            return threedsPayment;
+            return ThreedsPayment.create(threedsPaymentRequest, options);
 
         } catch (RuntimeException e) {
             logger.error(e.getMessage());
-            throw new RuntimeException("Error completing 3D Secure Payment");
+            throw new RuntimeException("Sistemde yaşanan bir sorundan dolayı ödeme alınamadı lütfen tekrar deneyiniz.");
         }
     }
 
@@ -192,7 +189,7 @@ public class PaymentService {
             Map<String, String[]> parameters =  request.getParameterMap();
             String paymentId = parameters.containsKey("paymentId") ? parameters.get("paymentId")[0] : null;
             String conversationId = parameters.containsKey("conversationId") ? parameters.get("conversationId")[0] : null;
-
+            // TODO lanet olsun bele hayata
             ThreedsPayment threedsPayment = completePayment(paymentId, conversationId);
 
             if(paymentId == null || conversationId == null) {

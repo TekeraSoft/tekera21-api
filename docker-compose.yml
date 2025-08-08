@@ -124,24 +124,24 @@ services:
     networks:
       - tekera-network
 
-  mc-once1:
-    image: minio/mc
-    depends_on:
-      - minio1
-    entrypoint: >
-      sh -c "
-        echo '🕒 MinIO hazır mı kontrol ediliyor...' &&
-        until mc alias set myminio http://minio1:9000 tekera_user tekera_pass; do
-          echo '⏳ Bekleniyor...'; sleep 2;
-        done &&
-        echo '✅ mc alias tamam.' &&
-        mc mb myminio/tekera-bucket || true &&
-        mc anonymous set download myminio/tekera-bucket &&
-        echo '✅ Bucket public yapıldı.'
-      "
-    networks:
-      - tekera-network
-    restart: "no"
+#  mc-once1:
+#    image: minio/mc
+#    depends_on:
+#      - minio1
+#    entrypoint: >
+#      sh -c "
+#        echo '🕒 MinIO hazır mı kontrol ediliyor...' &&
+#        until mc alias set myminio http://minio1:9000 tekera_user tekera_pass; do
+#          echo '⏳ Bekleniyor...'; sleep 2;
+#        done &&
+#        echo '✅ mc alias tamam.' &&
+#        mc mb myminio/tekera-bucket || true &&
+#        mc anonymous set download myminio/tekera-bucket &&
+#        echo '✅ Bucket public yapıldı.'
+#      "
+#    networks:
+#      - tekera-network
+#    restart: "no"
 
   elasticsearch:
     container_name: elasticsearch

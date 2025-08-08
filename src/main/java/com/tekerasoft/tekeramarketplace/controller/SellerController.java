@@ -50,10 +50,9 @@ public class SellerController {
         return productService.update(req,images);
     }
 
-    @GetMapping("/findSellerReturnProducts/{companyId}")
-    public ResponseEntity<Page<ProductListDto>> findCompanyReturnProducts(@PathVariable String companyId,
-                                                                          Pageable pageable) {
-        return ResponseEntity.ok(productService.findCompanyReturnProducts(companyId,pageable));
+    @GetMapping("/sellerProducts")
+    public ResponseEntity<Page<ProductListDto>> findCompanyReturnProducts(Pageable pageable) {
+        return ResponseEntity.ok(sellerService.getSellerProducts(pageable));
     }
 
     @GetMapping("/getProductById")
