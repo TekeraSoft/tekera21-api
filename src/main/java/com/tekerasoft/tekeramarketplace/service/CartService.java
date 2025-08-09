@@ -33,10 +33,13 @@ public class CartService {
     }
 
     public Cart getCart(String guestUserId) {
-        String currentOwnerId = (guestUserId == null || guestUserId.isEmpty())
-                ? authenticationFacade.getCurrentUserId()
-                : guestUserId;
-        return getCartFromDb(currentOwnerId);
+        if(guestUserId != null) {
+            String currentOwnerId = (guestUserId == null || guestUserId.isEmpty())
+                    ? authenticationFacade.getCurrentUserId()
+                    : guestUserId;
+            return getCartFromDb(currentOwnerId);
+        }
+        return null;
     }
 
     public void saveCart(String userId, Cart cart) {

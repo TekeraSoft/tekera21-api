@@ -24,17 +24,17 @@ public class SellerController {
     private final FileService fileService;
     private final VariationService variationService;
     private final DigitalFashionService digitalFashionService;
-    private final OrderService orderService;
+    private final SellerOrderService sellerOrderService;
 
     public SellerController(ProductService productService, SellerService sellerService, FileService fileService,
                             VariationService variationService, DigitalFashionService digitalFashionService,
-                            OrderService orderService) {
+                            SellerOrderService sellerOrderService) {
         this.productService = productService;
         this.sellerService = sellerService;
         this.fileService = fileService;
         this.variationService = variationService;
         this.digitalFashionService = digitalFashionService;
-        this.orderService = orderService;
+        this.sellerOrderService = sellerOrderService;
     }
 
     @PostMapping(value = "/createProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -93,15 +93,15 @@ public class SellerController {
     }
 
     @GetMapping("/findOrdersContainingBasketItemsForSeller")
-    public ResponseEntity<Page<OrderDto>> findOrdersContainingBasketItemsForCompany(@RequestParam String companyId,
+    public ResponseEntity<Page<SellerOrderDto>> findOrdersContainingBasketItemsForCompany(@RequestParam String companyId,
                                                                                     Pageable pageable)
     {
-        return ResponseEntity.ok(orderService.findOrdersContainingBasketItemsForCompany(companyId,pageable));
+        return ResponseEntity.ok(sellerOrderService.findOrdersContainingBasketItemsForCompany(companyId,pageable));
     }
 
     @GetMapping("findOrdersByPhoneNumberOrUsername")
-    public ResponseEntity<List<OrderDto>> findOrdersByPhoneNumberOrUsername(@RequestParam String searchParam) {
-        return ResponseEntity.ok(orderService.findOrdersByPhoneNumberOrUsername(searchParam));
+    public ResponseEntity<List<SellerOrderDto>> findOrdersByPhoneNumberOrUsername(@RequestParam String searchParam) {
+        return ResponseEntity.ok(sellerOrderService.findOrdersByPhoneNumberOrUsername(searchParam));
     }
 
     @GetMapping("/getSellerInformation")

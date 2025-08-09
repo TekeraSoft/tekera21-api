@@ -1,27 +1,54 @@
 {
-  "analysis": {
-    "filter": {
-      "custom_filter": {
-        "type": "edge_ngram",
-        "min_gram": 1,
-        "max_gram": 20
-      }
-    },
-    "analyzer": {
-      "custom_search": {
-        "type": "custom",
-        "tokenizer": "standard",
-        "filter": [
-          "lowercase"
-        ]
+  "settings": {
+    "analysis": {
+      "char_filter": {
+        "turkish_char_filter": {
+          "type": "mapping",
+          "mappings": [
+            "ı => i",
+            "İ => i",
+            "ş => s",
+            "Ş => s",
+            "ç => c",
+            "Ç => c",
+            "ö => o",
+            "Ö => o",
+            "ü => u",
+            "Ü => u",
+            "ğ => g",
+            "Ğ => g"
+          ]
+        }
       },
-      "custom_index": {
-        "type": "custom",
-        "tokenizer": "standard",
-        "filter": [
-          "lowercase",
-          "custom_filter"
-        ]
+      "filter": {
+        "custom_filter": {
+          "type": "edge_ngram",
+          "min_gram": 1,
+          "max_gram": 20
+        }
+      },
+      "analyzer": {
+        "custom_search": {
+          "type": "custom",
+          "char_filter": ["turkish_char_filter"],
+          "tokenizer": "standard",
+          "filter": ["lowercase"]
+        },
+        "custom_index": {
+          "type": "custom",
+          "char_filter": ["turkish_char_filter"],
+          "tokenizer": "standard",
+          "filter": ["lowercase", "custom_filter"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "text",
+        "analyzer": "custom_index",
+        "search_analyzer": "custom_search"
       }
     }
   }

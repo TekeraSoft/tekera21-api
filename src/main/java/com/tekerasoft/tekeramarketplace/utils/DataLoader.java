@@ -2,6 +2,10 @@ package com.tekerasoft.tekeramarketplace.utils;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tekerasoft.tekeramarketplace.model.entity.Category;
+import com.tekerasoft.tekeramarketplace.model.entity.Product;
+import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
+import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
 import com.tekerasoft.tekeramarketplace.repository.esrepository.SearchItemRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.CategoryRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.ProductRepository;
@@ -13,32 +17,32 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-//@Component
-//public class DataLoader implements CommandLineRunner {
-//
-//    private final CategoryRepository categoryRepository;
-//    private final SubCategoryRepository subCategoryRepository;
-//    private final ObjectMapper objectMapper;
-//    private final ProductRepository productRepository;
-//    private final SellerRepository sellerRepository;
-//    private final SearchItemRepository searchItemRepository;
-//
-//    // Constructorı güncelledik
-//    public DataLoader(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository,
-//                      ObjectMapper objectMapper,
-//                      ProductRepository productRepository,
-//                      SellerRepository sellerRepository, SearchItemRepository searchItemRepository) { // <<-- 2. DEĞİŞİKLİK: Bu parametreyi ekledik
-//        this.categoryRepository = categoryRepository;
-//        this.subCategoryRepository = subCategoryRepository; // <<-- Bu satırı ekledik (2. değişikliğin parçası)
-//        this.objectMapper = objectMapper;
-//        this.productRepository = productRepository;
-//        this.sellerRepository = sellerRepository;
-//        this.searchItemRepository = searchItemRepository;
-//    }
-//
-//    @Override
-//    @Transactional
-//    public void run(String... args) throws Exception {
+@Component
+public class DataLoader implements CommandLineRunner {
+
+    private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
+    private final ObjectMapper objectMapper;
+    private final ProductRepository productRepository;
+    private final SellerRepository sellerRepository;
+    private final SearchItemRepository searchItemRepository;
+
+    // Constructorı güncelledik
+    public DataLoader(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository,
+                      ObjectMapper objectMapper,
+                      ProductRepository productRepository,
+                      SellerRepository sellerRepository, SearchItemRepository searchItemRepository) { // <<-- 2. DEĞİŞİKLİK: Bu parametreyi ekledik
+        this.categoryRepository = categoryRepository;
+        this.subCategoryRepository = subCategoryRepository; // <<-- Bu satırı ekledik (2. değişikliğin parçası)
+        this.objectMapper = objectMapper;
+        this.productRepository = productRepository;
+        this.sellerRepository = sellerRepository;
+        this.searchItemRepository = searchItemRepository;
+    }
+
+    @Override
+    @Transactional
+    public void run(String... args) throws Exception {
 
 //      InputStream inputStream = getClass().getClassLoader().getResourceAsStream("arzuamber-products.json");
 //      System.out.println("Veriler yükleniyor...");
@@ -159,11 +163,14 @@ import java.util.List;
 //            }
 //        }
 
+//        searchItemRepository.deleteAll();
+
 //        List<Product> products = productRepository.findAll();
 //        products.forEach(product -> {
 //            searchItemRepository.save(new SearchItem(
 //                    product.getId().toString(),
 //                    product.getName(),
+//                    product.getCategory().getName(),
 //                    product.getSlug(),
 //                    product.getSeller().getId().toString(),
 //                    product.getVariations().get(0).getImages().get(0),
@@ -171,7 +178,7 @@ import java.util.List;
 //                    0.0
 //            ));
 //        });
-
+//
 //        List<Category> categories = categoryRepository.findAll();
 //        categories.forEach(category -> {
 //            searchItemRepository.save(new SearchItem(
@@ -179,11 +186,12 @@ import java.util.List;
 //                    category.getName(),
 //                    category.getSlug(),
 //                    null,
+//                    null,
 //                    category.getImage(),
 //                    SearchItemType.CATEGORY,
 //                    0.0
 //            ));
 //        });
-//
-//    }
-//}
+
+    }
+}

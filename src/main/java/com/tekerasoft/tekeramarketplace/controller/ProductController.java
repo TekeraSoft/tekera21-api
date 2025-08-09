@@ -66,4 +66,9 @@ public class ProductController {
         return  ResponseEntity.ok(productService.filterProduct(color,clothSize,tags,style,subCategoryName,searchParam,pageable));
     }
 
+    @GetMapping("/getProductsByCategory")
+    public ResponseEntity<Page<ProductUiDto>> getProductsByCategory(@RequestParam String categoryName,Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllLProduct(pageable));
+    }
+
 }

@@ -62,7 +62,13 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
 
     Optional<Product> findBySlug(String slug);
 
-    @Query("SELECT p FROM Product p JOIN p.subCategories sc WHERE sc.name = :name")
-    Page<Product> findProductBySubCategory(@Param("name") String name, Pageable pageable);
+    @Query("""
+    SELECT p
+    FROM Product p
+    JOIN p.subCategories sc
+    JOIN p.category c
+    WHERE sc.name = :name OR c.name = :name
+    """)
+    Page<Product> findProductByCategoryOrSubCategory(@Param("name") String name, Pageable pageable);
 
 }

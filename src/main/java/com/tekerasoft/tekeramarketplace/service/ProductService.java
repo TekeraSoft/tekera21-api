@@ -433,10 +433,6 @@ public class ProductService {
         }
     }
 
-    public Page<ProductUiDto> getProductsBySubCategory(String subName,Pageable pageable) {
-        return productRepository.findProductBySubCategory(subName,pageable).map(ProductUiDto::toProductUiDto);
-    }
-
     public Cart toCartItem(List<AddToCartRequest> cartItems, String userId) {
 
         List<CartItem> cartItemList = new ArrayList<>();
@@ -494,6 +490,11 @@ public class ProductService {
         cart.setItemCount(cartItemList.stream().mapToInt(CartItem::getQuantity).sum());
 
         return cart;
+    }
+
+    public Page<ProductUiDto> getProductsByCategory(String categoryName, Pageable pageable) {
+        return productRepository.findProductByCategoryOrSubCategory(categoryName, pageable)
+                .map(ProductUiDto::toProductUiDto);
     }
 
 }

@@ -31,6 +31,7 @@ import java.util.*;
 public class PaymentService {
 
     private final ProductService productService;
+    private final SellerOrderService sellerOrderService;
 
     @Value("${spring.origin.url}")
     private String originUrl;
@@ -44,11 +45,12 @@ public class PaymentService {
     private static final Logger logger = LoggerFactory.getLogger(PaymentService.class);
 
     public PaymentService(Options options, OrderService orderService, AttributeService attributeService,
-                          ProductService productService) {
+                          ProductService productService, SellerOrderService sellerOrderService) {
         this.options = options;
         this.orderService = orderService;
         this.attributeService = attributeService;
         this.productService = productService;
+        this.sellerOrderService = sellerOrderService;
     }
 
     // Kargo ücreti iki taraf için ayrı gösterilecek
@@ -72,7 +74,7 @@ public class PaymentService {
 
             // TODO: Main order burada oluşacak kullanıcıların kendi ürünleri paylaştırılmış bir şekilde
             // TODO: Paylaştırılan ürünlerin status durumları pending atanacak
-            List<Order> orders = orderService.createOrder(
+            List<SellerOrder> orders = sellerOrderService.createOrder(
                     CreateOrderRequest.convertFromPayRequestToOrderRequest(
                             req,
                             totalPrice,
@@ -191,6 +193,7 @@ public class PaymentService {
             String conversationId = parameters.containsKey("conversationId") ? parameters.get("conversationId")[0] : null;
             // TODO lanet olsun bele hayata
             ThreedsPayment threedsPayment = completePayment(paymentId, conversationId);
+
 
             if(paymentId == null || conversationId == null) {
                 throw new PaymentException("Eksik Ödeme Bilgisi");

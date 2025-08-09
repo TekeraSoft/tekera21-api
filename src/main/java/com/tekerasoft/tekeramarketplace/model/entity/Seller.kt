@@ -59,7 +59,7 @@ open class Seller(
     open var shippingCompanies: MutableSet<ShippingCompany> = mutableSetOf(),
 
     @OneToMany(fetch = FetchType.LAZY)
-    open var orders: MutableList<Order> = mutableListOf(),
+    open var sellerOrders: MutableList<SellerOrder> = mutableListOf(),
 
     open var rate: Double,
 
@@ -94,7 +94,7 @@ open class Seller(
             bankAccounts = mutableListOf(),
             identityDocumentPaths = mutableListOf(),
             shippingCompanies = mutableSetOf(),
-            orders = mutableListOf(),
+            sellerOrders = mutableListOf(),
             rate = 0.0,
             isVerified = false,
             isActive = false,

@@ -21,26 +21,26 @@ public class SuperAdminController {
     private final SellerService sellerService;
     private final ProductService productService;
     private final ThemeService themeService;
-    private final OrderService orderService;
     private final FashionCollectionService fashionCollectionService;
     private final ShippingCompanyService shippingCompanyService;
     private final UserService userService;
+    private final SellerOrderService sellerOrderService;
 
     public SuperAdminController(CategoryService categoryService, SubCategoryService subCategoryService,
                                 SellerService sellerService, ProductService productService,
-                                ThemeService themeService, OrderService orderService,
-                                FashionCollectionService fashionCollectionService,
-                                ShippingCompanyService shippingCompanyService, UserService userService)
+                                ThemeService themeService, FashionCollectionService fashionCollectionService,
+                                ShippingCompanyService shippingCompanyService, UserService userService,
+                                SellerOrderService sellerOrderService)
     {
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
         this.sellerService = sellerService;
         this.productService = productService;
         this.themeService = themeService;
-        this.orderService = orderService;
         this.fashionCollectionService = fashionCollectionService;
         this.shippingCompanyService = shippingCompanyService;
         this.userService = userService;
+        this.sellerOrderService = sellerOrderService;
     }
 
     @PostMapping(value = "/createCategory", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -167,7 +167,7 @@ public class SuperAdminController {
     }
 
     @GetMapping("/getAllOrder")
-    public ResponseEntity<Page<OrderDto>> getAllOrder(Pageable pageable) {
-        return ResponseEntity.ok(orderService.getAllOrder(pageable));
+    public ResponseEntity<Page<SellerOrderDto>> getAllOrder(Pageable pageable) {
+        return ResponseEntity.ok(sellerOrderService.getAllOrder(pageable));
     }
 }

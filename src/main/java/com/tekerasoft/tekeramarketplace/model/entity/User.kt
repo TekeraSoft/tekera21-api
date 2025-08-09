@@ -33,7 +33,7 @@ data class User (
     var gender: Gender,
 
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var orders: MutableList<Order>? = mutableListOf(),
+    var orders: MutableList<SellerOrder>? = mutableListOf(),
 
     var gsmNumber: String,
 

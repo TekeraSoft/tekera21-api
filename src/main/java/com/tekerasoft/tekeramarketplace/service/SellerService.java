@@ -280,10 +280,10 @@ public class SellerService {
         return new ApiResponse<>("Changed document status", HttpStatus.OK.value());
     }
 
-    public void addSellerOrder (String sellerId, Order order) {
+    public void addSellerOrder (String sellerId, SellerOrder order) {
         Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
                 .orElseThrow(() -> new NotFoundException("Seller not found"));
-        seller.getOrders().add(order);
+        seller.getSellerOrders().add(order);
         sellerRepository.save(seller);
     }
 

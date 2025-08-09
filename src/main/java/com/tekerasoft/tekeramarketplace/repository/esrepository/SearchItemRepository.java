@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface SearchItemRepository extends ElasticsearchRepository<SearchItem, String> {
 
-    @Query("{\"bool\": {\"must\": {\"match_phrase_prefix\": {\"name\": \"?0\"}}}}")
+    @Query("{\"match\": {\"name\": {\"query\": \"?0\"}}}")
     List<SearchItem> customAutocompleteSearch(String input);
 
 }
