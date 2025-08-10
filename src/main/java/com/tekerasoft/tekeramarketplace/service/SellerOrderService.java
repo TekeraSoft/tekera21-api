@@ -43,7 +43,7 @@ public class SellerOrderService {
         this.authenticationFacade = authenticationFacade;
     }
     @Transactional
-    public List<SellerOrder> createOrder(CreateOrderRequest req) {
+    public List<SellerOrder> createSellerOrder(CreateOrderRequest req) {
         Optional<User> user = userService.getByUsername(authenticationFacade.getCurrentUserEmail());
 
         List<BasketItem> basketItems = req.getBasketItems().stream().map(bi -> {
@@ -85,7 +85,7 @@ public class SellerOrderService {
         // For each seller create a separate order
         for (Map.Entry<String, List<BasketItem>> entry : itemsBySeller.entrySet()) {
             List<BasketItem> sellerItems = entry.getValue();
-            // seller object (all items belong to same seller)
+
             Seller seller = sellerItems.get(0).getSeller();
 
             SellerOrder sellerOrder = new SellerOrder();
@@ -133,11 +133,14 @@ public class SellerOrderService {
                     .map(it -> it.getPrice().multiply(BigDecimal.valueOf(it.getQuantity())))
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            BigDecimal shippingTotal = sellerItems.stream()
-                    .map(it -> it.getShippingPrice().multiply(BigDecimal.valueOf(it.getQuantity())))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+//            BigDecimal shippingTotal = sellerItems.stream()
+//                    .map(it -> it.getShippingPrice().multiply(BigDecimal.valueOf(it.getQuantity())))
+//                    .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            sellerOrder.setTotalPrice(itemsTotal.add(shippingTotal)); // assumes Order.totalPrice is BigDecimal
+            // TODO simdilik sadece ilk shipping_copmany fiyatı dahil bu kullanici secimine gore degisecek !!!
+            sellerOrder.setShippingPrice(seller.getShippingCompanies().stream().findFirst().get().getPrice());
+
+            sellerOrder.setTotalPrice(itemsTotal); // assumes Order.totalPrice is BigDecimal .add(shippingTotal)
 
             // payment fields (carried from request; adjust if payment per-seller differs)
             sellerOrder.setPaymentStatus(req.getPaymentStatus());

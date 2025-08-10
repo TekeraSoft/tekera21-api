@@ -53,8 +53,6 @@ public class PaymentService {
         this.sellerOrderService = sellerOrderService;
     }
 
-    // Kargo ücreti iki taraf için ayrı gösterilecek
-
     public ThreedsInitialize payment(CreatePayRequest req) {
         try {
             String orderNumber = "ORD-" + UUID.randomUUID()
@@ -62,8 +60,7 @@ public class PaymentService {
                     .substring(0, 6)
                     .toUpperCase();
 
-            // Calculate total price map !
-            // TODO: toplam fiyat burada hesaplanacak main order ve payment getwey e gönderilecek
+
             BigDecimal totalPrice = req.getBasketItems().stream()
                     .map(bi -> {
                         Attribute productAttribute = attributeService.getAttributeById(bi.getAttributeId());
@@ -72,15 +69,12 @@ public class PaymentService {
                         return price.multiply(quantity);
                     }).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            // TODO: Main order burada oluşacak kullanıcıların kendi ürünleri paylaştırılmış bir şekilde
-            // TODO: Paylaştırılan ürünlerin status durumları pending atanacak
-            List<SellerOrder> orders = sellerOrderService.createOrder(
-                    CreateOrderRequest.convertFromPayRequestToOrderRequest(
-                            req,
-                            totalPrice,
-                            PaymentType.CREDIT_CARD,
-                            PaymentStatus.PENDING
-                    )
+            Order order = orderService.createOrder(
+                    orderNumber,
+                    req,
+                    totalPrice,
+                    PaymentType.CREDIT_CARD,
+                    PaymentStatus.PENDING
             );
 
             CreatePaymentRequest paymentRequest = new CreatePaymentRequest();
@@ -101,7 +95,7 @@ public class PaymentService {
             paymentRequest.setPaymentCard(paymentCard);
 
             Buyer buyer = new Buyer();
-            buyer.setId(orders.get(0).getBuyer().getId().toString());
+            buyer.setId(order.getSellerOrder().get(0).getBuyer().getId().toString());
             buyer.setName(req.getBuyer().getName());
             buyer.setSurname(req.getBuyer().getSurname());
             buyer.setGsmNumber(req.getBuyer().getGsmNumber());

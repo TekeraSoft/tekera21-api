@@ -15,15 +15,16 @@ CREATE TABLE address
 
 CREATE TABLE attributes
 (
-    id             UUID    NOT NULL,
-    created_at     TIMESTAMP WITHOUT TIME ZONE,
-    updated_at     TIMESTAMP WITHOUT TIME ZONE,
-    price          DECIMAL,
-    discount_price DECIMAL,
-    stock          INTEGER NOT NULL,
-    sku            VARCHAR(255),
-    barcode        VARCHAR(255),
-    variation_id   UUID,
+    id                 UUID    NOT NULL,
+    created_at         TIMESTAMP WITHOUT TIME ZONE,
+    updated_at         TIMESTAMP WITHOUT TIME ZONE,
+    price              DECIMAL,
+    discount_price     DECIMAL,
+    stock              INTEGER NOT NULL,
+    max_purchase_stock INTEGER,
+    sku                VARCHAR(255),
+    barcode            VARCHAR(255),
+    variation_id       UUID,
     CONSTRAINT "pk_attrıbutes" PRIMARY KEY (id)
 );
 
@@ -143,18 +144,19 @@ CREATE TABLE order_basket_items
 
 CREATE TABLE orders
 (
-    id                  UUID NOT NULL,
-    created_at          TIMESTAMP WITHOUT TIME ZONE,
-    updated_at          TIMESTAMP WITHOUT TIME ZONE,
-    user_id             UUID,
-    buyer_id            UUID,
-    shipping_address_id UUID,
-    billing_address_id  UUID,
-    total_price         DECIMAL,
-    shipping_price      DECIMAL,
-    payment_type        SMALLINT,
-    payment_status      SMALLINT,
+    id             UUID NOT NULL,
+    created_at     TIMESTAMP WITHOUT TIME ZONE,
+    updated_at     TIMESTAMP WITHOUT TIME ZONE,
+    order_no       VARCHAR(255),
+    shipping_price DECIMAL,
+    total_price    DECIMAL,
     CONSTRAINT pk_orders PRIMARY KEY (id)
+);
+
+CREATE TABLE orders_seller_order
+(
+    order_id        UUID NOT NULL,
+    seller_order_id UUID NOT NULL
 );
 
 CREATE TABLE product_attributes
@@ -222,10 +224,28 @@ CREATE TABLE seller_categories
 
 CREATE TABLE seller_document_paths
 (
-    seller_id           UUID NOT NULL,
-    document_title      VARCHAR(255),
-    document_path       VARCHAR(255),
-    verification_status SMALLINT
+    seller_id                   UUID NOT NULL,
+    document_title              VARCHAR(255),
+    document_path               VARCHAR(255),
+    verification_status         SMALLINT,
+    faulty_document_description VARCHAR(255)
+);
+
+CREATE TABLE seller_orders
+(
+    id                  UUID NOT NULL,
+    created_at          TIMESTAMP WITHOUT TIME ZONE,
+    updated_at          TIMESTAMP WITHOUT TIME ZONE,
+    user_id             UUID,
+    buyer_id            UUID,
+    shipping_address_id UUID,
+    billing_address_id  UUID,
+    total_price         DECIMAL,
+    shipping_price      DECIMAL,
+    payment_type        SMALLINT,
+    payment_status      SMALLINT,
+    order_id            UUID,
+    CONSTRAINT pk_seller_orders PRIMARY KEY (id)
 );
 
 CREATE TABLE seller_shipping_companies
@@ -233,6 +253,30 @@ CREATE TABLE seller_shipping_companies
     seller_id           UUID NOT NULL,
     shipping_company_id UUID NOT NULL,
     CONSTRAINT "pk_seller_shıppıng_companıes" PRIMARY KEY (seller_id, shipping_company_id)
+);
+
+CREATE TABLE seller_verification
+(
+    id              UUID    NOT NULL,
+    created_at      TIMESTAMP WITHOUT TIME ZONE,
+    updated_at      TIMESTAMP WITHOUT TIME ZONE,
+    seller_user_id  UUID,
+    supervisor_id   UUID,
+    seller_id       UUID,
+    checkesignature BOOLEAN NOT NULL,
+    CONSTRAINT "pk_sellerverıfıcatıon" PRIMARY KEY (id)
+);
+
+CREATE TABLE seller_verification_documents
+(
+    seller_verification_id      UUID NOT NULL,
+    check_document_verification VARCHAR(255)
+);
+
+CREATE TABLE seller_verification_extra_documents
+(
+    seller_verification_id      UUID NOT NULL,
+    extra_document_verification VARCHAR(255)
 );
 
 CREATE TABLE sellers
@@ -267,16 +311,10 @@ CREATE TABLE sellers_address
     address_id UUID NOT NULL
 );
 
-CREATE TABLE sellers_orders
+CREATE TABLE sellers_seller_orders
 (
-    seller_id UUID NOT NULL,
-    orders_id UUID NOT NULL
-);
-
-CREATE TABLE sellers_products
-(
-    seller_id   UUID NOT NULL,
-    products_id UUID NOT NULL
+    seller_id        UUID NOT NULL,
+    seller_orders_id UUID NOT NULL
 );
 
 CREATE TABLE sellers_users
@@ -379,6 +417,7 @@ CREATE TABLE users
     gsm_number      VARCHAR(255),
     birth_date      date,
     last_login      TIMESTAMP WITHOUT TIME ZONE,
+    assign_count    INTEGER,
     CONSTRAINT pk_users PRIMARY KEY (id)
 );
 
@@ -419,20 +458,20 @@ ALTER TABLE users
 ALTER TABLE order_basket_items
     ADD CONSTRAINT "uc_order_basket_ıtems_basket_ıtem" UNIQUE (basket_item_id);
 
-ALTER TABLE orders
-    ADD CONSTRAINT uc_orders_buyer UNIQUE (buyer_id);
+ALTER TABLE orders_seller_order
+    ADD CONSTRAINT uc_orders_seller_order_sellerorder UNIQUE (seller_order_id);
 
 ALTER TABLE products_comments
     ADD CONSTRAINT uc_products_comments_comments UNIQUE (comments_id);
 
+ALTER TABLE seller_orders
+    ADD CONSTRAINT uc_seller_orders_buyer UNIQUE (buyer_id);
+
 ALTER TABLE sellers_address
     ADD CONSTRAINT uc_sellers_address_address UNIQUE (address_id);
 
-ALTER TABLE sellers_orders
-    ADD CONSTRAINT uc_sellers_orders_orders UNIQUE (orders_id);
-
-ALTER TABLE sellers_products
-    ADD CONSTRAINT uc_sellers_products_products UNIQUE (products_id);
+ALTER TABLE sellers_seller_orders
+    ADD CONSTRAINT uc_sellers_seller_orders_sellerorders UNIQUE (seller_orders_id);
 
 ALTER TABLE sellers_users
     ADD CONSTRAINT uc_sellers_users_users UNIQUE (users_id);
@@ -458,23 +497,35 @@ ALTER TABLE basket_item
 ALTER TABLE fashion_collection
     ADD CONSTRAINT FK_FASHIONCOLLECTION_ON_SELLER FOREIGN KEY (seller_id) REFERENCES sellers (id);
 
-ALTER TABLE orders
-    ADD CONSTRAINT FK_ORDERS_ON_BILLINGADDRESS FOREIGN KEY (billing_address_id) REFERENCES address (id);
-
-ALTER TABLE orders
-    ADD CONSTRAINT FK_ORDERS_ON_BUYER FOREIGN KEY (buyer_id) REFERENCES buyer (id);
-
-ALTER TABLE orders
-    ADD CONSTRAINT FK_ORDERS_ON_SHIPPINGADDRESS FOREIGN KEY (shipping_address_id) REFERENCES address (id);
-
-ALTER TABLE orders
-    ADD CONSTRAINT FK_ORDERS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
-
 ALTER TABLE products
     ADD CONSTRAINT FK_PRODUCTS_ON_CATEGORY FOREIGN KEY (category_id) REFERENCES category (id);
 
 ALTER TABLE products
     ADD CONSTRAINT FK_PRODUCTS_ON_SELLER FOREIGN KEY (seller_id) REFERENCES sellers (id);
+
+ALTER TABLE seller_verification
+    ADD CONSTRAINT FK_SELLERVERIFICATION_ON_SELLER FOREIGN KEY (seller_id) REFERENCES sellers (id);
+
+ALTER TABLE seller_verification
+    ADD CONSTRAINT FK_SELLERVERIFICATION_ON_SELLERUSER FOREIGN KEY (seller_user_id) REFERENCES users (id);
+
+ALTER TABLE seller_verification
+    ADD CONSTRAINT FK_SELLERVERIFICATION_ON_SUPERVISOR FOREIGN KEY (supervisor_id) REFERENCES users (id);
+
+ALTER TABLE seller_orders
+    ADD CONSTRAINT FK_SELLER_ORDERS_ON_BILLINGADDRESS FOREIGN KEY (billing_address_id) REFERENCES address (id);
+
+ALTER TABLE seller_orders
+    ADD CONSTRAINT FK_SELLER_ORDERS_ON_BUYER FOREIGN KEY (buyer_id) REFERENCES buyer (id);
+
+ALTER TABLE seller_orders
+    ADD CONSTRAINT FK_SELLER_ORDERS_ON_ORDER FOREIGN KEY (order_id) REFERENCES orders (id);
+
+ALTER TABLE seller_orders
+    ADD CONSTRAINT FK_SELLER_ORDERS_ON_SHIPPINGADDRESS FOREIGN KEY (shipping_address_id) REFERENCES address (id);
+
+ALTER TABLE seller_orders
+    ADD CONSTRAINT FK_SELLER_ORDERS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
 
 ALTER TABLE sub_category
     ADD CONSTRAINT FK_SUBCATEGORY_ON_CATEGORY FOREIGN KEY (category_id) REFERENCES category (id);
@@ -501,7 +552,13 @@ ALTER TABLE order_basket_items
     ADD CONSTRAINT "fk_ordbasıte_on_basket_ıtem" FOREIGN KEY (basket_item_id) REFERENCES basket_item (id);
 
 ALTER TABLE order_basket_items
-    ADD CONSTRAINT "fk_ordbasıte_on_order" FOREIGN KEY (order_id) REFERENCES orders (id);
+    ADD CONSTRAINT "fk_ordbasıte_on_seller_order" FOREIGN KEY (order_id) REFERENCES seller_orders (id);
+
+ALTER TABLE orders_seller_order
+    ADD CONSTRAINT fk_ordselord_on_order FOREIGN KEY (order_id) REFERENCES orders (id);
+
+ALTER TABLE orders_seller_order
+    ADD CONSTRAINT fk_ordselord_on_seller_order FOREIGN KEY (seller_order_id) REFERENCES seller_orders (id);
 
 ALTER TABLE products_comments
     ADD CONSTRAINT fk_procom_on_comment FOREIGN KEY (comments_id) REFERENCES comment (id);
@@ -539,17 +596,17 @@ ALTER TABLE seller_bank_accounts
 ALTER TABLE seller_document_paths
     ADD CONSTRAINT fk_seller_document_paths_on_seller FOREIGN KEY (seller_id) REFERENCES sellers (id);
 
-ALTER TABLE sellers_orders
-    ADD CONSTRAINT fk_selord_on_order FOREIGN KEY (orders_id) REFERENCES orders (id);
+ALTER TABLE seller_verification_documents
+    ADD CONSTRAINT "fk_seller_verıfıcatıon_documents_on_seller_verıfıcatıon" FOREIGN KEY (seller_verification_id) REFERENCES seller_verification (id);
 
-ALTER TABLE sellers_orders
-    ADD CONSTRAINT fk_selord_on_seller FOREIGN KEY (seller_id) REFERENCES sellers (id);
+ALTER TABLE seller_verification_extra_documents
+    ADD CONSTRAINT "fk_seller_verıfıcatıon_extra_documents_on_seller_verıfıcatıon" FOREIGN KEY (seller_verification_id) REFERENCES seller_verification (id);
 
-ALTER TABLE sellers_products
-    ADD CONSTRAINT fk_selpro_on_product FOREIGN KEY (products_id) REFERENCES products (id);
+ALTER TABLE sellers_seller_orders
+    ADD CONSTRAINT fk_selselord_on_seller FOREIGN KEY (seller_id) REFERENCES sellers (id);
 
-ALTER TABLE sellers_products
-    ADD CONSTRAINT fk_selpro_on_seller FOREIGN KEY (seller_id) REFERENCES sellers (id);
+ALTER TABLE sellers_seller_orders
+    ADD CONSTRAINT fk_selselord_on_seller_order FOREIGN KEY (seller_orders_id) REFERENCES seller_orders (id);
 
 ALTER TABLE seller_shipping_companies
     ADD CONSTRAINT "fk_selshıcom_on_seller" FOREIGN KEY (seller_id) REFERENCES sellers (id);
