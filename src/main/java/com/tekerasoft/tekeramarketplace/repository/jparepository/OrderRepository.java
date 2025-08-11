@@ -11,4 +11,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface OrderRepository extends JpaRepository<Order, UUID> {
+    Order findByOrderNo(String orderNo);
 }

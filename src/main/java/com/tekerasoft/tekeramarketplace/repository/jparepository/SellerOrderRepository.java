@@ -29,7 +29,7 @@ public interface SellerOrderRepository extends JpaRepository<SellerOrder, UUID> 
     SELECT o
     FROM SellerOrder o
     WHERE o.user.id = :userId
-      AND o.paymentStatus = com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus.PAID
 """)
     Page<SellerOrder> findOrderByUserId(@Param("userId") UUID userId, Pageable pageable);
 }
+ // TODO findorderbyuserid ye ekle sorguya AND o.paymentStatus = com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus.PAID

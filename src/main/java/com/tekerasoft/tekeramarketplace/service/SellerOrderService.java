@@ -160,9 +160,9 @@ public class SellerOrderService {
     }
 
     @Transactional
-    public void completeOrder(String conversationId, PaymentStatus paymentStatus) {
+    public void completeOrder(String sellerOrderId, PaymentStatus paymentStatus) {
         try {
-            SellerOrder order = sellerOrderRepository.findById(UUID.fromString(conversationId))
+            SellerOrder order = sellerOrderRepository.findById(UUID.fromString(sellerOrderId))
                     .orElseThrow(() -> new NotFoundException("Order not found"));
             if(paymentStatus.equals(PaymentStatus.PAID)) {
                 order.setPaymentStatus(paymentStatus);

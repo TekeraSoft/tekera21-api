@@ -56,4 +56,8 @@ public class OrderService {
        return orderRepository.save(order);
     }
 
+    public Order getOrderByOrderNo(String orderNo) {
+        return orderRepository.findByOrderNo(orderNo);
+    }
+
 }

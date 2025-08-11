@@ -64,8 +64,8 @@ public class PaymentService {
             BigDecimal totalPrice = req.getBasketItems().stream()
                     .map(bi -> {
                         Attribute productAttribute = attributeService.getAttributeById(bi.getAttributeId());
-                        BigDecimal price = productAttribute.getPrice(); // price BigDecimal olmalı
-                        BigDecimal quantity = BigDecimal.valueOf(bi.getQuantity()); // quantity int/long ise çeviriyoruz
+                        BigDecimal price = productAttribute.getPrice();
+                        BigDecimal quantity = BigDecimal.valueOf(bi.getQuantity());
                         return price.multiply(quantity);
                     }).reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -194,6 +194,10 @@ public class PaymentService {
             }
 
             if(threedsPayment.getStatus().equals("success")) {
+                Order order = orderService.getOrderByOrderNo(conversationId);
+                for (SellerOrder so: order.getSellerOrder()) {
+                    sellerOrderService.completeOrder(so.getId().toString(), PaymentStatus.PAID);
+                }
                 response.sendRedirect(originUrl + "/odeme/basarili");
             } else {
                 response.sendRedirect(originUrl + "/odeme/basarisiz");
