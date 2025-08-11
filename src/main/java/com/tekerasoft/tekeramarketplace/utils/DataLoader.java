@@ -163,15 +163,14 @@ public class DataLoader implements CommandLineRunner {
 //            }
 //        }
 
-//        searchItemRepository.deleteAll();
-
 //        List<Product> products = productRepository.findAll();
 //        products.forEach(product -> {
 //            searchItemRepository.save(new SearchItem(
 //                    product.getId().toString(),
 //                    product.getName(),
-//                    product.getCategory().getName(),
 //                    product.getSlug(),
+//                    product.getCategory().getName(),
+//                    product.getCategory().getSlug(),
 //                    product.getSeller().getId().toString(),
 //                    product.getVariations().get(0).getImages().get(0),
 //                    SearchItemType.PRODUCT,
@@ -185,6 +184,7 @@ public class DataLoader implements CommandLineRunner {
 //                    category.getId().toString(),
 //                    category.getName(),
 //                    category.getSlug(),
+//                    null,
 //                    null,
 //                    null,
 //                    category.getImage(),

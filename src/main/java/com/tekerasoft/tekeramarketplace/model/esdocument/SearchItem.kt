@@ -17,16 +17,19 @@ open class SearchItem(
     @Id
     open var id: String,
 
-    @Field(type = FieldType.Text, analyzer = "custom_index", searchAnalyzer = "custom_search")
+    @Field(name = "name", type = FieldType.Text, analyzer = "autocomplete_index", searchAnalyzer = "autocomplete_search")
     open var name: String,
 
-    @Field("slug", type = FieldType.Text, analyzer = "custom_index", searchAnalyzer = "custom_search")
+    @Field(name = "slug", type = FieldType.Text, analyzer = "autocomplete_index", searchAnalyzer = "autocomplete_search")
     open var slug: String,
 
-    @Field("categoryName", type = FieldType.Text, analyzer = "custom_index", searchAnalyzer = "custom_search")
+    @Field(name = "category_name", type = FieldType.Text, analyzer = "autocomplete_index", searchAnalyzer = "autocomplete_search")
     open var categoryName: String? = null,
 
-    @Field("companyId", type = FieldType.Text, analyzer = "custom_index", searchAnalyzer = "custom_search")
+    @Field(name = "category_slug", type = FieldType.Text, analyzer = "autocomplete_index", searchAnalyzer = "autocomplete_search")
+    open var categorySlug: String? = null,
+
+    @Field(name = "company_id", type = FieldType.Text, analyzer = "autocomplete_index", searchAnalyzer = "autocomplete_search")
     open var companyId: String? = null,
 
     @Field("image_url", type = FieldType.Text)
@@ -44,6 +47,7 @@ open class SearchItem(
         name = "",
         slug = "",
         categoryName = "",
+        categorySlug = "",
         companyId = null,
         imageUrl = null,
         itemType = SearchItemType.PRODUCT,
