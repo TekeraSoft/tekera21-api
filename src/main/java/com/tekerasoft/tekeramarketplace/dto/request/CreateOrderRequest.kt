@@ -2,10 +2,13 @@ package com.tekerasoft.tekeramarketplace.dto.request
 
 import com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus
 import com.tekerasoft.tekeramarketplace.model.enums.PaymentType
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import java.math.BigDecimal
 
 data class CreateOrderRequest(
     val buyer: BuyerRequest,
+    @field:NotNull(message= "Sepette hiç ürün yok")
     val basketItems: List<BasketItemRequest>,
     val shippingAddress: ShippingAddressRequest,
     val billingAddress: BillingAddressRequest?,
@@ -64,9 +67,13 @@ data class CreateOrderRequest(
 
 
 data class BuyerRequest(
+    @field:NotBlank("Alıcı adı zorunlu !")
     val name: String,
+    @field:NotBlank("Alıcı soyad zorunlu !")
     val surname: String,
+    @field:NotBlank("Alıcı mail zorunlu !")
     val email: String,
+    @field:NotBlank("Alıcı gsm numarası zorunlu !")
     val gsmNumber: String,
     val identityNumber: String,
 )
@@ -79,11 +86,16 @@ data class BasketItemRequest(
 )
 
 data class ShippingAddressRequest(
+    @field:NotBlank("Alıcı şehir zorunlu !")
     val city: String,
+    @field:NotBlank("Alıcı mahalle/cadde zorunlu !")
     val street: String,
     val postalCode: String?,
+    @field:NotBlank("Alıcı bina numarası zorunlu !")
     val buildNo: String,
+    @field:NotBlank("Alıcı kapı numarası zorunlu !")
     val doorNumber: String,
+    @field:NotBlank("Alıcı detaylı adres zorunlu !")
     val detailAddress: String,
     val country: String,
 )

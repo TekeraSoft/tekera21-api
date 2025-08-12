@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.model.entity
 
+import com.tekerasoft.tekeramarketplace.model.enums.ExtraDocument
 import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -46,9 +47,13 @@ open class Seller(
     open var bankAccounts: MutableList<BankAccount> = mutableListOf(),
 
     @ElementCollection
-    @CollectionTable(name= "seller_document_paths",
+    @CollectionTable(name= "seller_documents",
         joinColumns = [JoinColumn(name = "seller_id")])
-    open var identityDocumentPaths: MutableList<SellerDocument> = mutableListOf(),
+    open var sellerDocuments: MutableList<SellerDocument> = mutableListOf(),
+
+    @ElementCollection
+    @CollectionTable(name="seller_extra_documents", joinColumns = [JoinColumn(name = "seller_id")])
+    open var sellerExtraDocuments: MutableList<ExtraDocument> = mutableListOf(),
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -92,7 +97,8 @@ open class Seller(
             users = mutableSetOf(),
             address = mutableListOf(),
             bankAccounts = mutableListOf(),
-            identityDocumentPaths = mutableListOf(),
+            sellerDocuments = mutableListOf(),
+            sellerExtraDocuments = mutableListOf(),
             shippingCompanies = mutableSetOf(),
             sellerOrders = mutableListOf(),
             rate = 0.0,

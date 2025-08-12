@@ -2,14 +2,15 @@ package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
-import com.tekerasoft.tekeramarketplace.dto.payload.DeletePathList;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.UpdateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.dto.response.SellerVerifiedResponse;
 import com.tekerasoft.tekeramarketplace.exception.CompanyException;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
+import com.tekerasoft.tekeramarketplace.exception.SellerVerificationException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
-import com.tekerasoft.tekeramarketplace.model.enums.Role;
+import com.tekerasoft.tekeramarketplace.model.enums.SellerDocumentType;
 import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
@@ -120,8 +121,8 @@ public class SellerService {
                 String documentPath = fileService.folderFileUpload(file,
                         String.format("/company/documents/%s", companyReplaceName));
 
-                com.tekerasoft.tekeramarketplace.model.enums.SellerDocument documentTitleEnum =
-                        com.tekerasoft.tekeramarketplace.model.enums.SellerDocument.valueOf(documentTitle.toUpperCase());
+                com.tekerasoft.tekeramarketplace.model.enums.SellerDocumentType documentTitleEnum =
+                        com.tekerasoft.tekeramarketplace.model.enums.SellerDocumentType.valueOf(documentTitle.toUpperCase());
 
                 // CompanyDocument nesnesi oluştur
                 SellerDocument document = new SellerDocument(
@@ -133,8 +134,8 @@ public class SellerService {
                 sellerDocuments.add(document);
             }
 
-            // Bu selerDocuments listesini company entity’sine kaydeder
-            seller.setIdentityDocumentPaths(sellerDocuments);
+            // Bu satır selerDocuments listesini company entity’sine kaydeder
+            seller.setSellerDocuments(sellerDocuments);
             seller.setVerificationStatus(VerificationStatus.PENDING);
 
             // Seller kaydını veritabanına kaydet
@@ -203,8 +204,8 @@ public class SellerService {
                     .toList();
 
             if (!nonEmptyFiles.isEmpty()) {
-                List<SellerDocument> existingDocs = new ArrayList<>(seller.getIdentityDocumentPaths());
-                Map<com.tekerasoft.tekeramarketplace.model.enums.SellerDocument, SellerDocument> docMap =
+                List<SellerDocument> existingDocs = new ArrayList<>(seller.getSellerDocuments());
+                Map<com.tekerasoft.tekeramarketplace.model.enums.SellerDocumentType, SellerDocument> docMap =
                         existingDocs.stream().collect(Collectors.toMap(SellerDocument::getDocumentTitle, d -> d));
 
                 List<String> oldPathsToDelete = new ArrayList<>();
@@ -217,9 +218,9 @@ public class SellerService {
                             ? originalFilename.substring(0, originalFilename.lastIndexOf('.'))
                             : originalFilename;
 
-                    com.tekerasoft.tekeramarketplace.model.enums.SellerDocument documentTitleEnum;
+                    com.tekerasoft.tekeramarketplace.model.enums.SellerDocumentType documentTitleEnum;
                     try {
-                        documentTitleEnum = com.tekerasoft.tekeramarketplace.model.enums.SellerDocument
+                        documentTitleEnum = com.tekerasoft.tekeramarketplace.model.enums.SellerDocumentType
                                 .valueOf(documentTitle.toUpperCase());
                     } catch (IllegalArgumentException e) {
                         throw new CompanyException("Geçersiz belge tipi: " + documentTitle);
@@ -255,7 +256,7 @@ public class SellerService {
                 }
 
                 // Mevcut seller belgelerini set et
-                seller.setIdentityDocumentPaths(existingDocs);
+                seller.setSellerDocuments(existingDocs);
             }
         }
 
@@ -265,26 +266,20 @@ public class SellerService {
         return new ApiResponse<>("Seller updated successfully", HttpStatus.OK.value());
     }
 
+    // TODO seller document status change method - call the active method status if verified seller activation true
     public ApiResponse<?> changeStatusFaultyDocument(String sellerId,
-                                                     com.tekerasoft.tekeramarketplace.model.enums.SellerDocument documentName ,
+                                                     com.tekerasoft.tekeramarketplace.model.enums.SellerDocumentType documentName ,
                                                      VerificationStatus status)
     {
         Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
                 .orElseThrow(() -> new NotFoundException("Seller not found"));
-        seller.getIdentityDocumentPaths().forEach(path -> {
+        seller.getSellerDocuments().forEach(path -> {
             if(documentName.equals(path.getDocumentTitle())) {
                 path.setVerificationStatus(status);
             }
         });
         sellerRepository.save(seller);
         return new ApiResponse<>("Changed document status", HttpStatus.OK.value());
-    }
-
-    public void addSellerOrder (String sellerId, SellerOrder order) {
-        Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
-                .orElseThrow(() -> new NotFoundException("Seller not found"));
-        seller.getSellerOrders().add(order);
-        sellerRepository.save(seller);
     }
 
     public Seller getSellerById(String id) {
@@ -294,23 +289,6 @@ public class SellerService {
 
     public Seller getSellerByUserId(String userId) {
         return sellerRepository.findSellerByUserId(UUID.fromString(userId));
-    }
-
-    public ApiResponse<?> deleteCompany(String id) {
-        Seller seller = sellerRepository.findById(UUID.fromString(id)).orElseThrow(
-                () -> new NotFoundException("Company not found")
-        );
-        try {
-            seller.getIdentityDocumentPaths().forEach(path -> {
-                fileService.deleteFileProduct(path.getDocumentPath());
-            });
-            fileService.deleteFileProduct(seller.getLogo());
-            searchItemService.deleteItem(seller.getId().toString());
-            sellerRepository.delete(seller);
-            return new ApiResponse<>("Delete Company", HttpStatus.OK.value());
-        } catch (RuntimeException e) {
-            throw new CompanyException(e.getMessage());
-        }
     }
 
     public ApiResponse<?> changeSellerActiveStatus(String sellerId) {
@@ -355,13 +333,26 @@ public class SellerService {
         return sellerRepository.findAll(pageable).map(SellerAdminDto::toDto);
     }
 
-    public void sellerActive() {
-        Seller seller =  sellerRepository.findById(UUID.fromString("sellerId"))
+    public ApiResponse<?> sellerActivation(String sellerId) {
+        Seller seller =  sellerRepository.findById(UUID.fromString(sellerId))
                 .orElseThrow(() -> new NotFoundException("Seller not found"));
-        seller.setActive(true);
-        seller.setVerified(true);
-        seller.setVerificationStatus(VerificationStatus.VERIFIED);
-        sellerRepository.save(seller);
+
+        // Enum’daki tüm belgeler
+        // List<SellerDocumentType> allRequired = Arrays.asList(SellerDocumentType.values());
+
+        List<SellerDocument> findNotVerifiedSellerDocuments = sellerRepository.findUnverifiedDocumentsBySeller(
+                UUID.fromString(sellerId),
+                VerificationStatus.VERIFIED
+        );
+        if(findNotVerifiedSellerDocuments.isEmpty()) {
+            seller.setActive(true);
+            seller.setVerified(true);
+            seller.setVerificationStatus(VerificationStatus.VERIFIED);
+            sellerRepository.save(seller);
+            return new ApiResponse<>("Satıcı onaylandı !", HttpStatus.OK.value());
+        }
+        throw new SellerVerificationException("Sellers not verified");
+        //return new SellerVerifiedResponse("Seller not verified",findNotVerifiedSellerDocuments.stream().map(fns -> fns.getDocumentTitle().name()).toList());
     }
 
 }

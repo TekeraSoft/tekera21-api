@@ -25,7 +25,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final Random random = new Random();  // burası eksik olabilir
+    private final Random random = new Random();
 
     public UserService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;

@@ -5,6 +5,7 @@ import com.tekerasoft.tekeramarketplace.dto.request.CreateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.service.SellerService;
 import com.tekerasoft.tekeramarketplace.service.ShippingCompanyService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +25,7 @@ public class AccountController {
     }
 
     @PostMapping("/createSeller")
-    public ApiResponse<?> createCompany(@RequestPart("data") CreateSellerRequest req,
+    public ApiResponse<?> createCompany(@Valid @RequestPart("data") CreateSellerRequest req,
                                                         @RequestPart("files") List<MultipartFile> files,
                                                         @RequestPart("logo") MultipartFile logo)
     {

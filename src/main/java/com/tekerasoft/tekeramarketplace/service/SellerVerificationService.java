@@ -8,6 +8,7 @@ import com.tekerasoft.tekeramarketplace.model.entity.Seller;
 import com.tekerasoft.tekeramarketplace.model.entity.SellerDocument;
 import com.tekerasoft.tekeramarketplace.model.entity.SellerVerification;
 import com.tekerasoft.tekeramarketplace.model.entity.User;
+import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.SellerVerificationRepository;
 import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import jakarta.transaction.Transactional;
@@ -25,11 +26,15 @@ public class SellerVerificationService {
     private final SellerVerificationRepository sellerVerificationRepository;
     private final AuthenticationFacade  authenticationFacade;
     private final UserService userService;
+    private final SellerService sellerService;
 
-    public SellerVerificationService(SellerVerificationRepository sellerVerificationRepository, AuthenticationFacade authenticationFacade, UserService userService) {
+    public SellerVerificationService(SellerVerificationRepository sellerVerificationRepository,
+                                     AuthenticationFacade authenticationFacade,
+                                     UserService userService, SellerService sellerService) {
         this.sellerVerificationRepository = sellerVerificationRepository;
         this.authenticationFacade = authenticationFacade;
         this.userService = userService;
+        this.sellerService = sellerService;
     }
 
     public Page<SellerVerificationSupportDto> getSupportVerificationList(Pageable pageable) {
@@ -46,17 +51,6 @@ public class SellerVerificationService {
         sellerVerification.setSellerUser(sellerUser);
         sellerVerification.setSupervisor(supervisorUser);
         sellerVerification.setSeller(seller);
-        sellerVerification.setCheckDocumentVerification(seller.getIdentityDocumentPaths()
-                .stream().map(SellerDocument::getDocumentTitle).collect(Collectors.toSet()));
         sellerVerificationRepository.save(sellerVerification);
     }
-
-    public void checkSellerInformationAndDocuments (String sellerVerificationId,
-                                                    Set<com.tekerasoft.tekeramarketplace.model.enums.SellerDocument> sellerDocuments) {
-        SellerVerification sellerVerification = sellerVerificationRepository.findById(UUID.fromString(sellerVerificationId))
-                .orElseThrow(() -> new RuntimeException("Seller Verification Not Found"));
-        Set<com.tekerasoft.tekeramarketplace.model.enums.SellerDocument> supportSelectedDocument = sellerDocuments;
-        sellerVerification.setCheckDocumentVerification(sellerDocuments);
-    }
-
 }

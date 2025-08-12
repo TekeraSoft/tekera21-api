@@ -6,7 +6,7 @@ import com.tekerasoft.tekeramarketplace.model.enums.ExtraDocument
 data class SellerVerificationSupportDto(
     val sellerUser: UserDto,
     val seller: SellerAdminDto,
-    val sellerDocuments: Set<com.tekerasoft.tekeramarketplace.model.enums.SellerDocument>,
+    val sellerDocumentTypes: Set<com.tekerasoft.tekeramarketplace.model.enums.SellerDocumentType>,
     val sellerExtraDocument: Set<ExtraDocument>,
     val eSignature: Boolean
 ) {

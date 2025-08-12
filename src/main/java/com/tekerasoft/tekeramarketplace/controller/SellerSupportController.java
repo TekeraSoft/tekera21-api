@@ -2,7 +2,7 @@ package com.tekerasoft.tekeramarketplace.controller;
 
 import com.tekerasoft.tekeramarketplace.dto.SellerVerificationSupportDto;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
-import com.tekerasoft.tekeramarketplace.model.enums.SellerDocument;
+import com.tekerasoft.tekeramarketplace.model.enums.SellerDocumentType;
 import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus;
 import com.tekerasoft.tekeramarketplace.service.SellerService;
 import com.tekerasoft.tekeramarketplace.service.SellerVerificationService;
@@ -29,8 +29,8 @@ public class SellerSupportController {
 
     @PutMapping("/changeStatusFaultyDocument")
     public ResponseEntity<ApiResponse<?>> changeStatusFaultyDocument(@RequestParam String sellerId,
-                                                                    @RequestParam SellerDocument sellerDocumentName,
+                                                                    @RequestParam SellerDocumentType sellerDocumentTypeName,
                                                                     @RequestParam VerificationStatus status) {
-        return ResponseEntity.ok(sellerService.changeStatusFaultyDocument(sellerId,sellerDocumentName,status));
+        return ResponseEntity.ok(sellerService.changeStatusFaultyDocument(sellerId, sellerDocumentTypeName,status));
     }
 }

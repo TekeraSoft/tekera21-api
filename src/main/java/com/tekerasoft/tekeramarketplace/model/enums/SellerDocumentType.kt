@@ -1,6 +1,6 @@
 package com.tekerasoft.tekeramarketplace.model.enums
 
-enum class SellerDocument {
+enum class SellerDocumentType {
     TAX_CERTIFICATE,
     COMMERCIAL_REGISTER_GAZETTE,
     SIGNATURE_CIRCULAR,
