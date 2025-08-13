@@ -28,7 +28,7 @@ data class SellerAdminDto(
     val address: List<Address>,
     val shippingCompanies: List<ShippingCompanyDto>,
     val bankAccounts: List<BankAccount>,
-    val identityDocumentPaths: List<SellerDocument>,
+    val sellerDocument: List<SellerDocument>,
     val rate: Double,
     val verificationStatus: VerificationStatus,
 ) {
@@ -54,7 +54,7 @@ data class SellerAdminDto(
                 from.address,
                 from.shippingCompanies.map { ShippingCompanyDto.toDto(it) },
                 from.bankAccounts,
-                from.identityDocumentPaths,
+                from.sellerDocuments,
                 from.rate,
                 from.verificationStatus,
             )

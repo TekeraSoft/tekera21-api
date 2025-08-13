@@ -33,4 +33,9 @@ public class SellerSupportController {
                                                                     @RequestParam VerificationStatus status) {
         return ResponseEntity.ok(sellerService.changeStatusFaultyDocument(sellerId, sellerDocumentTypeName,status));
     }
+
+    @PutMapping("/sellerActivation")
+    public ResponseEntity<ApiResponse<?>> sellerActivation(@RequestParam String sellerId) {
+        return ResponseEntity.ok(sellerService.sellerActivation(sellerId));
+    }
 }

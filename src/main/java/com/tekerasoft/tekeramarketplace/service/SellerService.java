@@ -5,7 +5,6 @@ import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.UpdateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
-import com.tekerasoft.tekeramarketplace.dto.response.SellerVerifiedResponse;
 import com.tekerasoft.tekeramarketplace.exception.CompanyException;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.exception.SellerVerificationException;
@@ -351,7 +350,7 @@ public class SellerService {
             sellerRepository.save(seller);
             return new ApiResponse<>("Satıcı onaylandı !", HttpStatus.OK.value());
         }
-        throw new SellerVerificationException("Sellers not verified");
+        throw new SellerVerificationException("Sellers not verified", findNotVerifiedSellerDocuments);
         //return new SellerVerifiedResponse("Seller not verified",findNotVerifiedSellerDocuments.stream().map(fns -> fns.getDocumentTitle().name()).toList());
     }
 

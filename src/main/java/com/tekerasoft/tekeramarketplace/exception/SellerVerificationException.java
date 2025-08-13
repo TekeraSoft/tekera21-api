@@ -5,7 +5,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class SellerVerificationException extends RuntimeException {
-    public SellerVerificationException(String message) {
+    private final Object data;
+
+    public SellerVerificationException(String message, Object data) {
         super(message);
+        this.data = data;
+    }
+
+    public Object getData() {
+        return data;
     }
 }

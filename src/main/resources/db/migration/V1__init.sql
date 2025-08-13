@@ -222,13 +222,19 @@ CREATE TABLE seller_categories
     CONSTRAINT "pk_seller_categorıes" PRIMARY KEY (category_id, seller_id)
 );
 
-CREATE TABLE seller_document_paths
+CREATE TABLE seller_documents
 (
     seller_id                   UUID NOT NULL,
     document_title              VARCHAR(255),
     document_path               VARCHAR(255),
     verification_status         SMALLINT,
     faulty_document_description VARCHAR(255)
+);
+
+CREATE TABLE seller_extra_documents
+(
+    seller_id              UUID NOT NULL,
+    seller_extra_documents SMALLINT
 );
 
 CREATE TABLE seller_orders
@@ -257,26 +263,13 @@ CREATE TABLE seller_shipping_companies
 
 CREATE TABLE seller_verification
 (
-    id              UUID    NOT NULL,
-    created_at      TIMESTAMP WITHOUT TIME ZONE,
-    updated_at      TIMESTAMP WITHOUT TIME ZONE,
-    seller_user_id  UUID,
-    supervisor_id   UUID,
-    seller_id       UUID,
-    checkesignature BOOLEAN NOT NULL,
+    id             UUID NOT NULL,
+    created_at     TIMESTAMP WITHOUT TIME ZONE,
+    updated_at     TIMESTAMP WITHOUT TIME ZONE,
+    seller_user_id UUID,
+    supervisor_id  UUID,
+    seller_id      UUID,
     CONSTRAINT "pk_sellerverıfıcatıon" PRIMARY KEY (id)
-);
-
-CREATE TABLE seller_verification_documents
-(
-    seller_verification_id      UUID NOT NULL,
-    check_document_verification VARCHAR(255)
-);
-
-CREATE TABLE seller_verification_extra_documents
-(
-    seller_verification_id      UUID NOT NULL,
-    extra_document_verification VARCHAR(255)
 );
 
 CREATE TABLE sellers
@@ -593,14 +586,11 @@ ALTER TABLE seller_categories
 ALTER TABLE seller_bank_accounts
     ADD CONSTRAINT fk_seller_bank_accounts_on_seller FOREIGN KEY (seller_id) REFERENCES sellers (id);
 
-ALTER TABLE seller_document_paths
-    ADD CONSTRAINT fk_seller_document_paths_on_seller FOREIGN KEY (seller_id) REFERENCES sellers (id);
+ALTER TABLE seller_documents
+    ADD CONSTRAINT fk_seller_documents_on_seller FOREIGN KEY (seller_id) REFERENCES sellers (id);
 
-ALTER TABLE seller_verification_documents
-    ADD CONSTRAINT "fk_seller_verıfıcatıon_documents_on_seller_verıfıcatıon" FOREIGN KEY (seller_verification_id) REFERENCES seller_verification (id);
-
-ALTER TABLE seller_verification_extra_documents
-    ADD CONSTRAINT "fk_seller_verıfıcatıon_extra_documents_on_seller_verıfıcatıon" FOREIGN KEY (seller_verification_id) REFERENCES seller_verification (id);
+ALTER TABLE seller_extra_documents
+    ADD CONSTRAINT fk_seller_extra_documents_on_seller FOREIGN KEY (seller_id) REFERENCES sellers (id);
 
 ALTER TABLE sellers_seller_orders
     ADD CONSTRAINT fk_selselord_on_seller FOREIGN KEY (seller_id) REFERENCES sellers (id);

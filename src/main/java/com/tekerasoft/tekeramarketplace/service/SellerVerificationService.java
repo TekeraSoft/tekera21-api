@@ -26,15 +26,13 @@ public class SellerVerificationService {
     private final SellerVerificationRepository sellerVerificationRepository;
     private final AuthenticationFacade  authenticationFacade;
     private final UserService userService;
-    private final SellerService sellerService;
 
     public SellerVerificationService(SellerVerificationRepository sellerVerificationRepository,
                                      AuthenticationFacade authenticationFacade,
-                                     UserService userService, SellerService sellerService) {
+                                     UserService userService) {
         this.sellerVerificationRepository = sellerVerificationRepository;
         this.authenticationFacade = authenticationFacade;
         this.userService = userService;
-        this.sellerService = sellerService;
     }
 
     public Page<SellerVerificationSupportDto> getSupportVerificationList(Pageable pageable) {
