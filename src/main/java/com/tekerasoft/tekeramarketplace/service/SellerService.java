@@ -361,14 +361,14 @@ public class SellerService {
     // TODO: Seller urun satis bedeli / komisyon / indirim / kupon uygulanan fiyat indirisimsiz fiyat
     // TODO: Seller shipping price için hesaplama yapılacak
 
-    public SellerReportDto getSellerReportBySellerUserId(String sellerUserId) {
-        Seller seller = sellerRepository.findSellerByUserId(UUID.fromString(authenticationFacade.getCurrentUserId()));
-        LocalDate now = LocalDate.now();
-        BigDecimal dailyProfit = seller.getSellerOrders().stream()
-                .filter(so -> so.getCreatedAt().toLocalDate().isEqual(now)) // sadece bugünün siparişleri
-                .flatMap(so -> so.getBasketItems().stream())
-                .map(BasketItem::getPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
+//    public SellerReportDto getSellerReportBySellerUserId(String sellerUserId) {
+//        Seller seller = sellerRepository.findSellerByUserId(UUID.fromString(authenticationFacade.getCurrentUserId()));
+//        LocalDate now = LocalDate.now();
+//        BigDecimal dailyProfit = seller.getSellerOrders().stream()
+//                .filter(so -> so.getCreatedAt().toLocalDate().isEqual(now)) // sadece bugünün siparişleri
+//                .flatMap(so -> so.getBasketItems().stream())
+//                .map(BasketItem::getPrice)
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//    }
 
 }
