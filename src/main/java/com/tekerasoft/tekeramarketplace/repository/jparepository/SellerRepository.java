@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.repository.jparepository;
 
+import com.tekerasoft.tekeramarketplace.dto.SellerReportAggregation;
 import com.tekerasoft.tekeramarketplace.model.entity.Seller;
 import com.tekerasoft.tekeramarketplace.model.entity.Product;
 import com.tekerasoft.tekeramarketplace.model.entity.SellerDocument;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,4 +45,23 @@ public interface SellerRepository extends JpaRepository<Seller, UUID> {
             "JOIN s.products p " +
             "WHERE u.id = :userId")
     Page<Product> findProductsByUserId(@Param("userId") UUID userId,Pageable pageable);
+
+    @Query("SELECT new com.tekerasoft.tekeramarketplace.dto.SellerReportAggregation(" +
+            "SUM(CASE WHEN FUNCTION('DATE', so.createdAt) = CURRENT_DATE THEN bi.price ELSE 0 END), " +
+            "SUM(CASE WHEN FUNCTION('YEARWEEK', so.createdAt, 1) = FUNCTION('YEARWEEK', CURRENT_DATE, 1) THEN bi.price ELSE 0 END), " +
+            "SUM(CASE WHEN FUNCTION('MONTH', so.createdAt) = FUNCTION('MONTH', CURRENT_DATE) AND FUNCTION('YEAR', so.createdAt) = FUNCTION('YEAR', CURRENT_DATE) THEN bi.price ELSE 0 END)) " +
+            "FROM Seller s " +
+            "JOIN s.sellerOrders so " +
+            "JOIN so.basketItems bi " +
+            "WHERE s.id = :sellerId")
+    SellerReportAggregation getSellerAggregatedProfit(@Param("sellerId") Long sellerId);
+
+    @Query("SELECT SUM(bi.price) " +
+            "FROM Seller s " +
+            "JOIN s.sellerOrders so " +
+            "JOIN so.basketItems bi " +
+            "WHERE s.id = :sellerId " +
+            "AND FUNCTION('DATE', so.createdAt) = :specificDate")
+    BigDecimal getProfitBySpecificDate(@Param("sellerId") Long sellerId,
+                                       @Param("specificDate") java.time.LocalDate specificDate);
 }

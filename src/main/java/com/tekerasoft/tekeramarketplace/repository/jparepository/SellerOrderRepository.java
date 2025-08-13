@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.repository.jparepository;
 
+import com.tekerasoft.tekeramarketplace.dto.SellerReportAggregation;
 import com.tekerasoft.tekeramarketplace.model.entity.Order;
 import com.tekerasoft.tekeramarketplace.model.entity.SellerOrder;
 import org.springframework.data.domain.Page;

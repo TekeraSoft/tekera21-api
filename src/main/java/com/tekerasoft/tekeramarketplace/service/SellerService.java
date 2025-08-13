@@ -2,6 +2,7 @@ package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
+import com.tekerasoft.tekeramarketplace.dto.SellerReportDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.UpdateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
@@ -24,6 +25,10 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -355,4 +360,15 @@ public class SellerService {
     // TODO: Seller accounting işlemleri için methodlar eklenecek alt kısım ve dahası belirt!!
     // TODO: Seller urun satis bedeli / komisyon / indirim / kupon uygulanan fiyat indirisimsiz fiyat
     // TODO: Seller shipping price için hesaplama yapılacak
+
+    public SellerReportDto getSellerReportBySellerUserId(String sellerUserId) {
+        Seller seller = sellerRepository.findSellerByUserId(UUID.fromString(authenticationFacade.getCurrentUserId()));
+        LocalDate now = LocalDate.now();
+        BigDecimal dailyProfit = seller.getSellerOrders().stream()
+                .filter(so -> so.getCreatedAt().toLocalDate().isEqual(now)) // sadece bugünün siparişleri
+                .flatMap(so -> so.getBasketItems().stream())
+                .map(BasketItem::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
 }
