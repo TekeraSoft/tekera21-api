@@ -171,136 +171,158 @@ public class ProductService {
     }
 
     @Transactional
-    public ApiResponse<?> update(UpdateProductRequest req ,List<MultipartFile> images) {
+    public ApiResponse<?> update(UpdateProductRequest req, List<MultipartFile> images) {
         try {
+            // Ürün bulunuyor
             Product product = productRepository.findById(UUID.fromString(req.getId()))
                     .orElseThrow(() -> new NotFoundException("Product not found: " + req.getId()));
 
-            // ---------- Temel alanlar ----------
+            // Temel alanlar
             product.setName(req.getName());
             product.setCode(req.getCode());
             product.setBrandName(req.getBrandName());
             product.setDescription(req.getDescription());
             product.setCurrencyType(req.getCurrencyType());
             product.setProductType(req.getProductType());
-            product.setTags(req.getTags());
-            product.setAttributes(req.getAttributeDetails());
+            product.setTags(req.getTags() != null ? new ArrayList<>(req.getTags()) : new ArrayList<>());
+            product.setAttributes(req.getAttributeDetails() != null ? new ArrayList<>(req.getAttributeDetails()) : new ArrayList<>());
 
-            // ---------- Kategori ----------
+            // Kategori
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             product.setCategory(category);
 
-            // ---------- Alt kategoriler ----------
-            Set<SubCategory> subCategories = req.getSubCategories().stream()
+            // Alt kategoriler
+            Set<SubCategory> subCategories = req.getSubCategories() != null
+                    ? req.getSubCategories().stream()
                     .map(id -> subCategoryRepository.findById(UUID.fromString(id))
                             .orElseThrow(() -> new RuntimeException("SubCategory not found: " + id)))
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toSet())
+                    : new HashSet<>();
             product.setSubCategories(subCategories);
 
-            // ---------- Varyasyonlar (sırayı koruyarak) ----------
-            List<Variation> orderedVariations = new ArrayList<>();
-
-            for (VariationUpdateRequest varReq : req.getVariants()) {
-
-                Variation var = variationRepository.findById(UUID.fromString(varReq.getId()))
-                        .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
-
-                if (varReq.getId() != null && !varReq.getId().isEmpty()) {
-                    var.getAttributes().clear(); // mevcut attributelar sıfırlanıyor
-                } else {
-                    var = new Variation();
-                    var.setAttributes(new ArrayList<>());
+            // Silinecek varyantlar
+            if (req.getDeletedVariants() != null && !req.getDeletedVariants().isEmpty()) {
+                for (String variantId : req.getDeletedVariants()) {
+                    UUID varUUID = UUID.fromString(variantId);
+                    variationRepository.findById(varUUID).ifPresent(var -> {
+                        List<Variation> currentList = new ArrayList<>(product.getVariations());
+                        currentList.remove(var);
+                        product.setVariations(currentList);
+                        variationRepository.delete(var);
+                    });
                 }
-
-                // Varyasyon temel bilgileri
-                var.setProduct(product);
-                var.setModelName(varReq.getModelName());
-                var.setModelCode(varReq.getModelCode());
-                var.setColor(varReq.getColor());
-
-                // Attribute'lar
-                Variation finalVar = var;
-                List<Attribute> variationAttributes = varReq.getAttributes().stream()
-                        .map(attr -> new Attribute(
-                                attr.getPrice(),
-                                attr.getDiscountPrice(),
-                                attr.getStock(),
-                                attr.getMaxPurchaseStock(),
-                                attr.getSku(),
-                                attr.getBarcode(),
-                                attr.getAttributeDetails(),
-                                finalVar
-                        ))
-                        .collect(Collectors.toList());
-                var.getAttributes().addAll(variationAttributes);
-
-                // Görselleri birleştir (gelen url'ler + yüklenen dosyalar)
-                Set<String> combinedImages = new LinkedHashSet<>(); // sırayı korur, tekrarları engeller
-
-                if (var.getImages() != null) {
-                    combinedImages.addAll(var.getImages()); // mevcut görseller
-                }
-
-                if (varReq.getImageUrls() != null) {
-                    combinedImages.addAll(varReq.getImageUrls()); // gelen görsel URL'leri
-                }
-
-                if (images != null && !images.isEmpty()) {
-                    for (MultipartFile image : images) {
-                        Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
-                        if (parsed == null) continue;
-
-                        String imageModelCode = parsed.get("modelCode");
-                        String imageColor     = parsed.get("color");
-
-                        if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
-                                && varReq.getColor().contains(imageColor)) {
-
-                            String imageUrl = fileService.productFileUpload(
-                                    image,
-                                    product.getSeller().getSlug(),
-                                    SlugGenerator.generateSlug(req.getName()),
-                                    imageColor
-                            );
-                            combinedImages.add(imageUrl);
-                        }
-                    }
-                }
-
-                var.setImages(new ArrayList<>(combinedImages));
-
-                orderedVariations.add(var);
             }
 
-            // Eski listeyi temizle + sıralı listeyi ekle
-            product.getVariations().clear();
-            product.getVariations().addAll(orderedVariations);
+            // Yeni / Güncellenmiş varyantlar
+            List<Variation> orderedVariations = new ArrayList<>();
 
-            // ---------- Silinecek görseller ----------
+            if (req.getVariants() != null) {
+                for (VariationUpdateRequest varReq : req.getVariants()) {
+                    Variation var;
+                    if (varReq.getId() != null && !varReq.getId().isEmpty()) {
+                        var = variationRepository.findById(UUID.fromString(varReq.getId()))
+                                .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
+                        var.setAttributes(new ArrayList<>());
+                    } else {
+                        var = new Variation();
+                        var.setAttributes(new ArrayList<>());
+                    }
+
+                    // Varyasyon temel bilgileri
+                    var.setProduct(product);
+                    var.setModelName(varReq.getModelName());
+                    var.setModelCode(varReq.getModelCode());
+                    var.setColor(varReq.getColor());
+
+                    // Attribute'lar
+                    Variation finalVar = var;
+                    List<Attribute> variationAttributes = varReq.getAttributes() != null
+                            ? varReq.getAttributes().stream()
+                            .map(attr -> new Attribute(
+                                    attr.getPrice(),
+                                    attr.getDiscountPrice(),
+                                    attr.getStock(),
+                                    attr.getMaxPurchaseStock(),
+                                    attr.getSku(),
+                                    attr.getBarcode(),
+                                    attr.getAttributeDetails(),
+                                    finalVar
+                            ))
+                            .collect(Collectors.toList())
+                            : new ArrayList<>();
+                    var.setAttributes(new ArrayList<>(variationAttributes));
+
+                    // Görseller
+                    Set<String> combinedImages = new LinkedHashSet<>();
+                    if (var.getImages() != null) {
+                        combinedImages.addAll(var.getImages());
+                    }
+                    if (varReq.getImageUrls() != null) {
+                        combinedImages.addAll(varReq.getImageUrls());
+                    }
+                    if (images != null && !images.isEmpty()) {
+                        for (MultipartFile image : images) {
+                            Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
+                            if (parsed == null) continue;
+
+                            String imageModelCode = parsed.get("modelCode");
+                            String imageColor = parsed.get("color");
+
+                            if (varReq.getModelCode().equalsIgnoreCase(imageModelCode)
+                                    && varReq.getColor().contains(imageColor)) {
+
+                                String imageUrl = fileService.productFileUpload(
+                                        image,
+                                        product.getSeller().getSlug(),
+                                        SlugGenerator.generateSlug(req.getName()),
+                                        imageColor
+                                );
+                                combinedImages.add(imageUrl);
+                            }
+                        }
+                    }
+                    var.setImages(new ArrayList<>(combinedImages));
+
+                    orderedVariations.add(var);
+                }
+            }
+
+            // Eski listeyi mutable yap ve güncelle
+            product.setVariations(new ArrayList<>(orderedVariations));
+
+            // Silinecek görseller
             if (req.getDeleteImages() != null && !req.getDeleteImages().isEmpty()) {
                 for (String imageUrlToDelete : req.getDeleteImages()) {
                     fileService.deleteFileProduct(imageUrlToDelete);
                     for (Variation var : product.getVariations()) {
-                        List<String> updatedImages = new ArrayList<>(var.getImages() == null ? List.of() : var.getImages());
+                        List<String> updatedImages = var.getImages() != null
+                                ? new ArrayList<>(var.getImages())
+                                : new ArrayList<>();
                         if (updatedImages.removeIf(img -> img.equals(imageUrlToDelete))) {
                             var.setImages(updatedImages);
                         }
                     }
                 }
             }
-            if(req.getVideoUrl() != null) {
-                if(req.getVideoUrl().startsWith("temp")) {
-                    String newPath = req.getVideoUrl().replace("temp/", "products/"+product.getSeller().getSlug()+"/");
+
+            // Video
+            if (req.getVideoUrl() != null) {
+                if (req.getVideoUrl().startsWith("temp")) {
+                    String newPath = req.getVideoUrl().replace(
+                            "temp/",
+                            "products/" + product.getSeller().getSlug() + "/"
+                    );
                     fileService.copyObject(req.getVideoUrl(), newPath);
                     product.setVideoUrl(newPath);
                     fileService.deleteInFolderFile(req.getVideoUrl());
-                }else {
+                } else {
                     product.setVideoUrl(req.getVideoUrl());
                 }
             } else {
                 product.setVideoUrl(null);
             }
+
             productRepository.save(product);
             return new ApiResponse<>("Product Updated", HttpStatus.OK.value());
 

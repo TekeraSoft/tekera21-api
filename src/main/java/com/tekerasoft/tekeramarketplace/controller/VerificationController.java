@@ -5,6 +5,7 @@ import com.tekerasoft.tekeramarketplace.dto.request.UpdateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.service.SellerService;
 import com.tekerasoft.tekeramarketplace.service.ShippingCompanyService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,7 @@ public class VerificationController {
     }
 
     @PutMapping("/updateSeller")
-    public ResponseEntity<ApiResponse<?>> updateSeller(@RequestPart("data") UpdateSellerRequest req,
+    public ResponseEntity<ApiResponse<?>> updateSeller(@Valid @RequestPart("data") UpdateSellerRequest req,
                                                        @RequestPart(name = "files", required = false) List<MultipartFile> files,
                                                        @RequestPart(name = "logo", required = false) MultipartFile logo) {
         return ResponseEntity.ok(sellerService.updateSeller(req,files,logo));

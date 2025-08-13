@@ -108,6 +108,11 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    public void attachSellerRole(User user) {
+        user.setRoles(new HashSet<>(List.of(Role.SELLER)));
+        userRepository.save(user);
+    }
+
     public ApiResponse<?> forgotPassword(String email, String password, String token) {
         try {
             Optional<User> user = userRepository.findByEmail(email);

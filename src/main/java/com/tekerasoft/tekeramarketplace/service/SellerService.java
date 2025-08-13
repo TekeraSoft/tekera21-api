@@ -9,7 +9,6 @@ import com.tekerasoft.tekeramarketplace.exception.CompanyException;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.exception.SellerVerificationException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
-import com.tekerasoft.tekeramarketplace.model.enums.SellerDocumentType;
 import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
@@ -335,7 +334,6 @@ public class SellerService {
     public ApiResponse<?> sellerActivation(String sellerId) {
         Seller seller =  sellerRepository.findById(UUID.fromString(sellerId))
                 .orElseThrow(() -> new NotFoundException("Seller not found"));
-
         // Enum’daki tüm belgeler
         // List<SellerDocumentType> allRequired = Arrays.asList(SellerDocumentType.values());
 
@@ -343,15 +341,18 @@ public class SellerService {
                 UUID.fromString(sellerId),
                 VerificationStatus.VERIFIED
         );
-        if(findNotVerifiedSellerDocuments.isEmpty()) {
+        if(findNotVerifiedSellerDocuments.isEmpty() && !seller.getMerisNumber().isEmpty()) {
             seller.setActive(true);
             seller.setVerified(true);
             seller.setVerificationStatus(VerificationStatus.VERIFIED);
             sellerRepository.save(seller);
+            userService.attachSellerRole(seller.getUsers().stream().findFirst().get());
             return new ApiResponse<>("Satıcı onaylandı !", HttpStatus.OK.value());
         }
         throw new SellerVerificationException("Sellers not verified", findNotVerifiedSellerDocuments);
-        //return new SellerVerifiedResponse("Seller not verified",findNotVerifiedSellerDocuments.stream().map(fns -> fns.getDocumentTitle().name()).toList());
     }
 
+    // TODO: Seller accounting işlemleri için methodlar eklenecek alt kısım ve dahası belirt!!
+    // TODO: Seller urun satis bedeli / komisyon / indirim / kupon uygulanan fiyat indirisimsiz fiyat
+    // TODO: Seller shipping price için hesaplama yapılacak
 }

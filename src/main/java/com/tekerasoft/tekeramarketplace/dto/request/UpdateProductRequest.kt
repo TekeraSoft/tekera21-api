@@ -52,4 +52,8 @@ data class UpdateProductRequest(
     @JsonProperty("deleteImages")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     val deleteImages: List<String>? = listOf(),
+
+    @JsonProperty("deletedVariants")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val deletedVariants: List<String>? = null,
 )

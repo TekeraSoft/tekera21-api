@@ -142,9 +142,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(SellerVerificationException.class)
-    public ResponseEntity<Object> handleStockException(SellerVerificationException ex) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    public ResponseEntity<Map<String, Object>> handleSellerVerificationException(SellerVerificationException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getData());
+        body.put("statusCode", HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 }

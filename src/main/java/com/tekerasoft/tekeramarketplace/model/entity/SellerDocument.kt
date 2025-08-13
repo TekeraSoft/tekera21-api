@@ -10,7 +10,7 @@ import jakarta.persistence.Enumerated
 open class SellerDocument(
     @Enumerated(EnumType.STRING)
     open var documentTitle: SellerDocumentType?,
-    open var documentPath: String,
+    open var documentPath: String? = null,
     open var verificationStatus: VerificationStatus = VerificationStatus.PENDING,
     open var faultyDocumentDescription: String? = null,
 ) {

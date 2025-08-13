@@ -9,5 +9,15 @@ open class OrderDto(
     open var totalPrice: BigDecimal,
     open var sellerOrders: MutableList<SellerOrderDto>
 ) {
-
+    companion object {
+        @JvmStatic
+        fun toDto(from: Order): OrderDto {
+            return OrderDto(
+                from.orderNo,
+                from.shippingPrice,
+                from.totalPrice,
+                from.sellerOrder.map { it -> SellerOrderDto.toDto(it) }.toMutableList()
+            )
+        }
+    }
 }
