@@ -28,7 +28,7 @@ public class SearchItemService {
     }
 
     public List<SearchItem> searchProductOrCompany(String input) {
-        List<SearchItem> all = searchItemRepository.findByNameMatch(input);
+        List<SearchItem> all = searchItemRepository.findByNameAndSlugMatch(input);
 
         List<SearchItem> categories = all.stream()
                 .filter(i -> i.getItemType() == SearchItemType.CATEGORY)

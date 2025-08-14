@@ -22,7 +22,7 @@ open class Variation(
         name = "variation_images",
         joinColumns = [JoinColumn(name = "variation_id")]
     )
-    open var images: List<String> = listOf(),
+    open var images: MutableList<String> = mutableListOf(),
 
     @OneToMany(mappedBy="variation",fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open var attributes: MutableList<Attribute> = mutableListOf(),
@@ -36,7 +36,7 @@ open class Variation(
             modelName = "",
             modelCode = "",
             color = "",
-            images = listOf(),
+            images = mutableListOf(),
             attributes = mutableListOf(),
             product = Product(),
         )

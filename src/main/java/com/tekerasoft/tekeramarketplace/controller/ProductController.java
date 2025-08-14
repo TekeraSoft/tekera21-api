@@ -61,9 +61,10 @@ public class ProductController {
             @RequestParam(required = false) List<String> tags,
             @RequestParam(required = false) String style,
             @RequestParam(required = false) String subCategoryName,
+            @RequestParam(required = false) String categoryName,
             @RequestParam(required = false) String searchParam,
             Pageable pageable) {
-        return  ResponseEntity.ok(productService.filterProduct(color,clothSize,tags,style,subCategoryName,searchParam,pageable));
+        return  ResponseEntity.ok(productService.filterProduct(color,clothSize,tags,style,subCategoryName,categoryName,searchParam,pageable));
     }
 
     @GetMapping("/getProductsByCategory")

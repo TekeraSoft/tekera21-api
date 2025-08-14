@@ -7,6 +7,7 @@ import com.tekerasoft.tekeramarketplace.dto.request.*;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.exception.StockException;
+import com.tekerasoft.tekeramarketplace.exception.UnauthorizedException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.model.document.Cart;
 import com.tekerasoft.tekeramarketplace.model.document.CartAttributes;
@@ -14,6 +15,7 @@ import com.tekerasoft.tekeramarketplace.model.document.CartItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.*;
+import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -35,12 +37,17 @@ public class ProductService {
     private final SellerRepository sellerRepository;
     private final VariationRepository variationRepository;
     private final SearchItemService searchItemService;
+    private final SellerService sellerService;
+    private final AuthenticationFacade  authenticationFacade;
+
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
                           SubCategoryRepository subCategoryRepository,
                           SellerRepository sellerRepository,
-                          VariationRepository variationRepository, SearchItemService searchItemService) {
+                          VariationRepository variationRepository, SearchItemService searchItemService,
+                          SellerService sellerService,
+                          AuthenticationFacade authenticationFacade) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
@@ -48,6 +55,8 @@ public class ProductService {
         this.sellerRepository = sellerRepository;
         this.variationRepository = variationRepository;
         this.searchItemService = searchItemService;
+        this.sellerService = sellerService;
+        this.authenticationFacade = authenticationFacade;
     }
 
     public Product getById(UUID id) {
@@ -172,11 +181,15 @@ public class ProductService {
 
     @Transactional
     public ApiResponse<?> update(UpdateProductRequest req, List<MultipartFile> images) {
+        Seller checkSeller = sellerService.getSellerByUserId(authenticationFacade.getCurrentUserId());
+
         try {
             // Ürün bulunuyor
             Product product = productRepository.findById(UUID.fromString(req.getId()))
                     .orElseThrow(() -> new NotFoundException("Product not found: " + req.getId()));
-
+            if(!Objects.equals(product.getSeller().getId(), checkSeller.getId())) {
+                throw new UnauthorizedException("Bu ürünü güncellemek için yetkiniz yok !");
+            }
             // Temel alanlar
             product.setName(req.getName());
             product.setCode(req.getCode());
@@ -201,43 +214,36 @@ public class ProductService {
                     : new HashSet<>();
             product.setSubCategories(subCategories);
 
-            // Silinecek varyantlar
+            // Silinecek varyantlar (orphanRemoval ile Hibernate halledecek)
             if (req.getDeletedVariants() != null && !req.getDeletedVariants().isEmpty()) {
                 for (String variantId : req.getDeletedVariants()) {
                     UUID varUUID = UUID.fromString(variantId);
                     variationRepository.findById(varUUID).ifPresent(var -> {
-                        List<Variation> currentList = new ArrayList<>(product.getVariations());
-                        currentList.remove(var);
-                        product.setVariations(currentList);
-                        variationRepository.delete(var);
+                        product.getVariations().remove(var);
                     });
                 }
             }
 
             // Yeni / Güncellenmiş varyantlar
-            List<Variation> orderedVariations = new ArrayList<>();
-
+            List<Variation> updatedVariations = new ArrayList<>();
             if (req.getVariants() != null) {
                 for (VariationUpdateRequest varReq : req.getVariants()) {
                     Variation var;
                     if (varReq.getId() != null && !varReq.getId().isEmpty()) {
                         var = variationRepository.findById(UUID.fromString(varReq.getId()))
                                 .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
-                        var.setAttributes(new ArrayList<>());
                     } else {
                         var = new Variation();
-                        var.setAttributes(new ArrayList<>());
                     }
 
-                    // Varyasyon temel bilgileri
+                    // Varyant temel bilgileri
                     var.setProduct(product);
                     var.setModelName(varReq.getModelName());
                     var.setModelCode(varReq.getModelCode());
                     var.setColor(varReq.getColor());
 
-                    // Attribute'lar
-                    Variation finalVar = var;
-                    List<Attribute> variationAttributes = varReq.getAttributes() != null
+                    // Attribute'lar - Her zaman yeni, değiştirilebilir bir liste oluşturup atayın
+                    List<Attribute> newAttributes = varReq.getAttributes() != null
                             ? varReq.getAttributes().stream()
                             .map(attr -> new Attribute(
                                     attr.getPrice(),
@@ -247,20 +253,17 @@ public class ProductService {
                                     attr.getSku(),
                                     attr.getBarcode(),
                                     attr.getAttributeDetails(),
-                                    finalVar
+                                    var
                             ))
                             .collect(Collectors.toList())
                             : new ArrayList<>();
-                    var.setAttributes(new ArrayList<>(variationAttributes));
+                    var.setAttributes(newAttributes);
 
-                    // Görseller
+                    // Görseller - Burada da yeni bir liste oluşturup atıyoruz
                     Set<String> combinedImages = new LinkedHashSet<>();
-                    if (var.getImages() != null) {
-                        combinedImages.addAll(var.getImages());
-                    }
-                    if (varReq.getImageUrls() != null) {
-                        combinedImages.addAll(varReq.getImageUrls());
-                    }
+                    if (var.getImages() != null) combinedImages.addAll(var.getImages());
+                    if (varReq.getImageUrls() != null) combinedImages.addAll(varReq.getImageUrls());
+
                     if (images != null && !images.isEmpty()) {
                         for (MultipartFile image : images) {
                             Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
@@ -284,29 +287,33 @@ public class ProductService {
                     }
                     var.setImages(new ArrayList<>(combinedImages));
 
-                    orderedVariations.add(var);
+                    updatedVariations.add(var);
                 }
             }
 
-            // Eski listeyi mutable yap ve güncelle
-            product.setVariations(new ArrayList<>(orderedVariations));
+            // Varyant listesini güncelle
+            // Burada da aynı mantığı izleyerek yeni bir ArrayList oluşturup atıyoruz.
+            List<Variation> existingVariations = product.getVariations();
+            existingVariations.clear();
+            existingVariations.addAll(updatedVariations);
 
             // Silinecek görseller
             if (req.getDeleteImages() != null && !req.getDeleteImages().isEmpty()) {
                 for (String imageUrlToDelete : req.getDeleteImages()) {
                     fileService.deleteFileProduct(imageUrlToDelete);
                     for (Variation var : product.getVariations()) {
-                        List<String> updatedImages = var.getImages() != null
-                                ? new ArrayList<>(var.getImages())
-                                : new ArrayList<>();
-                        if (updatedImages.removeIf(img -> img.equals(imageUrlToDelete))) {
-                            var.setImages(updatedImages);
+                        if (var.getImages() != null) {
+                            // Mevcut listeyi değiştirilebilir bir kopyaya dönüştürerek işlemi yapıyoruz
+                            List<String> mutableImages = new ArrayList<>(var.getImages());
+                            if(mutableImages.removeIf(img -> img.equals(imageUrlToDelete))) {
+                                var.setImages(mutableImages);
+                            }
                         }
                     }
                 }
             }
 
-            // Video
+            // Video işlemleri
             if (req.getVideoUrl() != null) {
                 if (req.getVideoUrl().startsWith("temp")) {
                     String newPath = req.getVideoUrl().replace(
@@ -326,7 +333,7 @@ public class ProductService {
             productRepository.save(product);
             return new ApiResponse<>("Product Updated", HttpStatus.OK.value());
 
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Error updating product", e);
         }
     }
@@ -380,11 +387,25 @@ public class ProductService {
                 .map(ProductListDto::toDto);
     }
 
+    public Page<ProductDto> findProductBySeller(Pageable pageable) {
+        Seller seller = sellerService.getSellerByUserId(authenticationFacade.getCurrentUserId());
+        return productRepository.findActiveProductsByCompanyId(seller.getId(),pageable)
+                .map(ProductDto::toDto);
+    }
+
     public ProductDto findCompanyReturnProduct(String companyId, String slug) {
         return ProductDto.Companion.toDto(
                 productRepository.findActiveProductByCompanyIdAndSlug(UUID.fromString(companyId), slug)
                         .orElseThrow(() -> new NotFoundException("Product not found: " + slug))
         );
+    }
+
+    public ProductDto getProductBySeller(String productId) {
+        Seller seller = sellerService.getSellerByUserId(authenticationFacade.getCurrentUserId());
+        Product product = productRepository.findById(UUID.fromString(productId))
+                .orElseThrow(()-> new NotFoundException("Product not found: " + productId));
+        if(Objects.equals(product.getSeller().getId(), seller.getId())) return ProductDto.Companion.toDto(product);
+        throw new UnauthorizedException("Yetkisiz erişim size ait olmayan bir ürün çağırıyorsunuz !!");
     }
 
     public Page<ProductUiDto> findCompanyPopularOrNewSeasonProducts(String  companyId, String tag, Pageable pageable) {
@@ -402,6 +423,7 @@ public class ProductService {
 
     public Page<ProductUiDto> filterProduct(String color,String clothSize, List<String> tags,String style,
                                               String subCategoryName,
+                                              String categoryName,
                                               String searchParam,
                                               Pageable pageable) {
 
@@ -410,14 +432,16 @@ public class ProductService {
         tags = (tags == null || tags.isEmpty() ? null : tags);
         style = (style == null || style.isEmpty() ? null : style);
         subCategoryName = (subCategoryName == null || subCategoryName.isEmpty() ? null : subCategoryName);
+        categoryName = (categoryName == null || categoryName.isEmpty() ? null : categoryName);
         searchParam = (searchParam == null || searchParam.isEmpty() ? null : searchParam);
 
-        return productRepository.findByQueryField(color, clothSize, tags, style,subCategoryName,searchParam,pageable)
+        return productRepository.findByQueryField(color, clothSize, tags, style,subCategoryName,categoryName,searchParam,pageable)
                 .map(ProductUiDto::toProductUiDto);
     }
 
     public Page<ProductDto> filterAdminProduct(String color,String clothSize, List<String> tags,String style,
                                                String subCategoryName,
+                                               String categoryName,
                                                String searchParam,
                                                Pageable pageable) {
 
@@ -426,9 +450,10 @@ public class ProductService {
         tags = (tags == null || tags.isEmpty() ? null : tags);
         style = (style == null || style.isEmpty() ? null : style);
         subCategoryName = (subCategoryName == null || subCategoryName.isEmpty() ? null : subCategoryName);
+        categoryName = (categoryName == null || categoryName.isEmpty() ? null : categoryName);
         searchParam = (searchParam == null || searchParam.isEmpty() ? null : searchParam);
 
-        return productRepository.findByQueryField(color, clothSize, tags, style,subCategoryName,searchParam,pageable)
+        return productRepository.findByQueryField(color, clothSize, tags, style,subCategoryName,categoryName,searchParam,pageable)
                 .map(ProductDto::toDto);
     }
 

@@ -23,7 +23,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
        """)
     Page<Product> findActiveProducts(Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.isActive = true AND p.seller.id = :companyId")
+
+    @Query("SELECT p FROM Product p WHERE p.seller.id = :companyId")
     Page<Product> findActiveProductsByCompanyId(@Param("companyId") UUID companyId, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE :tag MEMBER OF p.tags AND p.seller.id = :companyId")
@@ -39,10 +40,20 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
      FROM Product p
      JOIN p.variations v
      JOIN v.attributes a
+     JOIN p.category c
      JOIN a.attributeDetails ad
      JOIN p.subCategories sc
     WHERE p.isActive = TRUE
-      AND (:subCategoryName IS NULL OR sc.name = :subCategoryName)
+      AND (
+          COALESCE(:subCategoryName, '') = ''\s
+          OR LOWER(sc.name) LIKE LOWER(CONCAT('%', :subCategoryName, '%'))\s
+          OR LOWER(sc.slug) LIKE LOWER(CONCAT('%', :subCategoryName, '%'))
+      )
+      AND (
+          COALESCE(:categoryName, '') = ''\s
+          OR LOWER(c.name) LIKE LOWER(CONCAT('%', :categoryName, '%'))\s
+          OR LOWER(c.slug) LIKE LOWER(CONCAT('%', :categoryName, '%'))
+      )
       AND (:color IS NULL OR v.color = :color)
       AND (:size IS NULL OR (ad.key = 'size' AND ad.value = :size))
       AND (:style IS NULL OR (ad.key = 'style' AND ad.value = :style))
@@ -57,6 +68,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
                                    @Param("tags") List<String> tags,
                                    @Param("style")  String style,
                                    @Param("subCategoryName") String subCategoryName,
+                                   @Param("categoryName") String categoryName,
                                    @Param("searchParam") String searchParam,
                                    Pageable pageable);
 

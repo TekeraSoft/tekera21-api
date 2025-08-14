@@ -25,16 +25,18 @@ public class SellerController {
     private final VariationService variationService;
     private final DigitalFashionService digitalFashionService;
     private final SellerOrderService sellerOrderService;
+    private final OrderService orderService;
 
     public SellerController(ProductService productService, SellerService sellerService, FileService fileService,
                             VariationService variationService, DigitalFashionService digitalFashionService,
-                            SellerOrderService sellerOrderService) {
+                            SellerOrderService sellerOrderService, OrderService orderService) {
         this.productService = productService;
         this.sellerService = sellerService;
         this.fileService = fileService;
         this.variationService = variationService;
         this.digitalFashionService = digitalFashionService;
         this.sellerOrderService = sellerOrderService;
+        this.orderService = orderService;
     }
 
     @PostMapping(value = "/createProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -104,8 +106,29 @@ public class SellerController {
         return ResponseEntity.ok(sellerOrderService.findOrdersByPhoneNumberOrUsername(searchParam));
     }
 
+    @GetMapping("/getSellerProducts")
+    public ResponseEntity<Page<ProductDto>> getSellerProducts(Pageable pageable) {
+        return ResponseEntity.ok(productService.findProductBySeller(pageable));
+    }
+
+    @GetMapping("/getProductBySellerCheck")
+    public ResponseEntity<ProductDto> getProductBySellerCheck(@RequestParam String productId) {
+        return ResponseEntity.ok(productService.getProductBySeller(productId));
+    }
+
     @GetMapping("/getSellerInformation")
     public ResponseEntity<SellerAdminDto> getSellerByUserId() {
         return ResponseEntity.ok(sellerService.getSellerInformation());
     }
+
+    @GetMapping("/getSellerOrders")
+    public ResponseEntity<Page<OrderDto>> findSellerOrders(Pageable pageable) {
+        return ResponseEntity.ok(orderService.getSellerOrders(pageable));
+    }
+
+    @GetMapping("/getSellerReport")
+    public ResponseEntity<SellerReportAggregation> getSellerReportBySellerUserId() {
+        return ResponseEntity.ok(sellerService.getSellerReportBySellerUserId());
+    }
+
 }

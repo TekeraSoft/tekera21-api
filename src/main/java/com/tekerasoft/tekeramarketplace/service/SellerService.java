@@ -2,7 +2,7 @@ package com.tekerasoft.tekeramarketplace.service;
 
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
-import com.tekerasoft.tekeramarketplace.dto.SellerReportDto;
+import com.tekerasoft.tekeramarketplace.dto.SellerReportAggregation;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.UpdateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
@@ -25,10 +25,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -285,6 +281,27 @@ public class SellerService {
         return new ApiResponse<>("Changed document status", HttpStatus.OK.value());
     }
 
+    public ApiResponse<?> sellerActivation(String sellerId) {
+        Seller seller =  sellerRepository.findById(UUID.fromString(sellerId))
+                .orElseThrow(() -> new NotFoundException("Seller not found"));
+        // Enum’daki tüm belgeler
+        // List<SellerDocumentType> allRequired = Arrays.asList(SellerDocumentType.values());
+
+        List<SellerDocument> findNotVerifiedSellerDocuments = sellerRepository.findUnverifiedDocumentsBySeller(
+                UUID.fromString(sellerId),
+                VerificationStatus.VERIFIED
+        );
+        if(findNotVerifiedSellerDocuments.isEmpty() && !seller.getMerisNumber().isEmpty()) {
+            seller.setActive(true);
+            seller.setVerified(true);
+            seller.setVerificationStatus(VerificationStatus.VERIFIED);
+            sellerRepository.save(seller);
+            userService.attachSellerRole(seller.getUsers().stream().findFirst().get());
+            return new ApiResponse<>("Satıcı onaylandı !", HttpStatus.OK.value());
+        }
+        throw new SellerVerificationException("Sellers not verified", findNotVerifiedSellerDocuments);
+    }
+
     public Seller getSellerById(String id) {
         return sellerRepository.findById(UUID.fromString(id)).orElseThrow(() ->
                 new NotFoundException("Seller not found: " + id));
@@ -292,6 +309,15 @@ public class SellerService {
 
     public Seller getSellerByUserId(String userId) {
         return sellerRepository.findSellerByUserId(UUID.fromString(userId));
+    }
+
+    public void saveSellerOrder(String sellerId, SellerOrder sellerOrder) {
+        Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
+                        .orElseThrow(() -> new NotFoundException("Seller not found: " + sellerId));
+        List<SellerOrder> orders = new ArrayList<>();
+        orders.add(sellerOrder);
+        seller.setSellerOrders(orders);
+        sellerRepository.save(seller);
     }
 
     public ApiResponse<?> changeSellerActiveStatus(String sellerId) {
@@ -336,39 +362,10 @@ public class SellerService {
         return sellerRepository.findAll(pageable).map(SellerAdminDto::toDto);
     }
 
-    public ApiResponse<?> sellerActivation(String sellerId) {
-        Seller seller =  sellerRepository.findById(UUID.fromString(sellerId))
-                .orElseThrow(() -> new NotFoundException("Seller not found"));
-        // Enum’daki tüm belgeler
-        // List<SellerDocumentType> allRequired = Arrays.asList(SellerDocumentType.values());
-
-        List<SellerDocument> findNotVerifiedSellerDocuments = sellerRepository.findUnverifiedDocumentsBySeller(
-                UUID.fromString(sellerId),
-                VerificationStatus.VERIFIED
-        );
-        if(findNotVerifiedSellerDocuments.isEmpty() && !seller.getMerisNumber().isEmpty()) {
-            seller.setActive(true);
-            seller.setVerified(true);
-            seller.setVerificationStatus(VerificationStatus.VERIFIED);
-            sellerRepository.save(seller);
-            userService.attachSellerRole(seller.getUsers().stream().findFirst().get());
-            return new ApiResponse<>("Satıcı onaylandı !", HttpStatus.OK.value());
-        }
-        throw new SellerVerificationException("Sellers not verified", findNotVerifiedSellerDocuments);
+    public SellerReportAggregation getSellerReportBySellerUserId() {
+        String seller = sellerRepository.findSellerByUserId(UUID.fromString(authenticationFacade.getCurrentUserId()))
+                .getId().toString();
+        return sellerRepository.getSellerAggregatedProfit(UUID.fromString(seller));
     }
-
-    // TODO: Seller accounting işlemleri için methodlar eklenecek alt kısım ve dahası belirt!!
-    // TODO: Seller urun satis bedeli / komisyon / indirim / kupon uygulanan fiyat indirisimsiz fiyat
-    // TODO: Seller shipping price için hesaplama yapılacak
-
-//    public SellerReportDto getSellerReportBySellerUserId(String sellerUserId) {
-//        Seller seller = sellerRepository.findSellerByUserId(UUID.fromString(authenticationFacade.getCurrentUserId()));
-//        LocalDate now = LocalDate.now();
-//        BigDecimal dailyProfit = seller.getSellerOrders().stream()
-//                .filter(so -> so.getCreatedAt().toLocalDate().isEqual(now)) // sadece bugünün siparişleri
-//                .flatMap(so -> so.getBasketItems().stream())
-//                .map(BasketItem::getPrice)
-//                .reduce(BigDecimal.ZERO, BigDecimal::add);
-//    }
 
 }

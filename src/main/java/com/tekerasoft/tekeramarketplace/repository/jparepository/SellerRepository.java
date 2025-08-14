@@ -19,7 +19,7 @@ import java.util.UUID;
 public interface SellerRepository extends JpaRepository<Seller, UUID> {
 
     @Query("SELECT p FROM Seller p WHERE p.isActive = true")
-    Page<Seller> findActiveCompanies(Pageable pageable);
+    Page<Seller> findActiveSeller(Pageable pageable);
 
     @Query("""
     SELECT d
@@ -40,21 +40,27 @@ public interface SellerRepository extends JpaRepository<Seller, UUID> {
     @Query("SELECT s FROM Seller s JOIN s.users u WHERE u.id = :userId")
     Seller findSellerByUserId(@Param("userId") UUID userId);
 
+
     @Query("SELECT p FROM Seller s " +
             "JOIN s.users u " +
             "JOIN s.products p " +
             "WHERE u.id = :userId")
     Page<Product> findProductsByUserId(@Param("userId") UUID userId,Pageable pageable);
 
-    @Query("SELECT new com.tekerasoft.tekeramarketplace.dto.SellerReportAggregation(" +
-            "SUM(CASE WHEN FUNCTION('DATE', so.createdAt) = CURRENT_DATE THEN bi.price ELSE 0 END), " +
-            "SUM(CASE WHEN FUNCTION('YEARWEEK', so.createdAt, 1) = FUNCTION('YEARWEEK', CURRENT_DATE, 1) THEN bi.price ELSE 0 END), " +
-            "SUM(CASE WHEN FUNCTION('MONTH', so.createdAt) = FUNCTION('MONTH', CURRENT_DATE) AND FUNCTION('YEAR', so.createdAt) = FUNCTION('YEAR', CURRENT_DATE) THEN bi.price ELSE 0 END)) " +
-            "FROM Seller s " +
-            "JOIN s.sellerOrders so " +
-            "JOIN so.basketItems bi " +
-            "WHERE s.id = :sellerId")
-    SellerReportAggregation getSellerAggregatedProfit(@Param("sellerId") Long sellerId);
+    @Query(
+            "SELECT new com.tekerasoft.tekeramarketplace.dto.SellerReportAggregation(" +
+                    // Günlük
+                    "COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','day', so.createdAt) = FUNCTION('date_trunc','day', CURRENT_TIMESTAMP) THEN bi.price ELSE NULL END), 0), " +
+                    // Haftalık (ISO week, Pazartesi başlangıç)
+                    "COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','week', so.createdAt) = FUNCTION('date_trunc','week', CURRENT_TIMESTAMP) THEN bi.price ELSE NULL END), 0), " +
+                    // Aylık
+                    "COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','month', so.createdAt) = FUNCTION('date_trunc','month', CURRENT_TIMESTAMP) THEN bi.price ELSE NULL END), 0)) " +
+                    "FROM Seller s " +
+                    "JOIN s.sellerOrders so " +
+                    "JOIN so.basketItems bi " +
+                    "WHERE s.id = :sellerId"
+    )
+    SellerReportAggregation getSellerAggregatedProfit(@Param("sellerId") java.util.UUID sellerId);
 
     @Query("SELECT SUM(bi.price) " +
             "FROM Seller s " +

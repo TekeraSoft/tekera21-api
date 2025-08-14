@@ -220,6 +220,7 @@ public class FileService {
 
     public String generatePresignedUploadUrl(String objectName) {
         try {
+            System.out.println(objectName);
             return minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .bucket(bucketName)

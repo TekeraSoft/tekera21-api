@@ -26,10 +26,12 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final SellerOrderService sellerOrderService;
+    private final AuthenticationFacade authenticationFacade;
 
-    public OrderService(OrderRepository orderRepository, SellerOrderService sellerOrderService) {
+    public OrderService(OrderRepository orderRepository, SellerOrderService sellerOrderService, AuthenticationFacade authenticationFacade) {
         this.orderRepository = orderRepository;
         this.sellerOrderService = sellerOrderService;
+        this.authenticationFacade = authenticationFacade;
     }
 
     public Order createOrder(String orderNumber,
@@ -54,6 +56,12 @@ public class OrderService {
         order.setSellerOrder(sellerOrders);
 
        return orderRepository.save(order);
+    }
+
+    public Page<OrderDto> getSellerOrders(Pageable pageable) {
+        return orderRepository
+                .getSellerOrdersByUserId(UUID.fromString(authenticationFacade.getCurrentUserId()),pageable)
+                .map(OrderDto::toDto);
     }
 
     public Order getOrderByOrderNo(String orderNo) {

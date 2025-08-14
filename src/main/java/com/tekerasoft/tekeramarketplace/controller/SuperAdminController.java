@@ -106,9 +106,10 @@ public class SuperAdminController {
             @RequestParam(required = false) List<String> tags,
             @RequestParam(required = false) String style,
             @RequestParam(required = false) String subCategoryName,
+            @RequestParam(required = false) String categoryName,
             @RequestParam(required = false) String searchParam,
             Pageable pageable) {
-        return  ResponseEntity.ok(productService.filterAdminProduct(color,size,tags,style,subCategoryName,searchParam,pageable));
+        return  ResponseEntity.ok(productService.filterAdminProduct(color,size,tags,style,subCategoryName,categoryName,searchParam,pageable));
     }
 
     @PostMapping(value ="/createTheme", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -159,10 +160,5 @@ public class SuperAdminController {
     @PostMapping("/createShippingCompany")
     public ResponseEntity<ApiResponse<?>> createShippingCompany(@RequestBody CreateShippingCompanyRequest req) {
         return ResponseEntity.ok(shippingCompanyService.createShippingCompany(req));
-    }
-
-    @GetMapping("/getAllOrder")
-    public ResponseEntity<Page<SellerOrderDto>> getAllOrder(Pageable pageable) {
-        return ResponseEntity.ok(sellerOrderService.getAllOrder(pageable));
     }
 }

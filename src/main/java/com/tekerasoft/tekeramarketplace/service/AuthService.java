@@ -114,7 +114,7 @@ public class AuthService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", user.get().getId());
         if(seller != null) {
-
+            claims.put("sellerId", seller.getId());
         }
         claims.put("roles", user.get().getRoles());
         claims.put("email", user.get().getEmail());

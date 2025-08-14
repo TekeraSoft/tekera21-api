@@ -30,7 +30,20 @@ public interface SellerOrderRepository extends JpaRepository<SellerOrder, UUID> 
     SELECT o
     FROM SellerOrder o
     WHERE o.user.id = :userId
+    """)
+        Page<SellerOrder> findOrderByUserId(@Param("userId") UUID userId, Pageable pageable);
+
+
+    @Query("""
+    SELECT DISTINCT so
+    FROM SellerOrder so
+    JOIN so.basketItems bi
+    JOIN bi.seller s
+    JOIN s.users u
+    WHERE u.id = :userId
 """)
-    Page<SellerOrder> findOrderByUserId(@Param("userId") UUID userId, Pageable pageable);
+    Page<SellerOrder> findSellerOrdersByUserId(@Param("userId") UUID userId, Pageable pageable);
 }
+
+
  // TODO findorderbyuserid ye ekle sorguya AND o.paymentStatus = com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus.PAID

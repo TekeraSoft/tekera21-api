@@ -6,4 +6,6 @@ data class SellerReportAggregation(
     val dailyProfit: BigDecimal,
     val weeklyProfit: BigDecimal,
     val monthlyProfit: BigDecimal
-)
+) {
+    constructor(): this(BigDecimal.ZERO, BigDecimal.ZERO,BigDecimal.ZERO)
+}

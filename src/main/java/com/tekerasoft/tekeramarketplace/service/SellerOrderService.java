@@ -1,6 +1,5 @@
 package com.tekerasoft.tekeramarketplace.service;
 
-import com.tekerasoft.tekeramarketplace.dto.OrderDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerOrderDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateOrderRequest;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
@@ -155,6 +154,12 @@ public class SellerOrderService {
             ordersToSave.add(sellerOrder);
         }
 
+        for(SellerOrder sellerOrder : ordersToSave) {
+            sellerOrder.getBasketItems().forEach(bi -> {
+                sellerService.saveSellerOrder(bi.getSeller().getId().toString(), sellerOrder);
+            });
+        }
+
         // persist all orders in one shot (transactional)
         return sellerOrderRepository.saveAll(ordersToSave);
     }
@@ -177,11 +182,6 @@ public class SellerOrderService {
 
     }
 
-    public SellerOrder getOrderById(String orderId) {
-        return sellerOrderRepository.findById(UUID.fromString(orderId))
-                .orElseThrow(() -> new NotFoundException("Order not found"));
-    }
-
     public Page<SellerOrderDto> getAllOrder(Pageable pageable) {
         return sellerOrderRepository.findAll(pageable).map(SellerOrderDto::toDto);
     }
@@ -201,6 +201,12 @@ public class SellerOrderService {
 
     public Page<SellerOrderDto> findOrdersContainingBasketItemsForCompany(String companyId, Pageable pageable) {
         return sellerOrderRepository.findOrdersContainingBasketItemsForCompany(UUID.fromString(companyId), pageable)
+                .map(SellerOrderDto::toDto);
+    }
+
+    public Page<SellerOrderDto> findSellerOrdersByUserId(Pageable pageable) {
+        String userId = authenticationFacade.getCurrentUserId();
+        return sellerOrderRepository.findSellerOrdersByUserId(UUID.fromString(userId), pageable)
                 .map(SellerOrderDto::toDto);
     }
 }

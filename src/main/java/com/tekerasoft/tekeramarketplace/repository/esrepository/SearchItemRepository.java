@@ -11,7 +11,28 @@ import java.util.List;
 
 public interface SearchItemRepository extends ElasticsearchRepository<SearchItem, String> {
 
-    @Query("{\"bool\": {\"should\": [{\"match\": {\"name\": \"?0\"}}]}}")
-    List<SearchItem> findByNameMatch(String searchTerm);
+    @Query("""
+{
+  "bool": {
+    "should": [
+      {
+        "match": {
+          "name": {
+            "query": "?0"
+          }
+        }
+      },
+      {
+        "match": {
+          "slug": {
+            "query": "?0"
+          }
+        }
+      }
+    ]
+  }
+}
+""")
+    List<SearchItem> findByNameAndSlugMatch(String searchTerm);
 
 }
