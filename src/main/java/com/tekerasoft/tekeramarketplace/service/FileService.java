@@ -220,7 +220,6 @@ public class FileService {
 
     public String generatePresignedUploadUrl(String objectName) {
         try {
-            System.out.println(objectName);
             return minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .bucket(bucketName)
@@ -234,7 +233,7 @@ public class FileService {
         }
     }
 
-    @Scheduled(cron = "0 0/30 * * * *")
+    @Scheduled(cron = "0 0/5 * * * *")
     public void cleanOldTempVideos() {
         Iterable<Result<Item>> items = minioClient.listObjects(ListObjectsArgs.builder()
                 .bucket(bucketName)

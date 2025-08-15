@@ -66,12 +66,10 @@ public class Filter extends OncePerRequestFilter {
         try {
             // 2. Token'dan kullanıcı adını çıkar
             username = jwtService.extractUser(token);
-
             // 3. Kullanıcı adı mevcutsa ve mevcut bir kimlik doğrulama yoksa
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 // 4. Kullanıcı detaylarını yükle
                 UserDetails userDetails = userService.loadUserByUsername(username);
-
                 // 5. Token'ı doğrula
                 if (jwtService.validateToken(token, userDetails)) {
                     // 6. Kimlik doğrulama nesnesi oluştur ve güvenlik bağlamına ayarla

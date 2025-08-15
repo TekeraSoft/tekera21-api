@@ -159,16 +159,16 @@ public class ProductService {
             product.setVariations(variations);
 
             // Video
-            if (req.getVideoUrl() != null) {
-                if (req.getVideoUrl().startsWith("/temp")) {
-                    String newPath = req.getVideoUrl().replace("temp/", "products/");
-                    fileService.copyObject(req.getVideoUrl(), newPath);
-                    product.setVideoUrl(newPath);
-                    fileService.deleteInFolderFile(req.getVideoUrl());
-                } else {
-                    product.setVideoUrl(req.getVideoUrl());
-                }
-            }
+//            if (req.getVideoUrl() != null) {
+//                if (req.getVideoUrl().startsWith("/temp")) {
+//                    String newPath = req.getVideoUrl().replace("temp/", "products/");
+//                    fileService.copyObject(req.getVideoUrl(), newPath);
+//                    product.setVideoUrl(newPath);
+//                    fileService.deleteInFolderFile(req.getVideoUrl());
+//                } else {
+//                    product.setVideoUrl(req.getVideoUrl());
+//                }
+//            }
 
             productRepository.save(product);
 
@@ -200,7 +200,6 @@ public class ProductService {
             product.setTags(req.getTags() != null ? new ArrayList<>(req.getTags()) : new ArrayList<>());
             product.setAttributes(req.getAttributeDetails() != null ? new ArrayList<>(req.getAttributeDetails()) : new ArrayList<>());
 
-            // Kategori
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             product.setCategory(category);
@@ -214,57 +213,65 @@ public class ProductService {
                     : new HashSet<>();
             product.setSubCategories(subCategories);
 
-            // Silinecek varyantlar (orphanRemoval ile Hibernate halledecek)
+            // Silinecek varyantlar
             if (req.getDeletedVariants() != null && !req.getDeletedVariants().isEmpty()) {
+                List<Variation> toRemove = new ArrayList<>();
                 for (String variantId : req.getDeletedVariants()) {
                     UUID varUUID = UUID.fromString(variantId);
-                    variationRepository.findById(varUUID).ifPresent(var -> {
-                        product.getVariations().remove(var);
-                    });
+                    product.getVariations().stream()
+                            .filter(v -> v.getId().equals(varUUID))
+                            .findFirst()
+                            .ifPresent(toRemove::add);
                 }
+                product.getVariations().removeAll(toRemove);
             }
 
             // Yeni / Güncellenmiş varyantlar
-            List<Variation> updatedVariations = new ArrayList<>();
+            Map<UUID, Variation> existingVariationMap = product.getVariations().stream()
+                    .collect(Collectors.toMap(Variation::getId, v -> v));
+
             if (req.getVariants() != null) {
                 for (VariationUpdateRequest varReq : req.getVariants()) {
                     Variation var;
                     if (varReq.getId() != null && !varReq.getId().isEmpty()) {
-                        var = variationRepository.findById(UUID.fromString(varReq.getId()))
-                                .orElseThrow(() -> new NotFoundException("Variation not found: " + varReq.getId()));
+                        UUID varUUID = UUID.fromString(varReq.getId());
+                        var = existingVariationMap.getOrDefault(varUUID, new Variation());
                     } else {
                         var = new Variation();
                     }
 
-                    // Varyant temel bilgileri
                     var.setProduct(product);
                     var.setModelName(varReq.getModelName());
                     var.setModelCode(varReq.getModelCode());
                     var.setColor(varReq.getColor());
 
-                    // Attribute'lar - Her zaman yeni, değiştirilebilir bir liste oluşturup atayın
-                    List<Attribute> newAttributes = varReq.getAttributes() != null
-                            ? varReq.getAttributes().stream()
-                            .map(attr -> new Attribute(
-                                    attr.getPrice(),
-                                    attr.getDiscountPrice(),
-                                    attr.getStock(),
-                                    attr.getMaxPurchaseStock(),
-                                    attr.getSku(),
-                                    attr.getBarcode(),
-                                    attr.getAttributeDetails(),
-                                    var
-                            ))
-                            .collect(Collectors.toList())
-                            : new ArrayList<>();
-                    var.setAttributes(newAttributes);
+                    var.getAttributes().clear();
 
-                    // Görseller - Burada da yeni bir liste oluşturup atıyoruz
+                    if (varReq.getAttributes() != null) {
+                        for (AttributeUpdateRequest attrReq : varReq.getAttributes()) {
+                            Attribute attr = new Attribute();
+                            attr.setPrice(attrReq.getPrice());
+                            attr.setDiscountPrice(attrReq.getDiscountPrice());
+                            attr.setStock(attrReq.getStock());
+                            attr.setMaxPurchaseStock(attrReq.getMaxPurchaseStock());
+                            attr.setSku(attrReq.getSku());
+                            attr.setBarcode(attrReq.getBarcode());
+                            attr.setVariation(var);
+
+                            // AttributeDetail ekleme
+                                attr.setAttributeDetails(attrReq.getAttributeDetails());
+
+
+                            var.getAttributes().add(attr);
+                        }
+                    }
+
+                    // Görseller
                     Set<String> combinedImages = new LinkedHashSet<>();
                     if (var.getImages() != null) combinedImages.addAll(var.getImages());
                     if (varReq.getImageUrls() != null) combinedImages.addAll(varReq.getImageUrls());
 
-                    if (images != null && !images.isEmpty()) {
+                    if (images != null) {
                         for (MultipartFile image : images) {
                             Map<String, String> parsed = parseImageFileName(image.getOriginalFilename());
                             if (parsed == null) continue;
@@ -287,25 +294,20 @@ public class ProductService {
                     }
                     var.setImages(new ArrayList<>(combinedImages));
 
-                    updatedVariations.add(var);
+                    if (!product.getVariations().contains(var)) {
+                        product.getVariations().add(var);
+                    }
                 }
             }
 
-            // Varyant listesini güncelle
-            // Burada da aynı mantığı izleyerek yeni bir ArrayList oluşturup atıyoruz.
-            List<Variation> existingVariations = product.getVariations();
-            existingVariations.clear();
-            existingVariations.addAll(updatedVariations);
-
             // Silinecek görseller
-            if (req.getDeleteImages() != null && !req.getDeleteImages().isEmpty()) {
+            if (req.getDeleteImages() != null) {
                 for (String imageUrlToDelete : req.getDeleteImages()) {
                     fileService.deleteFileProduct(imageUrlToDelete);
                     for (Variation var : product.getVariations()) {
                         if (var.getImages() != null) {
-                            // Mevcut listeyi değiştirilebilir bir kopyaya dönüştürerek işlemi yapıyoruz
                             List<String> mutableImages = new ArrayList<>(var.getImages());
-                            if(mutableImages.removeIf(img -> img.equals(imageUrlToDelete))) {
+                            if (mutableImages.removeIf(img -> img.equals(imageUrlToDelete))) {
                                 var.setImages(mutableImages);
                             }
                         }
@@ -322,7 +324,6 @@ public class ProductService {
                     );
                     fileService.copyObject(req.getVideoUrl(), newPath);
                     product.setVideoUrl(newPath);
-                    fileService.deleteInFolderFile(req.getVideoUrl());
                 } else {
                     product.setVideoUrl(req.getVideoUrl());
                 }
@@ -331,7 +332,7 @@ public class ProductService {
             }
 
             productRepository.save(product);
-            return new ApiResponse<>("Product Updated", HttpStatus.OK.value());
+            return new ApiResponse<>("Ürün güncellendi", HttpStatus.OK.value());
 
         } catch (Exception e) {
             throw new RuntimeException("Error updating product", e);

@@ -26,13 +26,9 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
     private final Filter filter;
 
-    public SecurityConfig(UserService userService, PasswordEncoder passwordEncoder, Filter filter) {
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
+    public SecurityConfig(Filter filter) {
         this.filter = filter;
     }
 
@@ -95,14 +91,6 @@ public class SecurityConfig {
 
         return source;
     }
-
-//    @Bean
-//    public AuthenticationProvider authenticationProvider() {
-//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//        authenticationProvider.setUserDetailsService(userService);
-//        authenticationProvider.setPasswordEncoder(passwordEncoder);
-//        return  authenticationProvider;
-//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
