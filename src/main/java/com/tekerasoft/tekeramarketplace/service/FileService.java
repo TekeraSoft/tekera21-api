@@ -3,8 +3,6 @@ package com.tekerasoft.tekeramarketplace.service;
 import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Item;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,7 +26,6 @@ public class FileService {
     private String bucketName;
 
     private final MinioClient minioClient;
-    private static Logger logger = LoggerFactory.getLogger(FileService.class);
 
     public FileService(MinioClient minioClient) {
         this.minioClient = minioClient;
@@ -233,6 +230,25 @@ public class FileService {
         }
     }
 
+    public void copyObject(String sourcePath, String destinationPath) {
+        try {
+            CopySource source = CopySource.builder()
+                    .bucket(bucketName)
+                    .object(sourcePath)
+                    .build();
+
+            CopyObjectArgs args = CopyObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(destinationPath)
+                    .source(source)
+                    .build();
+
+            minioClient.copyObject(args);
+        } catch (Exception e) {
+            return;
+        }
+    }
+
     @Scheduled(cron = "0 0/5 * * * *")
     public void cleanOldTempVideos() {
         Iterable<Result<Item>> items = minioClient.listObjects(ListObjectsArgs.builder()
@@ -252,27 +268,10 @@ public class FileService {
                             .build());
                 }
             } catch (Exception e) {
-                logger.warn("Failed to delete temp file: {}", e.getMessage());
+                return;
             }
         });
     }
 
-    public void copyObject(String sourcePath, String destinationPath) {
-        try {
-            CopySource source = CopySource.builder()
-                    .bucket(bucketName)
-                    .object(sourcePath)
-                    .build();
 
-            CopyObjectArgs args = CopyObjectArgs.builder()
-                    .bucket(bucketName)
-                    .object(destinationPath)
-                    .source(source)
-                    .build();
-
-            minioClient.copyObject(args);
-        } catch (Exception e) {
-            logger.error("Copy object error: {}", e.getMessage(), e);
-        }
-    }
 }

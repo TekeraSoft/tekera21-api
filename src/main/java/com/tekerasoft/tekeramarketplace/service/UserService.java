@@ -1,6 +1,6 @@
 package com.tekerasoft.tekeramarketplace.service;
 
-import com.tekerasoft.tekeramarketplace.dto.UserDto;
+import com.tekerasoft.tekeramarketplace.dto.UserAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateUserRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.SellerVerificationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
@@ -9,6 +9,8 @@ import com.tekerasoft.tekeramarketplace.model.entity.User;
 import com.tekerasoft.tekeramarketplace.model.enums.Role;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,11 +28,14 @@ public class UserService implements UserDetailsService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final Random random = new Random();
+    private final RoleService roleService;
 
-    public UserService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder,
+                       RoleService roleService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
+        this.roleService = roleService;
     }
 
     @Override
@@ -47,7 +52,6 @@ public class UserService implements UserDetailsService {
         user.setGsmNumber(req.getGsmNumber());
         user.setGender(req.getGender());
         user.setBirthDate(req.getBirthDate());
-        user.setRoles(Set.of(Role.CUSTOMER));
         user.setHashedPassword(passwordEncoder.encode(req.getPassword()));
         userRepository.save(user);
     }
@@ -103,13 +107,13 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void changeUserRole(User user) {
-        user.setRoles(new HashSet<>(List.of(Role.WITHOUT_APPROVAL_SELLER)));;
+    public void setApprovalSellerRole(User user) {
+        user.setRoles(new HashSet<>(List.of(roleService.getRole(Role.WITHOUT_APPROVAL_SELLER.name()))));;
         userRepository.save(user);
     }
 
     public void attachSellerRole(User user) {
-        user.setRoles(new HashSet<>(List.of(Role.SELLER)));
+        user.setRoles(new HashSet<>(List.of(roleService.getRole(Role.SELLER.name()))));
         userRepository.save(user);
     }
 
@@ -126,7 +130,7 @@ public class UserService implements UserDetailsService {
                 return new ApiResponse<>("Şifre başarıyla değiştirildi giriş yapabilirsiniz", HttpStatus.OK.value());
             }
         } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
+            return null;
         }
         return new ApiResponse<>("Beklenmedik bir hata oluştu lütfen tekrar deneyin",HttpStatus.NOT_FOUND.value());
     }
@@ -155,4 +159,21 @@ public class UserService implements UserDetailsService {
         }
 
     }
+
+    public Page<UserAdminDto> getAllUser(Pageable pageable) {
+        return userRepository.findAll(pageable).map(UserAdminDto::toDto);
+    }
+
+    public ApiResponse<?> changeUserRole(String userId, Role role) {
+        try {
+            User user = userRepository.findById(UUID.fromString(userId))
+                    .orElseThrow(() -> new NotFoundException("Kullanıcı bulunamadı !"));
+            user.setRoles(new HashSet<>(Set.of(roleService.getRole(role.name()))));
+            userRepository.save(user);
+            return new ApiResponse<>("Kullanıcı rolü değiştirildi",HttpStatus.OK.value());
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
 }

@@ -158,19 +158,18 @@ public class ProductService {
 
             product.setVariations(variations);
 
-            // Video
-//            if (req.getVideoUrl() != null) {
-//                if (req.getVideoUrl().startsWith("/temp")) {
-//                    String newPath = req.getVideoUrl().replace("temp/", "products/");
-//                    fileService.copyObject(req.getVideoUrl(), newPath);
-//                    product.setVideoUrl(newPath);
-//                    fileService.deleteInFolderFile(req.getVideoUrl());
-//                } else {
-//                    product.setVideoUrl(req.getVideoUrl());
-//                }
-//            }
+            Product savedProduct = productRepository.save(product);
 
-            productRepository.save(product);
+            SearchItem searchItem = new SearchItem();
+            searchItem.setId(savedProduct.getId().toString());
+            searchItem.setName(savedProduct.getName());
+            searchItem.setSlug(savedProduct.getSlug());
+            searchItem.setCategoryName(savedProduct.getCategory().getName());
+            searchItem.setCategorySlug(savedProduct.getCategory().getSlug());
+            searchItem.setCompanyId(savedProduct.getSeller().getId().toString());
+            searchItem.setImageUrl(product.getVariations().get(0).getImages().get(0));
+            searchItem.setItemType(SearchItemType.PRODUCT);
+            searchItem.setRate(0.0);
 
             return new ApiResponse<>("Product Created", HttpStatus.CREATED.value());
 

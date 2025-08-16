@@ -64,7 +64,7 @@ public class SellerService {
         }
         try {
             User user = userService.getUserInformation(authenticationFacade.getCurrentUserId());
-            userService.changeUserRole(user);
+            userService.setApprovalSellerRole(user);
             Set<ShippingCompany> shippingCompanySet = new HashSet<>();
             for(String sc: req.getShippingCompanies()) {
                 ShippingCompany shippingCompany = shippingCompanyService.getShippingCompany(sc);
@@ -345,7 +345,13 @@ public class SellerService {
 
     public SellerAdminDto getSellerInformation(){
         String sellerUserId = authenticationFacade.getCurrentUserId();
-        return SellerAdminDto.toDto(sellerRepository.findSellerByUserId(UUID.fromString(sellerUserId)));
+        Seller seller = sellerRepository.findSellerByUserId(UUID.fromString(sellerUserId));
+
+        if (seller == null) {
+            throw new RuntimeException("Seller not found for userId: " + sellerUserId);
+        }
+
+        return SellerAdminDto.toDto(seller);
     }
 
     public Page<ProductListDto> getSellerProducts(Pageable pageable) {

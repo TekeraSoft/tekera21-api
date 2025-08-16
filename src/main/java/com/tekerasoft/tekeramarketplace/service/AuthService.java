@@ -6,6 +6,7 @@ import com.tekerasoft.tekeramarketplace.dto.request.LoginRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.dto.response.JwtResponse;
 import com.tekerasoft.tekeramarketplace.exception.UserException;
+import com.tekerasoft.tekeramarketplace.model.entity.Role;
 import com.tekerasoft.tekeramarketplace.model.entity.Seller;
 import com.tekerasoft.tekeramarketplace.model.entity.User;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -116,7 +118,10 @@ public class AuthService {
         if(seller != null) {
             claims.put("sellerId", seller.getId());
         }
-        claims.put("roles", user.get().getRoles());
+        claims.put("roles",user.get().getRoles()
+                .stream()
+                .map(Role::getName)
+                .collect(Collectors.toList()));
         claims.put("email", user.get().getEmail());
         claims.put("phoneNumber", user.get().getGsmNumber());
         claims.put("nameSurname", user.get().getFirstName()+ " " + user.get().getLastName());

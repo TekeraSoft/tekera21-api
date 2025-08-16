@@ -3,6 +3,7 @@ package com.tekerasoft.tekeramarketplace.controller;
 import com.tekerasoft.tekeramarketplace.dto.*;
 import com.tekerasoft.tekeramarketplace.dto.request.*;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.model.enums.Role;
 import com.tekerasoft.tekeramarketplace.service.*;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -161,4 +162,15 @@ public class SuperAdminController {
     public ResponseEntity<ApiResponse<?>> createShippingCompany(@RequestBody CreateShippingCompanyRequest req) {
         return ResponseEntity.ok(shippingCompanyService.createShippingCompany(req));
     }
+
+    @GetMapping("/getAllUser")
+    public ResponseEntity<Page<UserAdminDto>> getAllUser(Pageable pageable) {
+        return ResponseEntity.ok(userService.getAllUser(pageable));
+    }
+
+    @PutMapping("/changaUserRole")
+    public ResponseEntity<ApiResponse<?>> changeUserRole(@RequestParam String userId, @RequestParam Role role) {
+        return ResponseEntity.ok(userService.changeUserRole(userId, role));
+    }
+
 }

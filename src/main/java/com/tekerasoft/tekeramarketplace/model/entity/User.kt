@@ -2,10 +2,9 @@ package com.tekerasoft.tekeramarketplace.model.entity
 
 import com.tekerasoft.tekeramarketplace.model.enums.Gender
 import com.tekerasoft.tekeramarketplace.model.enums.Permission
-import com.tekerasoft.tekeramarketplace.model.enums.Role
 import jakarta.persistence.*
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -13,52 +12,55 @@ import java.time.LocalDateTime
 @Table(name = "users", uniqueConstraints = [
     UniqueConstraint(columnNames = ["email"])
 ])
-data class User (
-    var firstName: String,
-    var lastName: String,
-    var email: String,
-    var hashedPassword: String,
+open class User (
+    open var firstName: String,
+    open var lastName: String,
+    open var email: String,
+    open var hashedPassword: String,
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = [JoinColumn(name = "user_id")])
-    @Enumerated(EnumType.STRING)
-    var roles: MutableSet<Role>? = mutableSetOf(Role.CUSTOMER),
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_roles",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "role_id")]
+    )
+    open var roles: MutableSet<Role> = mutableSetOf(),
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "user_permissions", joinColumns = [JoinColumn(name = "user_id")])
     @Enumerated(EnumType.STRING)
-    var permissions: MutableSet<Permission>? = mutableSetOf(),
+    open var permissions: MutableSet<Permission>? = mutableSetOf(),
 
     @Enumerated(EnumType.STRING)
-    var gender: Gender,
+    open var gender: Gender,
 
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var orders: MutableList<SellerOrder>? = mutableListOf(),
+    open var orders: MutableList<SellerOrder>? = mutableListOf(),
 
-    var gsmNumber: String,
+    open var gsmNumber: String,
 
     @OneToMany(fetch = FetchType.LAZY)
-    var followSellers: MutableList<Seller>? = mutableListOf(),
+    open var followSellers: MutableList<Seller>? = mutableListOf(),
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "user_topics", joinColumns = [JoinColumn(name = "user_id")])
-    var relatedTopics: MutableSet<String>? = mutableSetOf(),
+    open var relatedTopics: MutableSet<String>? = mutableSetOf(),
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var address: MutableList<Address>? = mutableListOf(),
+    open var address: MutableList<Address>? = mutableListOf(),
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "user_fav_products", joinColumns = [JoinColumn(name = "user_id")])
-    var favProducts: List<String>? = null,
+    open var favProducts: List<String>? = null,
 
-    var birthDate: LocalDate? = null,
-    var lastLogin: LocalDateTime,
+    open var birthDate: LocalDate? = null,
+    open var lastLogin: LocalDateTime,
 
-    var assignCount: Int? = 0,
+    open var assignCount: Int? = 0,
 
     ): BaseEntity() , UserDetails {
 
-    override fun getAuthorities()= this.roles
+    override fun getAuthorities(): MutableSet<out GrantedAuthority> = roles
 
     override fun getPassword() = this.hashedPassword
 

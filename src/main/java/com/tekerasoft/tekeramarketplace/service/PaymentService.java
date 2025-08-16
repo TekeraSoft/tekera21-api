@@ -9,7 +9,6 @@ import com.iyzipay.model.Locale;
 import com.iyzipay.request.CreatePaymentRequest;
 import com.iyzipay.request.CreateThreedsPaymentRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.BasketItemRequest;
-import com.tekerasoft.tekeramarketplace.dto.request.CreateOrderRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.CreatePayRequest;
 import com.tekerasoft.tekeramarketplace.exception.PaymentException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
@@ -18,8 +17,6 @@ import com.tekerasoft.tekeramarketplace.model.enums.PaymentType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +39,6 @@ public class PaymentService {
     private final Options options;
     private final OrderService orderService;
     private final AttributeService attributeService;
-    private static final Logger logger = LoggerFactory.getLogger(PaymentService.class);
 
     public PaymentService(Options options, OrderService orderService, AttributeService attributeService,
                           ProductService productService, SellerOrderService sellerOrderService) {
@@ -158,7 +154,7 @@ public class PaymentService {
             paymentRequest.setBasketItems(basketItems);
             return ThreedsInitialize.create(paymentRequest,options);
         } catch (RuntimeException e) {
-            throw new RuntimeException("Error Creating Payment Request",e);
+            return null;
         }
     }
 
@@ -173,7 +169,6 @@ public class PaymentService {
             return ThreedsPayment.create(threedsPaymentRequest, options);
 
         } catch (RuntimeException e) {
-            logger.error(e.getMessage());
             throw new RuntimeException("Sistemde yaşanan bir sorundan dolayı ödeme alınamadı lütfen tekrar deneyiniz.");
         }
     }
@@ -203,8 +198,7 @@ public class PaymentService {
                 response.sendRedirect(originUrl + "/odeme/basarisiz");
             }
         } catch (IOException e) {
-            logger.error(e.getMessage());
-            throw new PaymentException("Error completing 3D Secure Payment");
+            return null;
         }
         return null;
     }
