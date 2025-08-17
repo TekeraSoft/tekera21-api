@@ -49,12 +49,9 @@ public interface SellerRepository extends JpaRepository<Seller, UUID> {
 
     @Query(
             "SELECT new com.tekerasoft.tekeramarketplace.dto.SellerReportAggregation(" +
-                    // Günlük
-                    "COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','day', so.createdAt) = FUNCTION('date_trunc','day', CURRENT_TIMESTAMP) THEN bi.price ELSE NULL END), 0), " +
-                    // Haftalık (ISO week, Pazartesi başlangıç)
-                    "COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','week', so.createdAt) = FUNCTION('date_trunc','week', CURRENT_TIMESTAMP) THEN bi.price ELSE NULL END), 0), " +
-                    // Aylık
-                    "COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','month', so.createdAt) = FUNCTION('date_trunc','month', CURRENT_TIMESTAMP) THEN bi.price ELSE NULL END), 0)) " +
+                    "COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','day', so.createdAt) = FUNCTION('date_trunc','day', CURRENT_TIMESTAMP) THEN (bi.price * bi.quantity) ELSE NULL END), 0), " +
+                    "COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','week', so.createdAt) = FUNCTION('date_trunc','week', CURRENT_TIMESTAMP) THEN (bi.price * bi.quantity) ELSE NULL END), 0), " +
+                    "COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','month', so.createdAt) = FUNCTION('date_trunc','month', CURRENT_TIMESTAMP) THEN (bi.price * bi.quantity) ELSE NULL END), 0)) " +
                     "FROM Seller s " +
                     "JOIN s.sellerOrders so " +
                     "JOIN so.basketItems bi " +

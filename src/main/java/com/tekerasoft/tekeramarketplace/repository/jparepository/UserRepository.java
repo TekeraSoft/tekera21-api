@@ -9,12 +9,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
+
     Optional<User> findByEmail(String email);
 
     @Query(
             value = "SELECT u.* FROM users u " +
                     "JOIN user_roles ur ON ur.user_id = u.id " +
-                    "WHERE ur.roles = 'SELLER_SUPPORT' AND (u.assign_count < 7 OR u.assign_count IS NULL)",
+                    "JOIN roles r ON ur.role_id = r.id " +
+                    "WHERE r.name = 'SELLER_SUPPORT' " +
+                    "AND (u.assign_count < 7 OR u.assign_count IS NULL)",
             nativeQuery = true
     )
     List<User> findEligibleSupports();
@@ -22,7 +25,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query(
             value = "SELECT u.* FROM users u " +
                     "JOIN user_roles ur ON ur.user_id = u.id " +
-                    "WHERE ur.roles = 'SELLER_SUPPORT'",
+                    "JOIN roles r ON ur.role_id = r.id " +
+                    "WHERE r.name = 'SELLER_SUPPORT'",
             nativeQuery = true
     )
     List<User> findAllSupports();

@@ -62,6 +62,11 @@ public class SellerController {
         return ResponseEntity.ok(productService.getCustomerProduct(productId));
     }
 
+    @DeleteMapping("/deleteProductById")
+    public ApiResponse<?> deleteProductById(@RequestParam String productId) {
+        return productService.deleteProduct(productId);
+    }
+
     @GetMapping("/sellerGallery")
     public ResponseEntity<Page<String>> sellerGallery(@RequestParam String companyId, Pageable pageable)
             throws Exception {
@@ -92,13 +97,6 @@ public class SellerController {
     @DeleteMapping("/deleteTargetPic")
     public ApiResponse<?> deleteTargetPicture(@RequestParam String id) {
         return digitalFashionService.deleteTargetPicture(id);
-    }
-
-    @GetMapping("/findOrdersContainingBasketItemsForSeller")
-    public ResponseEntity<Page<SellerOrderDto>> findOrdersContainingBasketItemsForCompany(@RequestParam String companyId,
-                                                                                    Pageable pageable)
-    {
-        return ResponseEntity.ok(sellerOrderService.findOrdersContainingBasketItemsForCompany(companyId,pageable));
     }
 
     @GetMapping("findOrdersByPhoneNumberOrUsername")

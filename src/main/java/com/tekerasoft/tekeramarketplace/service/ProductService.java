@@ -18,6 +18,7 @@ import com.tekerasoft.tekeramarketplace.repository.jparepository.*;
 import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -160,22 +161,28 @@ public class ProductService {
 
             Product savedProduct = productRepository.save(product);
 
-            SearchItem searchItem = new SearchItem();
-            searchItem.setId(savedProduct.getId().toString());
-            searchItem.setName(savedProduct.getName());
-            searchItem.setSlug(savedProduct.getSlug());
-            searchItem.setCategoryName(savedProduct.getCategory().getName());
-            searchItem.setCategorySlug(savedProduct.getCategory().getSlug());
-            searchItem.setCompanyId(savedProduct.getSeller().getId().toString());
-            searchItem.setImageUrl(product.getVariations().get(0).getImages().get(0));
-            searchItem.setItemType(SearchItemType.PRODUCT);
-            searchItem.setRate(0.0);
-
+            SearchItem searchItem = getSearchItem(savedProduct, product);
+            searchItemService.createIndex(searchItem);
             return new ApiResponse<>("Product Created", HttpStatus.CREATED.value());
 
         } catch (RuntimeException e) {
             throw new RuntimeException("Error creating product", e);
         }
+    }
+
+    @NotNull
+    private static SearchItem getSearchItem(Product savedProduct, Product product) {
+        SearchItem searchItem = new SearchItem();
+        searchItem.setId(savedProduct.getId().toString());
+        searchItem.setName(savedProduct.getName());
+        searchItem.setSlug(savedProduct.getSlug());
+        searchItem.setCategoryName(savedProduct.getCategory().getName());
+        searchItem.setCategorySlug(savedProduct.getCategory().getSlug());
+        searchItem.setCompanyId(savedProduct.getSeller().getId().toString());
+        searchItem.setImageUrl(product.getVariations().get(0).getImages().get(0));
+        searchItem.setItemType(SearchItemType.PRODUCT);
+        searchItem.setRate(0.0);
+        return searchItem;
     }
 
     @Transactional
@@ -196,8 +203,10 @@ public class ProductService {
             product.setDescription(req.getDescription());
             product.setCurrencyType(req.getCurrencyType());
             product.setProductType(req.getProductType());
-            product.setTags(req.getTags() != null ? new ArrayList<>(req.getTags()) : new ArrayList<>());
-            product.setAttributes(req.getAttributeDetails() != null ? new ArrayList<>(req.getAttributeDetails()) : new ArrayList<>());
+            req.getTags();
+            product.setTags(new ArrayList<>(req.getTags()));
+            req.getAttributeDetails();
+            product.setAttributes(new ArrayList<>(req.getAttributeDetails()));
 
             Category category = categoryRepository.findById(UUID.fromString(req.getCategoryId()))
                     .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -214,15 +223,21 @@ public class ProductService {
 
             // Silinecek varyantlar
             if (req.getDeletedVariants() != null && !req.getDeletedVariants().isEmpty()) {
-                List<Variation> toRemove = new ArrayList<>();
                 for (String variantId : req.getDeletedVariants()) {
-                    UUID varUUID = UUID.fromString(variantId);
                     product.getVariations().stream()
-                            .filter(v -> v.getId().equals(varUUID))
+                            .filter(v -> v.getId().equals(UUID.fromString(variantId)))
                             .findFirst()
-                            .ifPresent(toRemove::add);
+                            .ifPresent(var -> {
+                                // önce görselleri sil
+                                var.getImages();
+                                for (String imgUrl : var.getImages()) {
+                                    fileService.deleteFileProduct(imgUrl);
+                                }
+
+                                // sonra variation'ı listeden kaldır
+                                product.getVariations().remove(var);
+                            });
                 }
-                product.getVariations().removeAll(toRemove);
             }
 
             // Yeni / Güncellenmiş varyantlar

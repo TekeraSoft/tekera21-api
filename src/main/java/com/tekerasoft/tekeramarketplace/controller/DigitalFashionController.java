@@ -18,7 +18,7 @@ public class DigitalFashionController {
         this.digitalFashionService = digitalFashionService;
     }
 
-    @GetMapping("/get-all-target-pic")
+    @GetMapping("/getAllTargetPicture")
     public Page<TargetPictureDto> getAllTargetPictures(Pageable pageable) {
         return digitalFashionService.getAllTargetPictures(pageable);
     }

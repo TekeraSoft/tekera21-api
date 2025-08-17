@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.service;
 
+import com.tekerasoft.tekeramarketplace.dto.OrderDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerOrderDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateOrderRequest;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
@@ -10,6 +11,7 @@ import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,14 +27,15 @@ public class SellerOrderService {
     private final VariationService variationService;
     private final SellerService sellerService;
     private final AuthenticationFacade authenticationFacade;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     public SellerOrderService(SellerOrderRepository sellerOrderRepository,
-                        UserService userService,
-                        AttributeService attributeService,
-                        ProductService productService,
-                        VariationService variationService,
-                        SellerService sellerService,
-                        AuthenticationFacade authenticationFacade) {
+                              UserService userService,
+                              AttributeService attributeService,
+                              ProductService productService,
+                              VariationService variationService,
+                              SellerService sellerService,
+                              AuthenticationFacade authenticationFacade, SimpMessagingTemplate simpMessagingTemplate) {
         this.sellerOrderRepository = sellerOrderRepository;
         this.userService = userService;
         this.attributeService = attributeService;
@@ -40,6 +43,7 @@ public class SellerOrderService {
         this.variationService = variationService;
         this.sellerService = sellerService;
         this.authenticationFacade = authenticationFacade;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
     @Transactional
     public List<SellerOrder> createSellerOrder(CreateOrderRequest req) {
@@ -175,6 +179,14 @@ public class SellerOrderService {
                     attributeService.decreaseStock(bi.getAttributeId(), bi.getQuantity());
                 }
                 sellerOrderRepository.save(order);
+                Set<UUID> sellerIds = order.getBasketItems().stream()
+                        .map(bi -> bi.getSeller().getId())
+                        .collect(Collectors.toSet());
+                for(UUID sellerId : sellerIds) {
+                    simpMessagingTemplate.convertAndSend(
+                            "/topic/sellerOrders/"+sellerId.toString(),
+                            SellerOrderDto.toDto(order));
+                }
             }
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
@@ -182,9 +194,6 @@ public class SellerOrderService {
 
     }
 
-    public Page<SellerOrderDto> getAllOrder(Pageable pageable) {
-        return sellerOrderRepository.findAll(pageable).map(SellerOrderDto::toDto);
-    }
 
     public List<SellerOrderDto> findOrdersByPhoneNumberOrUsername(String searchParam) {
         return sellerOrderRepository.findOrdersByPhoneNumberOrUsername(searchParam)

@@ -23,9 +23,6 @@ public interface SellerOrderRepository extends JpaRepository<SellerOrder, UUID> 
     """)
     List<SellerOrder> findOrdersByPhoneNumberOrUsername(@Param("searchParam") String searchParam);
 
-    @Query("SELECT DISTINCT o FROM SellerOrder o JOIN o.basketItems bi WHERE bi.seller.id = :companyId")
-    Page<SellerOrder> findOrdersContainingBasketItemsForCompany(@Param("companyId") UUID companyId, Pageable pageable);
-
     @Query("""
     SELECT o
     FROM SellerOrder o
@@ -41,9 +38,9 @@ public interface SellerOrderRepository extends JpaRepository<SellerOrder, UUID> 
     JOIN bi.seller s
     JOIN s.users u
     WHERE u.id = :userId
+    AND so.paymentStatus = com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus.PAID
 """)
     Page<SellerOrder> findSellerOrdersByUserId(@Param("userId") UUID userId, Pageable pageable);
 }
 
 
- // TODO findorderbyuserid ye ekle sorguya AND o.paymentStatus = com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus.PAID
