@@ -14,13 +14,14 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     Order findByOrderNo(String orderNo);
 
     @Query("""
-        SELECT DISTINCT o
-        FROM Order o
-        JOIN o.sellerOrder so
-        JOIN so.basketItems bi
-        JOIN bi.seller s
-        JOIN s.users u
-        WHERE u.id = :userId
-    """)
+    SELECT DISTINCT o
+    FROM Order o
+    JOIN o.sellerOrder so
+    JOIN so.basketItems bi
+    JOIN bi.seller s
+    JOIN s.users u
+    WHERE u.id = :userId
+    ORDER BY o.createdAt DESC
+""")
     Page<Order> getSellerOrdersByUserId(@Param("userId") UUID userId, Pageable pageable);
 }

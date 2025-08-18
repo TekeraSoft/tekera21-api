@@ -2,7 +2,10 @@ package com.tekerasoft.tekeramarketplace.repository.jparepository;
 
 import com.tekerasoft.tekeramarketplace.dto.SellerReportAggregation;
 import com.tekerasoft.tekeramarketplace.model.entity.Order;
+import com.tekerasoft.tekeramarketplace.model.entity.Seller;
 import com.tekerasoft.tekeramarketplace.model.entity.SellerOrder;
+import com.tekerasoft.tekeramarketplace.model.entity.User;
+import com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface SellerOrderRepository extends JpaRepository<SellerOrder, UUID> {
@@ -30,6 +34,11 @@ public interface SellerOrderRepository extends JpaRepository<SellerOrder, UUID> 
     """)
         Page<SellerOrder> findOrderByUserId(@Param("userId") UUID userId, Pageable pageable);
 
+    @Query("SELECT so FROM SellerOrder so JOIN so.basketItems bi " +
+            "WHERE bi.seller.id = :sellerId " +
+            "AND so.paymentStatus = :status")
+    Optional<SellerOrder> findPendingOrderBySeller(@Param("sellerId") UUID sellerId,
+                                                   @Param("status") PaymentStatus status);
 
     @Query("""
     SELECT DISTINCT so

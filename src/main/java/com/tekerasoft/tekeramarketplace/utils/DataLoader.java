@@ -38,6 +38,8 @@ public class DataLoader implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final ShippingCompanyRepository shippingCompanyRepository;
     private final RoleRepository roleRepository;
+    private final OrderRepository orderRepository;
+    private final SellerOrderRepository sellerOrderRepository;
 
     // Constructorı güncelledik
     public DataLoader(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository,
@@ -46,7 +48,7 @@ public class DataLoader implements CommandLineRunner {
                       SellerRepository sellerRepository, SearchItemRepository searchItemRepository, UserRepository userRepository,
                       PasswordEncoder passwordEncoder,
                       ShippingCompanyRepository shippingCompanyRepository,
-                      RoleRepository roleRepository) { // <<-- 2. DEĞİŞİKLİK: Bu parametreyi ekledik
+                      RoleRepository roleRepository, OrderRepository orderRepository, SellerOrderRepository sellerOrderRepository) { // <<-- 2. DEĞİŞİKLİK: Bu parametreyi ekledik
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository; // <<-- Bu satırı ekledik (2. değişikliğin parçası)
         this.objectMapper = objectMapper;
@@ -57,11 +59,16 @@ public class DataLoader implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
         this.shippingCompanyRepository = shippingCompanyRepository;
         this.roleRepository = roleRepository;
+        this.orderRepository = orderRepository;
+        this.sellerOrderRepository = sellerOrderRepository;
     }
 
     @Override
     @Transactional
     public void run(String... args) throws Exception {
+
+//        orderRepository.deleteAll();
+//        sellerOrderRepository.deleteAll();
 
         // Başlangıç rolleri
         List<String> defaultRoles = List.of(

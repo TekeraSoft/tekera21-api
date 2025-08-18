@@ -28,9 +28,6 @@ data class CreateProductRequest(
     @JsonProperty("categoryId")
     val categoryId: String,
 
-    @JsonProperty("companyId")
-    val companyId: String,
-
     @JsonProperty("subCategories")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     val subCategories: List<String>? = null,

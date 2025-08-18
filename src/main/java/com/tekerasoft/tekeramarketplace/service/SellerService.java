@@ -348,7 +348,7 @@ public class SellerService {
         Seller seller = sellerRepository.findSellerByUserId(UUID.fromString(sellerUserId));
 
         if (seller == null) {
-            throw new RuntimeException("Seller not found for userId: " + sellerUserId);
+            return null;
         }
 
         return SellerAdminDto.toDto(seller);

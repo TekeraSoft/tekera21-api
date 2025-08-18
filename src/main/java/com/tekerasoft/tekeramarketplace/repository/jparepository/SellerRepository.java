@@ -49,13 +49,16 @@ public interface SellerRepository extends JpaRepository<Seller, UUID> {
 
     @Query(
             "SELECT new com.tekerasoft.tekeramarketplace.dto.SellerReportAggregation(" +
-                    "COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','day', so.createdAt) = FUNCTION('date_trunc','day', CURRENT_TIMESTAMP) THEN (bi.price * bi.quantity) ELSE NULL END), 0), " +
-                    "COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','week', so.createdAt) = FUNCTION('date_trunc','week', CURRENT_TIMESTAMP) THEN (bi.price * bi.quantity) ELSE NULL END), 0), " +
-                    "COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','month', so.createdAt) = FUNCTION('date_trunc','month', CURRENT_TIMESTAMP) THEN (bi.price * bi.quantity) ELSE NULL END), 0)) " +
-                    "FROM Seller s " +
-                    "JOIN s.sellerOrders so " +
+                    "  COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','day', so.createdAt) = FUNCTION('date_trunc','day', CURRENT_TIMESTAMP) " +
+                    "                    THEN (bi.price * bi.quantity) END), 0), " +
+                    "  COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','week', so.createdAt) = FUNCTION('date_trunc','week', CURRENT_TIMESTAMP) " +
+                    "                    THEN (bi.price * bi.quantity) END), 0), " +
+                    "  COALESCE(SUM(CASE WHEN FUNCTION('date_trunc','month', so.createdAt) = FUNCTION('date_trunc','month', CURRENT_TIMESTAMP) " +
+                    "                    THEN (bi.price * bi.quantity) END), 0) " +
+                    ") " +
+                    "FROM SellerOrder so " +
                     "JOIN so.basketItems bi " +
-                    "WHERE s.id = :sellerId"
+                    "WHERE bi.seller.id = :sellerId"
     )
     SellerReportAggregation getSellerAggregatedProfit(@Param("sellerId") java.util.UUID sellerId);
 

@@ -80,8 +80,7 @@ public class ProductService {
             product.setActive(true);
 
             // Company
-            Seller seller = sellerRepository.findById(UUID.fromString(req.getCompanyId()))
-                    .orElseThrow(() -> new RuntimeException("Company not found"));
+            Seller seller = sellerService.getSellerByUserId(authenticationFacade.getCurrentUserId());
             product.setSeller(seller);
             seller.getProducts().add(product);
 
