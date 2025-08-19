@@ -346,11 +346,9 @@ public class SellerService {
     public SellerAdminDto getSellerInformation(){
         String sellerUserId = authenticationFacade.getCurrentUserId();
         Seller seller = sellerRepository.findSellerByUserId(UUID.fromString(sellerUserId));
-
         if (seller == null) {
             return null;
         }
-
         return SellerAdminDto.toDto(seller);
     }
 

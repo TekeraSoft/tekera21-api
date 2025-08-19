@@ -41,6 +41,10 @@ public class SellerVerificationService {
                 .map(SellerVerificationSupportDto::toDto);
     }
 
+    public SellerVerification getSellerVerification(String userId) {
+        return sellerVerificationRepository.findSupervisorVerificationBySupportId(UUID.fromString(userId));
+    }
+
     @Transactional
     public void assignToSupervisorSeller(String sellerUserId, Seller seller) {
         SellerVerification sellerVerification = new SellerVerification();

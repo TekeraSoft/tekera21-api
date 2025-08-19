@@ -1,8 +1,6 @@
 package com.tekerasoft.tekeramarketplace.model.document
 
-import com.tekerasoft.tekeramarketplace.config.NoArg
 import jakarta.persistence.Id
-import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import java.io.Serializable
 import java.math.BigDecimal

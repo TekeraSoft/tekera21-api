@@ -3,6 +3,7 @@ package com.tekerasoft.tekeramarketplace.controller;
 import com.tekerasoft.tekeramarketplace.dto.*;
 import com.tekerasoft.tekeramarketplace.dto.request.*;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.model.document.Setting;
 import com.tekerasoft.tekeramarketplace.model.enums.Role;
 import com.tekerasoft.tekeramarketplace.service.*;
 import jakarta.validation.Valid;
@@ -25,13 +26,12 @@ public class SuperAdminController {
     private final FashionCollectionService fashionCollectionService;
     private final ShippingCompanyService shippingCompanyService;
     private final UserService userService;
-    private final SellerOrderService sellerOrderService;
+    private final SettingService settingService;
 
     public SuperAdminController(CategoryService categoryService, SubCategoryService subCategoryService,
                                 SellerService sellerService, ProductService productService,
                                 ThemeService themeService, FashionCollectionService fashionCollectionService,
-                                ShippingCompanyService shippingCompanyService, UserService userService,
-                                SellerOrderService sellerOrderService)
+                                ShippingCompanyService shippingCompanyService, UserService userService, SettingService settingService)
     {
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
@@ -41,7 +41,17 @@ public class SuperAdminController {
         this.fashionCollectionService = fashionCollectionService;
         this.shippingCompanyService = shippingCompanyService;
         this.userService = userService;
-        this.sellerOrderService = sellerOrderService;
+        this.settingService = settingService;
+    }
+
+    @PutMapping("/changeSettings")
+    public ResponseEntity<ApiResponse<Setting>> changeSettings(@RequestBody Setting setting) {
+        return ResponseEntity.ok(settingService.updateSettings(setting));
+    }
+
+    @GetMapping("/getSettings")
+    public ResponseEntity<Setting> getSettings() {
+        return ResponseEntity.ok(settingService.getSettings());
     }
 
     @PostMapping(value = "/createCategory", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

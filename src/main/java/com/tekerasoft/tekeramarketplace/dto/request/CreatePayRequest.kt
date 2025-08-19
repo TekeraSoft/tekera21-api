@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.math.BigDecimal
 
 data class CreatePayRequest(
+    @JsonProperty("cartId")
+    val cartId: String,
     @JsonProperty("paymentCard")
     val paymentCard: PaymentCard,
     @JsonProperty("buyer")

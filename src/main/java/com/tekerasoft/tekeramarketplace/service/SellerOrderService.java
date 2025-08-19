@@ -25,25 +25,24 @@ public class SellerOrderService {
     private final AttributeService attributeService;
     private final ProductService productService;
     private final VariationService variationService;
-    private final SellerService sellerService;
     private final AuthenticationFacade authenticationFacade;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final CartService cartService;
 
     public SellerOrderService(SellerOrderRepository sellerOrderRepository,
                               UserService userService,
                               AttributeService attributeService,
                               ProductService productService,
                               VariationService variationService,
-                              SellerService sellerService,
-                              AuthenticationFacade authenticationFacade, SimpMessagingTemplate simpMessagingTemplate) {
+                              AuthenticationFacade authenticationFacade, SimpMessagingTemplate simpMessagingTemplate, CartService cartService) {
         this.sellerOrderRepository = sellerOrderRepository;
         this.userService = userService;
         this.attributeService = attributeService;
         this.productService = productService;
         this.variationService = variationService;
-        this.sellerService = sellerService;
         this.authenticationFacade = authenticationFacade;
         this.simpMessagingTemplate = simpMessagingTemplate;
+        this.cartService = cartService;
     }
 
 
@@ -159,12 +158,6 @@ public class SellerOrderService {
                 ordersToSave.add(sellerOrder);
             }
 
-            for(SellerOrder sellerOrder : ordersToSave) {
-                sellerOrder.getBasketItems().forEach(bi -> {
-                    sellerService.saveSellerOrder(bi.getSeller().getId().toString(), sellerOrder);
-                });
-            }
-
             return sellerOrderRepository.saveAll(ordersToSave);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -174,12 +167,13 @@ public class SellerOrderService {
 
 
     @Transactional
-    public void completeOrder(String sellerOrderId, PaymentStatus paymentStatus) {
+    public void completeOrder(String sellerOrderId, PaymentStatus paymentStatus,String cartId) {
         try {
             SellerOrder order = sellerOrderRepository.findById(UUID.fromString(sellerOrderId))
                     .orElseThrow(() -> new NotFoundException("Order not found"));
             if (paymentStatus.equals(PaymentStatus.PAID)) {
                 order.setPaymentStatus(paymentStatus);
+                cartService.clearCart(cartId);
 
                 for (BasketItem bi : order.getBasketItems()) {
                     attributeService.decreaseStock(bi.getAttributeId(), bi.getQuantity());

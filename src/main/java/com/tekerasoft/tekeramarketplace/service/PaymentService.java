@@ -66,6 +66,7 @@ public class PaymentService {
                     }).reduce(BigDecimal.ZERO, BigDecimal::add);
 
             Order order = orderService.createOrder(
+                    req.getCartId(),
                     orderNumber,
                     req,
                     totalPrice,
@@ -158,7 +159,7 @@ public class PaymentService {
         }
     }
 
-    // TODO: ORDER ID LER TESPIT EDILECEK VE STOK ADETİ QUANTİTY KADAR DÜŞÜRÜLECEK
+
     public ThreedsPayment completePayment(String paymentId, String conversationId) {
         try {
             CreateThreedsPaymentRequest threedsPaymentRequest = new CreateThreedsPaymentRequest();
@@ -173,14 +174,14 @@ public class PaymentService {
         }
     }
 
-    // TODO: Ödeme onayı gelir gelmez order status durumları bu method da PAID olacak
+
     @Transactional
     public String paymentCheck (HttpServletRequest request, HttpServletResponse response) {
         try {
             Map<String, String[]> parameters =  request.getParameterMap();
             String paymentId = parameters.containsKey("paymentId") ? parameters.get("paymentId")[0] : null;
             String conversationId = parameters.containsKey("conversationId") ? parameters.get("conversationId")[0] : null;
-            // TODO lanet olsun bele hayata
+
             ThreedsPayment threedsPayment = completePayment(paymentId, conversationId);
 
 
@@ -191,7 +192,7 @@ public class PaymentService {
             if(threedsPayment.getStatus().equals("success")) {
                 Order order = orderService.getOrderByOrderNo(conversationId);
                 for (SellerOrder so: order.getSellerOrder()) {
-                    sellerOrderService.completeOrder(so.getId().toString(), PaymentStatus.PAID);
+                    sellerOrderService.completeOrder(so.getId().toString(), PaymentStatus.PAID,order.getCartId());
                 }
                 response.sendRedirect(originUrl + "/odeme/basarili");
             } else {

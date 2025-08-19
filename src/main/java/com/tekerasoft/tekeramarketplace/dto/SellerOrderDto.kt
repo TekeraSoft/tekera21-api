@@ -2,6 +2,7 @@ package com.tekerasoft.tekeramarketplace.dto
 
 import com.tekerasoft.tekeramarketplace.model.entity.SellerOrder
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 data class SellerOrderDto(
     val id: String?,
@@ -9,6 +10,8 @@ data class SellerOrderDto(
     val basketItems: MutableList<BasketItemDto>,
     val shippingAddress: AddressDto,
     val billingAddress: AddressDto?,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
     val totalPrice: BigDecimal,
 ) {
     companion object {
@@ -39,6 +42,8 @@ data class SellerOrderDto(
                 ) }.toMutableList(),
                 from.shippingAddress.let { it -> AddressDto.toDto(it) },
                 from.billingAddress?.let { it -> AddressDto.toDto(it) },
+                from.createdAt,
+                from.updatedAt,
                 from.totalPrice,
                 )
         }

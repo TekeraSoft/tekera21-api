@@ -8,6 +8,7 @@ import java.math.BigDecimal
 open class Order(
 
     open var orderNo: String,
+    open var cartId: String,
     open var shippingPrice: BigDecimal,
     open var totalPrice: BigDecimal,
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
@@ -15,5 +16,5 @@ open class Order(
 
     ): BaseEntity()
 {
-        constructor(): this("", BigDecimal.ZERO, BigDecimal.ZERO,mutableListOf())
+        constructor(): this("","", BigDecimal.ZERO, BigDecimal.ZERO,mutableListOf())
 }

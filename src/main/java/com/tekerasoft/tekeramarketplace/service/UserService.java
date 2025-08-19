@@ -29,13 +29,15 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final Random random = new Random();
     private final RoleService roleService;
+    private final SellerVerificationService sellerVerificationService;
 
     public UserService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder,
-                       RoleService roleService) {
+                       RoleService roleService, SellerVerificationService sellerVerificationService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
+        this.sellerVerificationService = sellerVerificationService;
     }
 
     @Override
@@ -93,6 +95,8 @@ public class UserService implements UserDetailsService {
         return selectedSupport;
     }
 
+    // TODO: support assign count decrease
+
     public ApiResponse<?> activeUserSellerRole(SellerVerificationRequest req) {
         User user = userRepository.findById(UUID.fromString(req.getUserId()))
                 .orElseThrow(() -> new UsernameNotFoundException(req.getUserId()));
@@ -132,7 +136,7 @@ public class UserService implements UserDetailsService {
         } catch (RuntimeException e) {
             return null;
         }
-        return new ApiResponse<>("Beklenmedik bir hata oluştu lütfen tekrar deneyin",HttpStatus.NOT_FOUND.value());
+        return new ApiResponse<>("Beklenmedik bir hata oluştu lütfen tekrar deneyin !",HttpStatus.NOT_FOUND.value());
     }
 
 
@@ -176,6 +180,6 @@ public class UserService implements UserDetailsService {
         }
     }
 
-
+      // TODO: user active deactivate
 
 }

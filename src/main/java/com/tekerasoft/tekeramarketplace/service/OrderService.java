@@ -34,7 +34,9 @@ public class OrderService {
         this.authenticationFacade = authenticationFacade;
     }
 
-    public Order createOrder(String orderNumber,
+    public Order createOrder(
+            String cartId,
+            String orderNumber,
                              CreatePayRequest req,
                              BigDecimal totalPrice,
                              PaymentType paymentType,
@@ -50,6 +52,7 @@ public class OrderService {
         );
 
         Order order = new Order();
+        order.setCartId(cartId);
         order.setOrderNo(orderNumber);
         order.setShippingPrice(sellerOrders.stream().map(SellerOrder::getShippingPrice).reduce(BigDecimal.ZERO, BigDecimal::add));
         order.setTotalPrice(totalPrice);
