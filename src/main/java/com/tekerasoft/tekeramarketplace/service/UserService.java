@@ -29,15 +29,13 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final Random random = new Random();
     private final RoleService roleService;
-    private final SellerVerificationService sellerVerificationService;
 
     public UserService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder,
-                       RoleService roleService, SellerVerificationService sellerVerificationService) {
+                       RoleService roleService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
-        this.sellerVerificationService = sellerVerificationService;
     }
 
     @Override

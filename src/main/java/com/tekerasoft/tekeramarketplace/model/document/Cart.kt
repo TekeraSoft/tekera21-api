@@ -11,7 +11,8 @@ data class Cart(
     var id: String,
     var cartItems: MutableList<CartItem> = mutableListOf(),
     var totalPrice: BigDecimal,
-    var itemCount: Int
+    var itemCount: Int,
+    var shippingPrice: BigDecimal? =  BigDecimal.ZERO,
 ): Serializable {
     constructor() : this("", mutableListOf(), BigDecimal.ZERO, 0)
 }

@@ -19,7 +19,7 @@ public class SettingService {
 
     @PostConstruct
     public void loadSettings() {
-        this.currentSettings = settingRepository.findAll().get(0);
+        this.currentSettings = settingRepository.count() != 0 ? settingRepository.findAll().get(0) : null;
     }
 
     public Setting getSettings() {

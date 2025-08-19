@@ -34,7 +34,8 @@ public class SellerOrderService {
                               AttributeService attributeService,
                               ProductService productService,
                               VariationService variationService,
-                              AuthenticationFacade authenticationFacade, SimpMessagingTemplate simpMessagingTemplate, CartService cartService) {
+                              AuthenticationFacade authenticationFacade, SimpMessagingTemplate simpMessagingTemplate,
+                              CartService cartService) {
         this.sellerOrderRepository = sellerOrderRepository;
         this.userService = userService;
         this.attributeService = attributeService;

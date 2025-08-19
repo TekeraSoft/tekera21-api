@@ -8,7 +8,6 @@ import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,13 +15,14 @@ import java.util.UUID;
 public class CartService {
 
     private final ProductService productService;
-
+    private final SettingService settingService;
     private final CartRepository cartRepository;
     private final AuthenticationFacade  authenticationFacade;
 
-    public CartService(ProductService productService,
+    public CartService(ProductService productService, SettingService settingService,
                        CartRepository cartRepository,
                        AuthenticationFacade authenticationFacade) {
+        this.settingService = settingService;
         this.cartRepository = cartRepository;
         this.productService = productService;
         this.authenticationFacade = authenticationFacade;
@@ -34,7 +34,7 @@ public class CartService {
 
     public Cart getCart(String guestUserId) {
         if(guestUserId != null) {
-            String currentOwnerId = (guestUserId == null || guestUserId.isEmpty())
+            String currentOwnerId = guestUserId.isEmpty()
                     ? authenticationFacade.getCurrentUserId()
                     : guestUserId;
             return getCartFromDb(currentOwnerId);
@@ -148,5 +148,8 @@ public class CartService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         cart.setTotalPrice(totalPrice);
         cart.setItemCount(cart.getCartItems().stream().mapToInt(CartItem::getQuantity).sum());
+        if(totalPrice.compareTo(settingService.getSettings().getMinShippingPrice()) < 0) {
+            cart.setShippingPrice(settingService.getSettings().getShippingPrice());
+        }
     }
 }
