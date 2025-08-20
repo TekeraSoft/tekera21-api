@@ -79,7 +79,8 @@ public class SecurityConfig {
                 "http://localhost:3001",
                 "https://avm.beta.tekera21.com",
                 "https://sandbox-api.iyzipay.com",
-                "null"
+                "null",
+                "http://192.168.1.102:3001"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));

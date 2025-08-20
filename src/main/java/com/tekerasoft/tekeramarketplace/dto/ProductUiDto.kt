@@ -19,6 +19,7 @@ data class ProductUiDto(
     val price: BigDecimal?,
     val discountPrice: BigDecimal?,
     val rate: Double,
+    val description: String?
 ) {
     companion object {
         @JvmStatic
@@ -43,7 +44,8 @@ data class ProductUiDto(
                 product.tags,
                 product.variations.firstOrNull()?.attributes?.firstOrNull()?.price,
                 product.variations.firstOrNull()?.attributes?.firstOrNull()?.discountPrice,
-                product.rate
+                product.rate,
+                product.description
             )
         }
     }

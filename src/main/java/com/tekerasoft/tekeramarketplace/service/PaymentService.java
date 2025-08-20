@@ -2,36 +2,28 @@ package com.tekerasoft.tekeramarketplace.service;
 
 import com.iyzipay.Options;
 import com.iyzipay.model.*;
-import com.iyzipay.model.Address;
-import com.iyzipay.model.Buyer;
-import com.iyzipay.model.Currency;
 import com.iyzipay.model.Locale;
 import com.iyzipay.request.CreatePaymentRequest;
 import com.iyzipay.request.CreateThreedsPaymentRequest;
-import com.tekerasoft.tekeramarketplace.dto.request.BasketItemRequest;
+import com.tekerasoft.tekeramarketplace.builder.PaymentRequestBuilder;
 import com.tekerasoft.tekeramarketplace.dto.request.CreatePayRequest;
 import com.tekerasoft.tekeramarketplace.exception.PaymentException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
+import com.tekerasoft.tekeramarketplace.model.enums.PaymentResult;
 import com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus;
 import com.tekerasoft.tekeramarketplace.model.enums.PaymentType;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
+import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
 @Service
 public class PaymentService {
 
-    private final ProductService productService;
     private final SellerOrderService sellerOrderService;
-
-    @Value("${spring.origin.url}")
-    private String originUrl;
+    private final AuthenticationFacade authenticationFacade;
 
     @Value("${spring.iyzico.callback_url}")
     private String paymentCallbackUrl;
@@ -39,14 +31,16 @@ public class PaymentService {
     private final Options options;
     private final OrderService orderService;
     private final AttributeService attributeService;
+    private final PaymentRequestBuilder  paymentRequestBuilder;
 
     public PaymentService(Options options, OrderService orderService, AttributeService attributeService,
-                          ProductService productService, SellerOrderService sellerOrderService) {
+                          ProductService productService, SellerOrderService sellerOrderService, PaymentRequestBuilder paymentRequestBuilder, AuthenticationFacade authenticationFacade) {
         this.options = options;
         this.orderService = orderService;
         this.attributeService = attributeService;
-        this.productService = productService;
         this.sellerOrderService = sellerOrderService;
+        this.paymentRequestBuilder = paymentRequestBuilder;
+        this.authenticationFacade = authenticationFacade;
     }
 
     public ThreedsInitialize payment(CreatePayRequest req) {
@@ -64,7 +58,6 @@ public class PaymentService {
                         BigDecimal quantity = BigDecimal.valueOf(bi.getQuantity());
                         return price.multiply(quantity);
                     }).reduce(BigDecimal.ZERO, BigDecimal::add);
-
             Order order = orderService.createOrder(
                     req.getCartId(),
                     orderNumber,
@@ -74,88 +67,17 @@ public class PaymentService {
                     PaymentStatus.PENDING
             );
 
-            CreatePaymentRequest paymentRequest = new CreatePaymentRequest();
-            paymentRequest.setLocale(Locale.TR.getValue());
-            paymentRequest.setConversationId(orderNumber);
-            paymentRequest.setCurrency(Currency.TRY.name());
-            paymentRequest.setInstallment(1);
-            paymentRequest.setBasketId(orderNumber);
-            paymentRequest.setPaymentGroup(PaymentGroup.PRODUCT.name());
+            CreatePaymentRequest paymentRequest = paymentRequestBuilder.build(
+                    req,
+                    order,
+                    order.getOrderNo(),
+                    totalPrice,
+                    paymentCallbackUrl
+            );
 
-            PaymentCard paymentCard = new PaymentCard();
-            paymentCard.setCardNumber(req.getPaymentCard().getCardNumber());
-            paymentCard.setCardHolderName(req.getPaymentCard().getCardHolderName());
-            paymentCard.setExpireMonth(req.getPaymentCard().getExpireMonth());
-            paymentCard.setExpireYear(req.getPaymentCard().getExpireYear());
-            paymentCard.setCvc(req.getPaymentCard().getCvc());
-            paymentCard.setRegisterCard(0);
-            paymentRequest.setPaymentCard(paymentCard);
-
-            Buyer buyer = new Buyer();
-            buyer.setId(order.getSellerOrder().get(0).getBuyer().getId().toString());
-            buyer.setName(req.getBuyer().getName());
-            buyer.setSurname(req.getBuyer().getSurname());
-            buyer.setGsmNumber(req.getBuyer().getGsmNumber());
-            buyer.setEmail(req.getBuyer().getEmail());
-            buyer.setIdentityNumber(req.getBuyer().getIdentityNumber());
-            buyer.setLastLoginDate(req.getBuyer().getLastLoginDate());
-            buyer.setRegistrationDate(req.getBuyer().getRegistrationDate());
-            buyer.setRegistrationAddress(req.getBuyer().getRegistrationAddress());
-            if(req.getBillingAddress() != null) {
-                buyer.setCity(req.getBillingAddress().getCity());
-            }
-            buyer.setCity(req.getShippingAddress().getCity());
-            buyer.setCountry(req.getShippingAddress().getCountry());
-            buyer.setZipCode(req.getShippingAddress().getZipCode());
-            paymentRequest.setBuyer(buyer);
-
-            Address shippingAddress = new Address();
-            shippingAddress.setContactName(req.getBuyer().getName()+" "+req.getBuyer().getSurname());
-            shippingAddress.setCity(req.getShippingAddress().getCity());
-            shippingAddress.setCountry(req.getShippingAddress().getCountry());
-            shippingAddress.setAddress(req.getShippingAddress().getAddress());
-            shippingAddress.setZipCode(req.getShippingAddress().getZipCode());
-            paymentRequest.setShippingAddress(shippingAddress);
-
-            if(req.getBillingAddress() != null) {
-                Address billingAddress = new Address();
-                billingAddress.setContactName(req.getBuyer().getName()+" "+req.getBuyer().getSurname());
-                billingAddress.setCity(req.getBillingAddress().getCity());
-                billingAddress.setCountry(req.getBillingAddress().getCountry());
-                billingAddress.setAddress(req.getBillingAddress().getAddress());
-                billingAddress.setZipCode(req.getBillingAddress().getZipCode());
-                paymentRequest.setBillingAddress(billingAddress);
-            }else {
-                paymentRequest.setBillingAddress(shippingAddress);
-            }
-
-            List<com.iyzipay.model.BasketItem> basketItems = new ArrayList<>();
-            for(BasketItemRequest bi: req.getBasketItems()) {
-                com.iyzipay.model.BasketItem basketItem = new com.iyzipay.model.BasketItem();
-                Attribute productAttribute = attributeService.getAttributeById(bi.getAttributeId());
-                Product product = productService.getById(UUID.fromString(bi.getProductId()));
-                basketItem.setId(bi.getProductId());
-                basketItem.setName(product.getName());
-                basketItem.setCategory1(product.getCategory().getName());
-                basketItem.setCategory2(product.getSubCategories().stream().findFirst().get().getName());
-                basketItem.setItemType(product.getProductType().name());
-                basketItem.setItemType(BasketItemType.PHYSICAL.name());
-
-                BigDecimal totalItemPrice = new BigDecimal(String.valueOf(productAttribute.getPrice()))
-                        .multiply(new BigDecimal(bi.getQuantity()));
-
-                basketItem.setPrice(totalItemPrice);
-                basketItems.add(basketItem);
-            }
-
-            paymentRequest.setCallbackUrl(paymentCallbackUrl);
-
-            paymentRequest.setPrice(totalPrice);
-            paymentRequest.setPaidPrice(totalPrice);
-            paymentRequest.setBasketItems(basketItems);
             return ThreedsInitialize.create(paymentRequest,options);
         } catch (RuntimeException e) {
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -175,33 +97,22 @@ public class PaymentService {
     }
 
 
-    @Transactional
-    public String paymentCheck (HttpServletRequest request, HttpServletResponse response) {
-        try {
-            Map<String, String[]> parameters =  request.getParameterMap();
-            String paymentId = parameters.containsKey("paymentId") ? parameters.get("paymentId")[0] : null;
-            String conversationId = parameters.containsKey("conversationId") ? parameters.get("conversationId")[0] : null;
-
-            ThreedsPayment threedsPayment = completePayment(paymentId, conversationId);
-
-
-            if(paymentId == null || conversationId == null) {
-                throw new PaymentException("Eksik Ödeme Bilgisi");
-            }
-
-            if(threedsPayment.getStatus().equals("success")) {
-                Order order = orderService.getOrderByOrderNo(conversationId);
-                for (SellerOrder so: order.getSellerOrder()) {
-                    sellerOrderService.completeOrder(so.getId().toString(), PaymentStatus.PAID,order.getCartId());
-                }
-                response.sendRedirect(originUrl + "/odeme/basarili");
-            } else {
-                response.sendRedirect(originUrl + "/odeme/basarisiz");
-            }
-        } catch (IOException e) {
-            return null;
+    public PaymentResult handlePayment(String paymentId, String conversationId) {
+        if (paymentId == null || conversationId == null) {
+            throw new PaymentException("Beklenmedik bir hata oluştu lütfen tekrar deneyiniz.");
         }
-        return null;
+
+        ThreedsPayment threedsPayment = completePayment(paymentId, conversationId);
+
+        if ("success".equals(threedsPayment.getStatus())) {
+            Order order = orderService.getOrderByOrderNo(conversationId);
+            for (SellerOrder so : order.getSellerOrder()) {
+                sellerOrderService.completeOrder(so.getId().toString(), PaymentStatus.PAID, order.getCartId());
+            }
+            return PaymentResult.SUCCESS;
+        } else {
+            return PaymentResult.FAILURE;
+        }
     }
 
 }

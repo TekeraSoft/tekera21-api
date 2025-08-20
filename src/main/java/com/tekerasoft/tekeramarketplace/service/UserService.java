@@ -93,7 +93,12 @@ public class UserService implements UserDetailsService {
         return selectedSupport;
     }
 
-    // TODO: support assign count decrease
+    @Transactional
+    public void supportAssignDecrease(User user) {
+        Integer count = user.getAssignCount();
+        user.setAssignCount(count != null ? user.getAssignCount() - 1 : 0);
+        userRepository.save(user);
+    }
 
     public ApiResponse<?> activeUserSellerRole(SellerVerificationRequest req) {
         User user = userRepository.findById(UUID.fromString(req.getUserId()))

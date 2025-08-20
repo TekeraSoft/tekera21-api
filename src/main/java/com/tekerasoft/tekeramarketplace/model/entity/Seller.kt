@@ -63,7 +63,7 @@ open class Seller(
     )
     open var shippingCompanies: MutableSet<ShippingCompany> = mutableSetOf(),
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY,cascade = [CascadeType.ALL], orphanRemoval = true)
     open var sellerOrders: MutableList<SellerOrder> = mutableListOf(),
 
     open var rate: Double,

@@ -29,9 +29,20 @@ public class SettingService {
     // Ayarları güncellemek için bir metod
     public ApiResponse<Setting> updateSettings(Setting newSettings) {
 
-        Setting setting =  settingRepository.save(newSettings);
-        this.currentSettings = setting;
+        if(settingRepository.count() == 0){
+           Setting setting = settingRepository.save(newSettings);
+           this.currentSettings = setting;
+           return new ApiResponse<>("Ayarlar güncellendi",HttpStatus.OK.value() ,setting);
+        }
 
-        return new ApiResponse<>("Ayarlar güncellendi",HttpStatus.OK.value() ,setting);
+        Setting findSetting =  settingRepository.findById(newSettings.getId()).orElse(null);
+        assert findSetting != null;
+        findSetting.setShippingPrice(newSettings.getShippingPrice());
+        findSetting.setPlatformUsageFee(newSettings.getPlatformUsageFee());
+        findSetting.setMinShippingPrice(newSettings.getMinShippingPrice());
+        findSetting.setSellerSupportMaxAssignCount(newSettings.getSellerSupportMaxAssignCount());
+        Setting settingResult = settingRepository.save(findSetting);
+        this.currentSettings = findSetting;
+        return new ApiResponse<>("Ayarlar güncellendi",HttpStatus.OK.value() ,settingResult);
     }
 }

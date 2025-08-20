@@ -78,8 +78,8 @@ spring:
     api_key: sandbox-4mlmZxqqpEvkFn61GClqGpDpt0cYZuA2
     secret_key: sandbox-m4UURbHi8klCbIqCiCWsjlyJG8mTfuG4
     base_url: https://sandbox-api.iyzipay.com
-    callback_url: http://192.168.1.104:8080/v1/api/payment/paymentCheck
-      #callback_url: http://192.168.1.107:3001/api/payment/paymentCheck
+    callback_url: http://192.168.1.104:8080/v1/api/payment/callback
+      #callback_url: http://192.168.1.107:3001/api/payment/callback
 
 
   origin:

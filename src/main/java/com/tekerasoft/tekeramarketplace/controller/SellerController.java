@@ -124,9 +124,9 @@ public class SellerController {
         return ResponseEntity.ok(orderService.getSellerOrders(pageable));
     }
 
-    @GetMapping("/getSellerReport")
-    public ResponseEntity<SellerReportAggregation> getSellerReportBySellerUserId() {
-        return ResponseEntity.ok(sellerService.getSellerReportBySellerUserId());
-    }
+//    @GetMapping("/getSellerReport")
+//    public ResponseEntity<SellerReportAggregation> getSellerReportBySellerUserId() {
+//        return ResponseEntity.ok(sellerService.getSellerReportBySellerUserId());
+//    }
 
 }

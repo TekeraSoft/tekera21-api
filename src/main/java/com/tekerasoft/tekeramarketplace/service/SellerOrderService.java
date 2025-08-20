@@ -28,6 +28,7 @@ public class SellerOrderService {
     private final AuthenticationFacade authenticationFacade;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final CartService cartService;
+    private final SellerService sellerService;
 
     public SellerOrderService(SellerOrderRepository sellerOrderRepository,
                               UserService userService,
@@ -35,7 +36,7 @@ public class SellerOrderService {
                               ProductService productService,
                               VariationService variationService,
                               AuthenticationFacade authenticationFacade, SimpMessagingTemplate simpMessagingTemplate,
-                              CartService cartService) {
+                              CartService cartService, SellerService sellerService) {
         this.sellerOrderRepository = sellerOrderRepository;
         this.userService = userService;
         this.attributeService = attributeService;
@@ -44,13 +45,14 @@ public class SellerOrderService {
         this.authenticationFacade = authenticationFacade;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.cartService = cartService;
+        this.sellerService = sellerService;
     }
 
 
     @Transactional
     public List<SellerOrder> createSellerOrder(CreateOrderRequest req) {
         try {
-            Optional<User> user = userService.getByUsername(authenticationFacade.getCurrentUserEmail());
+            User user = userService.getUserInformation(authenticationFacade.getCurrentUserId());
 
             List<BasketItem> basketItems = req.getBasketItems().stream().map(bi -> {
                 Product product = productService.getById(UUID.fromString(bi.getProductId()));
@@ -88,7 +90,6 @@ public class SellerOrderService {
             List<SellerOrder> ordersToSave = new ArrayList<>();
 
             for (Map.Entry<String, List<BasketItem>> entry : itemsBySeller.entrySet()) {
-                String sellerId = entry.getKey();
                 List<BasketItem> sellerItems = entry.getValue();
                 Seller seller = sellerItems.get(0).getSeller();
 
@@ -114,7 +115,7 @@ public class SellerOrderService {
                     buyer.setEmail(req.getBuyer().getEmail());
                     buyer.setGsmNumber(req.getBuyer().getGsmNumber());
                     buyer.setIdentityNumber(req.getBuyer().getIdentityNumber());
-                    buyer.setRegistered(user.isPresent());
+                    buyer.setRegistered(user != null);
                     sellerOrder.setBuyer(buyer);
 
                     Address shippingAddress = new Address();
@@ -150,15 +151,13 @@ public class SellerOrderService {
                     sellerOrder.setPaymentStatus(req.getPaymentStatus());
                     sellerOrder.setPaymentType(req.getPaymentType());
 
-                    user.ifPresent(u -> {
-                        sellerOrder.setUser(u);
-                        u.getOrders().add(sellerOrder);
-                    });
+                    if(user != null) {
+                        sellerOrder.setUser(user);
+                    }
                 }
-
+                sellerService.addSellerOrder(sellerOrder, seller.getId().toString());
                 ordersToSave.add(sellerOrder);
             }
-
             return sellerOrderRepository.saveAll(ordersToSave);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage(), e);

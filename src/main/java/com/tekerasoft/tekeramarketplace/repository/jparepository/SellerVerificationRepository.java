@@ -15,7 +15,7 @@ public interface SellerVerificationRepository extends JpaRepository<SellerVerifi
     @Query("SELECT sv FROM SellerVerification sv JOIN sv.supervisor su WHERE su.id = :supportId")
     Page<SellerVerification> findBySupportId(@Param("supportId") UUID supportId, Pageable pageable);
 
-    @Query("SELECT sv FROM SellerVerification  sv JOIN sv.supervisor su WHERE su.id = :supportId")
-    SellerVerification findSupervisorVerificationBySupportId(@Param("supportId") UUID supportId);
+    @Query("SELECT sv FROM SellerVerification sv JOIN sv.seller su WHERE su.id = :sellerId")
+    SellerVerification findSupervisorVerificationBySupportId(@Param("sellerId") UUID sellerId);
 
 }

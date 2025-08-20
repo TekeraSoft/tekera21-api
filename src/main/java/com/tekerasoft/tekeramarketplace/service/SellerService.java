@@ -1,8 +1,6 @@
 package com.tekerasoft.tekeramarketplace.service;
 
-import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
-import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
-import com.tekerasoft.tekeramarketplace.dto.SellerReportAggregation;
+import com.tekerasoft.tekeramarketplace.dto.*;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.UpdateSellerRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
@@ -297,6 +295,8 @@ public class SellerService {
             seller.setVerificationStatus(VerificationStatus.VERIFIED);
             sellerRepository.save(seller);
             userService.attachSellerRole(seller.getUsers().stream().findFirst().get());
+            User supervisor = sellerVerificationService.getSellerSupport(seller.getId().toString());
+            userService.supportAssignDecrease(supervisor);
             return new ApiResponse<>("Satıcı onaylandı !", HttpStatus.OK.value());
         }
         throw new SellerVerificationException("Sellers not verified", findNotVerifiedSellerDocuments);
@@ -309,15 +309,6 @@ public class SellerService {
 
     public Seller getSellerByUserId(String userId) {
         return sellerRepository.findSellerByUserId(UUID.fromString(userId));
-    }
-
-    public void saveSellerOrder(String sellerId, SellerOrder sellerOrder) {
-        Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
-                        .orElseThrow(() -> new NotFoundException("Seller not found: " + sellerId));
-        List<SellerOrder> orders = new ArrayList<>();
-        orders.add(sellerOrder);
-        seller.setSellerOrders(orders);
-        sellerRepository.save(seller);
     }
 
     public ApiResponse<?> changeSellerActiveStatus(String sellerId) {
@@ -358,7 +349,8 @@ public class SellerService {
     }
 
     public Page<String> getAllCompanyMedia(String id, Pageable pageable) throws Exception {
-        Seller seller = sellerRepository.findById(UUID.fromString(id)).orElseThrow(() -> new NotFoundException("Company not found: " + id));
+        Seller seller = sellerRepository.findById(UUID.fromString(id))
+                .orElseThrow(() -> new NotFoundException("Company not found: " + id));
         return fileService.listUserMedia(seller.getSlug(),pageable);
     }
 
@@ -366,10 +358,17 @@ public class SellerService {
         return sellerRepository.findAll(pageable).map(SellerAdminDto::toDto);
     }
 
-    public SellerReportAggregation getSellerReportBySellerUserId() {
-        String seller = sellerRepository.findSellerByUserId(UUID.fromString(authenticationFacade.getCurrentUserId()))
-                .getId().toString();
-        return sellerRepository.getSellerAggregatedProfit(UUID.fromString(seller));
+    public void addSellerOrder(SellerOrder sellerOrder, String sellerId) {
+        Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
+                .orElseThrow(() -> new NotFoundException("Seller not found: " + sellerId));
+        seller.getSellerOrders().add(sellerOrder);
     }
+
+//    public SellerReportDto getSellerReportBySellerUserId() {
+//        String seller = sellerRepository.findSellerByUserId(UUID.fromString(authenticationFacade.getCurrentUserId()))
+//                .getId().toString();
+//        SellerReportAggregation sellerReportAggregation = sellerRepository.getSellerAggregatedProfit(UUID.fromString(seller));
+//        Interruption interruption = new Interruption()
+//    }
 
 }

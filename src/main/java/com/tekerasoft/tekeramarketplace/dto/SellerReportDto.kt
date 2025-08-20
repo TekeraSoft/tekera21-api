@@ -4,7 +4,6 @@ import java.math.BigDecimal
 
 data class SellerReportDto(
     val sellerReportAggregation: SellerReportAggregation,
-    val calculateShippingPriceSpecificDate: BigDecimal,
     val interruptions: List<Interruption>
 )
 

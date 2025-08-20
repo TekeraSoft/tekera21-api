@@ -95,8 +95,6 @@ public class Filter extends OncePerRequestFilter {
             response.getWriter().flush();
             return; // Filtre zincirini burada kes
         } catch (Exception e) {
-            // 8. Diğer tüm JWT veya kimlik doğrulama hatalarını yakala ve 400 Bad Request dön
-            logger.error("JWT doğrulama veya kullanıcı yükleme sırasında bir hata oluştu.", e);
             clearAuthCookies(response); // Hata durumunda da çerezleri temizle
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("{\"error\": \"Authentication failed due to an invalid request.\"}");
@@ -121,11 +119,10 @@ public class Filter extends OncePerRequestFilter {
 
     private void clearAuthCookies(HttpServletResponse response) {
         // session-token çerezini sil
-        Cookie sessionCookie = new Cookie("session-token", null);
+        Cookie sessionCookie = new Cookie("token", null);
         sessionCookie.setPath("/");
         sessionCookie.setHttpOnly(true);
         sessionCookie.setMaxAge(0); // Çerezi hemen sil
         response.addCookie(sessionCookie);
-        logger.debug("Çerez 'next-auth.session-token' temizlendi.");
     }
 }

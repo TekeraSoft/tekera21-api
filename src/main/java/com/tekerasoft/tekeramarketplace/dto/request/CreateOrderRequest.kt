@@ -23,7 +23,6 @@ data class CreateOrderRequest(
                                                 paymentType: PaymentType,
                                                 paymentStatus: PaymentStatus): CreateOrderRequest {
             return CreateOrderRequest(
-
                 payRequest.buyer.let { BuyerRequest(
                     it.name,
                     it.surname,
