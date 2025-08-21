@@ -25,30 +25,29 @@ open class SellerOrder(
     @JoinColumn(name = "buyer_id")
     open var buyer: Buyer,
 
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true) // FetchType.LAZY varsayılan olarak gelir
-    @JoinTable(
-        name = "order_basket_items", // İlişki için oluşturulacak ara tablo adı
-        joinColumns = [JoinColumn(name = "order_id")], // Bu tablonun Order'a referans veren sütunu
-        inverseJoinColumns = [JoinColumn(name = "basket_item_id")] // Bu tablonun BasketItem'a referans veren sütunu
-    )
+    @OneToMany(mappedBy = "sellerOrder", cascade = [CascadeType.ALL], orphanRemoval = true)
     open var basketItems: MutableList<BasketItem> = mutableListOf(),
 
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "shipping_address_id")
     open var shippingAddress: Address,
 
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "billing_address_id")
     open var billingAddress: Address? = null,
 
     open var totalPrice : BigDecimal,
-
     open var shippingPrice: BigDecimal,
-
     open var paymentType: PaymentType? = null,
-
     open var paymentStatus: PaymentStatus? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id") // <<-- İlişkinin sahibi burası
     open var order: Order? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id") // <<-- İlişkinin sahibi burası
+    open var seller: Seller? = null
 
 ): BaseEntity() {
     constructor() : this(

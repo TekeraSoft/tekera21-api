@@ -134,9 +134,10 @@ public class SellerService {
             // Bu satır selerDocuments listesini company entity’sine kaydeder
             seller.setSellerDocuments(sellerDocuments);
             seller.setVerificationStatus(VerificationStatus.PENDING);
-
+            user.setSeller(seller);
             // Seller kaydını veritabanına kaydet
             Seller savedSeller = sellerRepository.save(seller);
+            userService.updateUser(user);
             sellerVerificationService.assignToSupervisorSeller(user.getId().toString(),savedSeller);
             return new ApiResponse<>("Create Company", HttpStatus.CREATED.value());
         } catch (RuntimeException e) {
@@ -294,7 +295,7 @@ public class SellerService {
             seller.setVerified(true);
             seller.setVerificationStatus(VerificationStatus.VERIFIED);
             sellerRepository.save(seller);
-            userService.attachSellerRole(seller.getUsers().stream().findFirst().get());
+            seller.getUsers().stream().findFirst().ifPresent(userService::attachSellerRole);
             User supervisor = sellerVerificationService.getSellerSupport(seller.getId().toString());
             userService.supportAssignDecrease(supervisor);
             return new ApiResponse<>("Satıcı onaylandı !", HttpStatus.OK.value());
@@ -361,6 +362,7 @@ public class SellerService {
     public void addSellerOrder(SellerOrder sellerOrder, String sellerId) {
         Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
                 .orElseThrow(() -> new NotFoundException("Seller not found: " + sellerId));
+        sellerOrder.setSeller(seller);
         seller.getSellerOrders().add(sellerOrder);
     }
 
@@ -368,7 +370,7 @@ public class SellerService {
 //        String seller = sellerRepository.findSellerByUserId(UUID.fromString(authenticationFacade.getCurrentUserId()))
 //                .getId().toString();
 //        SellerReportAggregation sellerReportAggregation = sellerRepository.getSellerAggregatedProfit(UUID.fromString(seller));
-//        Interruption interruption = new Interruption()
+//
 //    }
 
 }

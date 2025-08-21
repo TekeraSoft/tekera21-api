@@ -34,7 +34,9 @@ public class PaymentService {
     private final PaymentRequestBuilder  paymentRequestBuilder;
 
     public PaymentService(Options options, OrderService orderService, AttributeService attributeService,
-                          ProductService productService, SellerOrderService sellerOrderService, PaymentRequestBuilder paymentRequestBuilder, AuthenticationFacade authenticationFacade) {
+                           SellerOrderService sellerOrderService,
+                          PaymentRequestBuilder paymentRequestBuilder,
+                          AuthenticationFacade authenticationFacade) {
         this.options = options;
         this.orderService = orderService;
         this.attributeService = attributeService;
@@ -54,12 +56,12 @@ public class PaymentService {
             BigDecimal totalPrice = req.getBasketItems().stream()
                     .map(bi -> {
                         Attribute productAttribute = attributeService.getAttributeById(bi.getAttributeId());
-                        BigDecimal price = productAttribute.getPrice();
+                        BigDecimal price = productAttribute.getDiscountPrice().compareTo(BigDecimal.ZERO) > 0 ?
+                                productAttribute.getDiscountPrice() : productAttribute.getPrice();
                         BigDecimal quantity = BigDecimal.valueOf(bi.getQuantity());
                         return price.multiply(quantity);
                     }).reduce(BigDecimal.ZERO, BigDecimal::add);
             Order order = orderService.createOrder(
-                    req.getCartId(),
                     orderNumber,
                     req,
                     totalPrice,
@@ -71,8 +73,8 @@ public class PaymentService {
                     req,
                     order,
                     order.getOrderNo(),
-                    totalPrice,
-                    paymentCallbackUrl
+                    paymentCallbackUrl,
+                    req.getCartId()
             );
 
             return ThreedsInitialize.create(paymentRequest,options);
@@ -106,8 +108,8 @@ public class PaymentService {
 
         if ("success".equals(threedsPayment.getStatus())) {
             Order order = orderService.getOrderByOrderNo(conversationId);
-            for (SellerOrder so : order.getSellerOrder()) {
-                sellerOrderService.completeOrder(so.getId().toString(), PaymentStatus.PAID, order.getCartId());
+            for (SellerOrder so : order.getSellerOrders()) {
+                sellerOrderService.completeOrder(so.getId().toString(), PaymentStatus.PAID);
             }
             return PaymentResult.SUCCESS;
         } else {

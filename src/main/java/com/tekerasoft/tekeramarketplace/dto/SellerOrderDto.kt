@@ -13,6 +13,7 @@ data class SellerOrderDto(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val totalPrice: BigDecimal,
+    val shippingPrice: BigDecimal,
 ) {
     companion object {
         @JvmStatic
@@ -33,7 +34,6 @@ data class SellerOrderDto(
                     it.barcode,
                     it.image,
                     it.attributes,
-                    it.shippingPrice,
                     it.shippingCompany.name,
                     it.productId,
                     it.variationId,
@@ -45,6 +45,7 @@ data class SellerOrderDto(
                 from.createdAt,
                 from.updatedAt,
                 from.totalPrice,
+                from.shippingPrice
                 )
         }
     }

@@ -33,7 +33,13 @@ open class BasketItem(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shipping_company_id")
-    open var shippingCompany: ShippingCompany
+    open var shippingCompany: ShippingCompany,
+
+    open var platformUsageFee: BigDecimal,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_order_id")
+    open var sellerOrder: SellerOrder? = null
 
     ): BaseEntity() {
         constructor() : this(
@@ -54,5 +60,7 @@ open class BasketItem(
             shippingPrice = BigDecimal.ZERO,
             seller = Seller(),
             shippingCompany = ShippingCompany(),
+            platformUsageFee = BigDecimal.ZERO,
+            sellerOrder = SellerOrder()
         )
     }

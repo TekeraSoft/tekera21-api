@@ -35,29 +35,26 @@ public class ProductService {
     private final FileService fileService;
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
-    private final SellerRepository sellerRepository;
-    private final VariationRepository variationRepository;
     private final SearchItemService searchItemService;
     private final SellerService sellerService;
     private final AuthenticationFacade  authenticationFacade;
+    private final SettingService settingService;
 
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
                           CategoryRepository categoryRepository,
                           SubCategoryRepository subCategoryRepository,
-                          SellerRepository sellerRepository,
-                          VariationRepository variationRepository, SearchItemService searchItemService,
+                          SearchItemService searchItemService,
                           SellerService sellerService,
-                          AuthenticationFacade authenticationFacade) {
+                          AuthenticationFacade authenticationFacade, SettingService settingService) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
-        this.sellerRepository = sellerRepository;
-        this.variationRepository = variationRepository;
         this.searchItemService = searchItemService;
         this.sellerService = sellerService;
         this.authenticationFacade = authenticationFacade;
+        this.settingService = settingService;
     }
 
     public Product getById(UUID id) {
@@ -114,6 +111,7 @@ public class ProductService {
                                 attr.getMaxPurchaseStock(),
                                 attr.getSku(),
                                 attr.getBarcode(),
+                                attr.getVatPercent(),
                                 attr.getAttributeDetails(),
                                 var
                         )).collect(Collectors.toList());
@@ -527,7 +525,7 @@ public class ProductService {
             cartItem.setMaxPurchaseStock(attribute.getMaxPurchaseStock());
             cartItem.setName(product.getName());
             cartItem.setQuantity(cart.getQuantity());
-            cartItem.setPrice(attribute.getPrice());
+            cartItem.setPrice(attribute.getDiscountPrice().compareTo(BigDecimal.ZERO) > 0 ? attribute.getDiscountPrice() : attribute.getPrice());
             cartItem.setBrandName(product.getBrandName());
             cartItem.setImage(!variation.getImages().isEmpty() ? variation.getImages().get(0) : null);
 
@@ -547,7 +545,15 @@ public class ProductService {
         Cart cart = new Cart();
         cart.setId(userId);
         cart.setCartItems(cartItemList);
-        cart.setTotalPrice(totalPrice);
+        if (totalPrice.compareTo(settingService.getSettings().getMinShippingPrice()) < 0) {
+            // Kargo ücretini ekle
+            cart.setTotalPrice(totalPrice.add(settingService.getSettings().getShippingPrice()));
+            cart.setShippingPrice(settingService.getSettings().getShippingPrice());
+        } else {
+            // Kargo ücretsiz. 300 TL'ye eşitse veya büyükse bu blok çalışır.
+            cart.setTotalPrice(totalPrice);
+            cart.setShippingPrice(BigDecimal.ZERO);
+        }
         cart.setItemCount(cartItemList.stream().mapToInt(CartItem::getQuantity).sum());
 
         return cart;

@@ -120,8 +120,8 @@ public class SellerController {
     }
 
     @GetMapping("/getSellerOrders")
-    public ResponseEntity<Page<OrderDto>> findSellerOrders(Pageable pageable) {
-        return ResponseEntity.ok(orderService.getSellerOrders(pageable));
+    public ResponseEntity<Page<SellerOrderDto>> findSellerOrders(Pageable pageable) {
+        return ResponseEntity.ok(sellerOrderService.findSellerOrdersByUserId(pageable));
     }
 
 //    @GetMapping("/getSellerReport")

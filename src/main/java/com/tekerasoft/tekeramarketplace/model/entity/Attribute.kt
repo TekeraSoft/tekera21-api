@@ -20,6 +20,7 @@ open class Attribute(
     open var maxPurchaseStock: Int? = null,
     open var sku: String? = null,
     open var barcode: String? = null,
+    open var vatPercent: BigDecimal,
 
     @ElementCollection
     @CollectionTable(
@@ -40,6 +41,7 @@ open class Attribute(
             0,
             "",
             "",
+            BigDecimal.ZERO,
             mutableListOf(),
             Variation()
         )

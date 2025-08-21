@@ -146,10 +146,21 @@ public class CartService {
         BigDecimal totalPrice = cart.getCartItems().stream()
                 .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Doğru toplam tutarı ayarla (kargo hariç)
         cart.setTotalPrice(totalPrice);
         cart.setItemCount(cart.getCartItems().stream().mapToInt(CartItem::getQuantity).sum());
+
+        // Kargo ücreti mantığı
         if(totalPrice.compareTo(settingService.getSettings().getMinShippingPrice()) < 0) {
+            // Eğer sepet tutarı 300'den küçükse, kargo ücretini ekle
             cart.setShippingPrice(settingService.getSettings().getShippingPrice());
+        } else {
+            // Eğer sepet tutarı 300'e eşit veya 300'den büyükse, kargoyu ücretsiz yap
+            cart.setShippingPrice(BigDecimal.ZERO);
         }
+
+        // Sepetin son toplamını (kargo dahil) ayarla
+        cart.setTotalPrice(totalPrice.add(cart.getShippingPrice()));
     }
 }

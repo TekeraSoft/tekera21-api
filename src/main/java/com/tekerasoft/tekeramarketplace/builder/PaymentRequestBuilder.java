@@ -9,6 +9,7 @@ import com.tekerasoft.tekeramarketplace.model.entity.Order;
 import com.tekerasoft.tekeramarketplace.model.entity.Product;
 import com.tekerasoft.tekeramarketplace.service.AttributeService;
 import com.tekerasoft.tekeramarketplace.service.ProductService;
+import com.tekerasoft.tekeramarketplace.service.SettingService;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -21,13 +22,15 @@ public class PaymentRequestBuilder {
 
     private final ProductService productService;
     private final AttributeService attributeService;
+    private final SettingService settingService;
 
-    public PaymentRequestBuilder(ProductService productService, AttributeService attributeService) {
+    public PaymentRequestBuilder(ProductService productService, AttributeService attributeService, SettingService settingService) {
         this.productService = productService;
         this.attributeService = attributeService;
+        this.settingService = settingService;
     }
 
-    public CreatePaymentRequest build(CreatePayRequest req, Order order, String orderNumber, BigDecimal totalPrice, String callbackUrl) {
+    public CreatePaymentRequest build(CreatePayRequest req, Order order, String orderNumber, String callbackUrl, String cartId) {
         CreatePaymentRequest paymentRequest = new CreatePaymentRequest();
         paymentRequest.setLocale(Locale.TR.getValue());
         paymentRequest.setConversationId(orderNumber);
@@ -48,7 +51,7 @@ public class PaymentRequestBuilder {
 
         // --- Buyer ---
         Buyer buyer = new Buyer();
-        buyer.setId(order.getSellerOrder().get(0).getBuyer().getId().toString());
+        buyer.setId(order.getSellerOrders().get(0).getBuyer().getId().toString());
         buyer.setName(req.getBuyer().getName());
         buyer.setSurname(req.getBuyer().getSurname());
         buyer.setGsmNumber(req.getBuyer().getGsmNumber());
@@ -106,9 +109,33 @@ public class PaymentRequestBuilder {
             basketItems.add(basketItem);
         }
 
-        paymentRequest.setCallbackUrl(callbackUrl);
-        paymentRequest.setPrice(totalPrice);
-        paymentRequest.setPaidPrice(totalPrice);
+        BigDecimal totalItemsPrice = basketItems.stream()
+                .map(com.iyzipay.model.BasketItem::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal shippingPrice = BigDecimal.ZERO;
+
+        // Kargo ücreti mantığını uygula
+        // Eğer sepet tutarı minimum ücretsiz kargo tutarından küçükse kargoyu ekle
+        if (totalItemsPrice.compareTo(settingService.getSettings().getMinShippingPrice()) < 0) {
+            shippingPrice = settingService.getSettings().getShippingPrice();
+
+            // Kargo ücretini sepet öğelerine ekle
+            com.iyzipay.model.BasketItem shippingItem = new com.iyzipay.model.BasketItem();
+            shippingItem.setId("shipping");
+            shippingItem.setName("Shipping Fee");
+            shippingItem.setCategory1("Shipping");
+            shippingItem.setItemType(BasketItemType.PHYSICAL.name());
+            shippingItem.setPrice(shippingPrice);
+            basketItems.add(shippingItem);
+        }
+
+        // Nihai ödenecek toplam fiyatı hesapla (ürünler + kargo)
+        BigDecimal finalPaidPrice = totalItemsPrice.add(shippingPrice);
+
+        paymentRequest.setCallbackUrl(callbackUrl+"?_cid="+cartId);
+        paymentRequest.setPrice(finalPaidPrice); // Kargo dahil nihai fiyat
+        paymentRequest.setPaidPrice(finalPaidPrice); // Ödenecek fiyat
         paymentRequest.setBasketItems(basketItems);
 
         return paymentRequest;

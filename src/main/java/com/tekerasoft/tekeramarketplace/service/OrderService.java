@@ -27,15 +27,16 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final SellerOrderService sellerOrderService;
     private final AuthenticationFacade authenticationFacade;
+    private final SettingService settingService;
 
-    public OrderService(OrderRepository orderRepository, SellerOrderService sellerOrderService, AuthenticationFacade authenticationFacade) {
+    public OrderService(OrderRepository orderRepository, SellerOrderService sellerOrderService, AuthenticationFacade authenticationFacade, SettingService settingService) {
         this.orderRepository = orderRepository;
         this.sellerOrderService = sellerOrderService;
         this.authenticationFacade = authenticationFacade;
+        this.settingService = settingService;
     }
 
     public Order createOrder(
-            String cartId,
             String orderNumber,
                              CreatePayRequest req,
                              BigDecimal totalPrice,
@@ -52,11 +53,16 @@ public class OrderService {
         );
 
         Order order = new Order();
-        order.setCartId(cartId);
+        order.setSellerOrders(sellerOrders);
         order.setOrderNo(orderNumber);
-        order.setShippingPrice(sellerOrders.stream().map(SellerOrder::getShippingPrice).reduce(BigDecimal.ZERO, BigDecimal::add));
+        order.setShippingPrice(totalPrice.compareTo(settingService.getSettings().getMinShippingPrice()) < 0 ?
+                settingService.getSettings().getShippingPrice() : BigDecimal.ZERO);
         order.setTotalPrice(totalPrice);
-        order.setSellerOrder(sellerOrders);
+
+        // **ÇÖZÜM:** Her SellerOrder'ı Order ile ilişkilendir.
+        sellerOrders.forEach(sellerOrder -> {
+            sellerOrder.setOrder(order); // SellerOrder nesnesine Order'ı atıyoruz
+        });
 
        return orderRepository.save(order);
     }

@@ -41,6 +41,8 @@ public class SettingService {
         findSetting.setPlatformUsageFee(newSettings.getPlatformUsageFee());
         findSetting.setMinShippingPrice(newSettings.getMinShippingPrice());
         findSetting.setSellerSupportMaxAssignCount(newSettings.getSellerSupportMaxAssignCount());
+        findSetting.setTaxPercents(newSettings.getTaxPercents());
+        findSetting.setPlatformCommissionFee(newSettings.getPlatformCommissionFee());
         Setting settingResult = settingRepository.save(findSetting);
         this.currentSettings = findSetting;
         return new ApiResponse<>("Ayarlar güncellendi",HttpStatus.OK.value() ,settingResult);

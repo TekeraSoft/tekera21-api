@@ -15,6 +15,8 @@ data class CreateAttributeRequest(
     val price: BigDecimal,
     @JsonProperty("discountPrice")
     val discountPrice: BigDecimal,
+    @JsonProperty("vatPercent")
+    val vatPercent: BigDecimal,
     @JsonProperty("sku")
     val sku: String,
     @JsonProperty("barcode")

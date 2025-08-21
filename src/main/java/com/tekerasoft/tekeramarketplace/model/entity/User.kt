@@ -39,8 +39,13 @@ open class User (
 
     open var gsmNumber: String,
 
-    @OneToMany(fetch = FetchType.LAZY)
-    open var followSellers: MutableList<Seller>? = mutableListOf(),
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "user_follow_sellers", // Yeni ara tablo
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "seller_id")]
+    )
+    open var followSellers: MutableSet<Seller> = mutableSetOf(),
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "user_topics", joinColumns = [JoinColumn(name = "user_id")])
@@ -57,6 +62,10 @@ open class User (
     open var lastLogin: LocalDateTime,
 
     open var assignCount: Int? = 0,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id") // <<-- BU SATIRI EKLEDİM
+    open var seller: Seller? = null,
 
     ): BaseEntity() , UserDetails {
 
@@ -84,7 +93,7 @@ open class User (
         Gender.FEMALE,
         mutableListOf(),
         "",
-        mutableListOf(),
+        mutableSetOf(),
         mutableSetOf(),
         mutableListOf(),
         listOf(),

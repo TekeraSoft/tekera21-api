@@ -16,7 +16,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query("""
     SELECT DISTINCT o
     FROM Order o
-    JOIN o.sellerOrder so
+    JOIN o.sellerOrders so
     JOIN so.basketItems bi
     JOIN bi.seller s
     JOIN s.users u

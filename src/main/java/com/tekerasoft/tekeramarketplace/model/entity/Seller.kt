@@ -35,8 +35,11 @@ open class Seller(
     @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open var products: MutableList<Product> = mutableListOf(),
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
     open var users: MutableSet<User> = mutableSetOf(),
+
+    @ManyToMany(mappedBy = "followSellers", fetch = FetchType.LAZY) // <<-- Düzeltildi
+    open var followUsers: MutableSet<User> = mutableSetOf(),
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
     open var address: MutableList<Address> = mutableListOf(),
@@ -63,47 +66,25 @@ open class Seller(
     )
     open var shippingCompanies: MutableSet<ShippingCompany> = mutableSetOf(),
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open var sellerOrders: MutableList<SellerOrder> = mutableListOf(),
 
     open var rate: Double,
-
     open var isVerified: Boolean = false,
-
     open var isActive: Boolean = false,
 
     @Enumerated(EnumType.STRING)
     open var verificationStatus: VerificationStatus = VerificationStatus.PENDING
 
-    ): BaseEntity() {
-
-        constructor() : this(
-            name = "",
-            slug = "",
-            logo = "",
-            email = "",
-            gsmNumber = "",
-            estimatedDeliveryTime = "",
-            alternativePhoneNumber = "",
-            supportPhoneNumber = "",
-            taxNumber = "",
-            taxOffice = "",
-            merisNumber = "",
-            registrationDate = LocalDateTime.now(),
-            contactPersonNumber = "",
-            contactPersonTitle = "",
-            categories = mutableSetOf(),
-            products = mutableListOf(),
-            users = mutableSetOf(),
-            address = mutableListOf(),
-            bankAccounts = mutableListOf(),
-            sellerDocuments = mutableListOf(),
-            sellerExtraDocuments = mutableListOf(),
-            shippingCompanies = mutableSetOf(),
-            sellerOrders = mutableListOf(),
-            rate = 0.0,
-            isVerified = false,
-            isActive = false,
-            verificationStatus = VerificationStatus.PENDING,
-        )
-    }
+): BaseEntity() {
+    constructor() : this(
+        name = "", slug = "", logo = "", email = "", gsmNumber = "", estimatedDeliveryTime = "",
+        alternativePhoneNumber = "", supportPhoneNumber = "", taxNumber = "", taxOffice = "",
+        merisNumber = "", registrationDate = LocalDateTime.now(), contactPersonNumber = "",
+        contactPersonTitle = "", categories = mutableSetOf(), products = mutableListOf(),
+        users = mutableSetOf(), address = mutableListOf(), bankAccounts = mutableListOf(),
+        sellerDocuments = mutableListOf(), sellerExtraDocuments = mutableListOf(),
+        shippingCompanies = mutableSetOf(), sellerOrders = mutableListOf(), rate = 0.0,
+        isVerified = false, isActive = false, verificationStatus = VerificationStatus.PENDING
+    )
+}

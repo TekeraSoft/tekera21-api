@@ -16,7 +16,7 @@ open class OrderDto(
                 from.orderNo,
                 from.shippingPrice,
                 from.totalPrice,
-                from.sellerOrder.map { it -> SellerOrderDto.toDto(it) }.toMutableList()
+                from.sellerOrders.map { it -> SellerOrderDto.toDto(it) }.toMutableList()
             )
         }
     }

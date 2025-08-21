@@ -6,15 +6,21 @@ import java.math.BigDecimal
 @Entity
 @Table(name = "orders")
 open class Order(
+    @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)
+    open var sellerOrders: MutableList<SellerOrder> = mutableListOf(),
 
-    open var orderNo: String,
-    open var cartId: String,
-    open var shippingPrice: BigDecimal,
-    open var totalPrice: BigDecimal,
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
-    open var sellerOrder: MutableList<SellerOrder>,
+    @Column(unique = true)
+    open var orderNo: String = "",
 
-    ): BaseEntity()
-{
-        constructor(): this("","", BigDecimal.ZERO, BigDecimal.ZERO,mutableListOf())
-}
+    // Total price, shipping price vb. veriler SellerOrder'lardan türetilebilir
+    open var totalPrice: BigDecimal = BigDecimal.ZERO,
+    open var shippingPrice: BigDecimal = BigDecimal.ZERO,
+
+    // Yeni eklenen alanlar
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    open var user: User? = null
+
+    // ... Diğer ödeme/sipariş durumları vs.
+
+) : BaseEntity()

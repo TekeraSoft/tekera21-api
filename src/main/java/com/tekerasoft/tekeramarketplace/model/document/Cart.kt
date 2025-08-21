@@ -17,7 +17,6 @@ data class Cart(
     constructor() : this("", mutableListOf(), BigDecimal.ZERO, 0)
 }
 
-
 data class CartItem(
     var productId: String,
     var variationId: String,

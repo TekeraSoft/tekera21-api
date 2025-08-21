@@ -10,4 +10,5 @@ data class SellerReportDto(
 data class Interruption (
     val shippingPrice: BigDecimal,
     val platformUsageFee: BigDecimal,
+
 )

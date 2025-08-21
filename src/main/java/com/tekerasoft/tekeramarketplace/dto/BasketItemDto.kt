@@ -16,7 +16,6 @@ data class BasketItemDto(
     val barcode: String?,
     val image: String,
     val attributes: MutableList<BasketAttributes>,
-    val shippingPrice: BigDecimal,
     val shippingCompanyName: String,
     val productId: String,
     val variationId: String,

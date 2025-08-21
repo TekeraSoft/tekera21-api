@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.service;
 
+import com.tekerasoft.tekeramarketplace.builder.PaymentBuilder;
 import com.tekerasoft.tekeramarketplace.dto.OrderDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerOrderDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateOrderRequest;
@@ -27,8 +28,8 @@ public class SellerOrderService {
     private final VariationService variationService;
     private final AuthenticationFacade authenticationFacade;
     private final SimpMessagingTemplate simpMessagingTemplate;
-    private final CartService cartService;
-    private final SellerService sellerService;
+    private final PaymentBuilder paymentBuilder;
+    private final SettingService settingService;
 
     public SellerOrderService(SellerOrderRepository sellerOrderRepository,
                               UserService userService,
@@ -36,7 +37,7 @@ public class SellerOrderService {
                               ProductService productService,
                               VariationService variationService,
                               AuthenticationFacade authenticationFacade, SimpMessagingTemplate simpMessagingTemplate,
-                              CartService cartService, SellerService sellerService) {
+                              PaymentBuilder paymentBuilder, SettingService settingService) {
         this.sellerOrderRepository = sellerOrderRepository;
         this.userService = userService;
         this.attributeService = attributeService;
@@ -44,10 +45,9 @@ public class SellerOrderService {
         this.variationService = variationService;
         this.authenticationFacade = authenticationFacade;
         this.simpMessagingTemplate = simpMessagingTemplate;
-        this.cartService = cartService;
-        this.sellerService = sellerService;
+        this.paymentBuilder = paymentBuilder;
+        this.settingService = settingService;
     }
-
 
     @Transactional
     public List<SellerOrder> createSellerOrder(CreateOrderRequest req) {
@@ -69,10 +69,11 @@ public class SellerOrderService {
                 basketItem.setBrandName(product.getBrandName());
                 basketItem.setQuantity(bi.getQuantity());
                 basketItem.setModelCode(variation.getModelCode());
-                basketItem.setPrice(attribute.getPrice());
+                basketItem.setPrice(paymentBuilder.selectDiscountOrPrice(attribute.getPrice(),attribute.getDiscountPrice()));
                 basketItem.setSku(attribute.getSku());
                 basketItem.setBarcode(attribute.getBarcode());
                 basketItem.setImage(variation.getImages().get(0));
+                basketItem.setPlatformUsageFee(settingService.getSettings().getPlatformUsageFee());
                 basketItem.setAttributes(attribute.getAttributeDetails().stream()
                         .map(it -> new BasketAttributes(it.getKey(), it.getValue()))
                         .toList());
@@ -101,12 +102,20 @@ public class SellerOrderService {
 
                 SellerOrder sellerOrder;
                 if (existingOrderOpt.isPresent()) {
-                    // Var olan order'a yeni basket item ekle
                     sellerOrder = existingOrderOpt.get();
+                    // BURAYA EKLE:
+                    for (BasketItem bi : sellerItems) {
+                        bi.setSellerOrder(sellerOrder); // BasketItem ile ilişkiyi kur
+                    }
                     sellerOrder.getBasketItems().addAll(sellerItems);
                 } else {
                     // Yeni SellerOrder oluştur
                     sellerOrder = new SellerOrder();
+                    sellerOrder.setSeller(seller); // <<-- ÖNEMLİ: İlişkiyi burada kuruyoruz.
+
+                    for (BasketItem bi : sellerItems) {
+                        bi.setSellerOrder(sellerOrder);
+                    }
                     sellerOrder.setBasketItems(sellerItems);
 
                     Buyer buyer = new Buyer();
@@ -155,25 +164,22 @@ public class SellerOrderService {
                         sellerOrder.setUser(user);
                     }
                 }
-                sellerService.addSellerOrder(sellerOrder, seller.getId().toString());
                 ordersToSave.add(sellerOrder);
             }
             return sellerOrderRepository.saveAll(ordersToSave);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-
     }
 
 
     @Transactional
-    public void completeOrder(String sellerOrderId, PaymentStatus paymentStatus,String cartId) {
+    public void completeOrder(String sellerOrderId, PaymentStatus paymentStatus) {
         try {
             SellerOrder order = sellerOrderRepository.findById(UUID.fromString(sellerOrderId))
                     .orElseThrow(() -> new NotFoundException("Order not found"));
             if (paymentStatus.equals(PaymentStatus.PAID)) {
                 order.setPaymentStatus(paymentStatus);
-                cartService.clearCart(cartId);
 
                 for (BasketItem bi : order.getBasketItems()) {
                     attributeService.decreaseStock(bi.getAttributeId(), bi.getQuantity());
@@ -194,7 +200,6 @@ public class SellerOrderService {
         }
 
     }
-
 
     public List<SellerOrderDto> findOrdersByPhoneNumberOrUsername(String searchParam) {
         return sellerOrderRepository.findOrdersByPhoneNumberOrUsername(searchParam)

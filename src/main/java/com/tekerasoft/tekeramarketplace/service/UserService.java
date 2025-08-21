@@ -5,6 +5,7 @@ import com.tekerasoft.tekeramarketplace.dto.request.CreateUserRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.SellerVerificationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
+import com.tekerasoft.tekeramarketplace.model.entity.Seller;
 import com.tekerasoft.tekeramarketplace.model.entity.User;
 import com.tekerasoft.tekeramarketplace.model.enums.Role;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.UserRepository;
@@ -53,6 +54,10 @@ public class UserService implements UserDetailsService {
         user.setGender(req.getGender());
         user.setBirthDate(req.getBirthDate());
         user.setHashedPassword(passwordEncoder.encode(req.getPassword()));
+        userRepository.save(user);
+    }
+
+    public void updateUser(User user) {
         userRepository.save(user);
     }
 
