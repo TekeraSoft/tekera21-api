@@ -29,7 +29,7 @@ public class CartService {
     }
 
     private Cart getCartFromDb(String cartOwnerId) {
-        return cartRepository.findById(cartOwnerId).orElse(null);
+        return !cartOwnerId.isEmpty() ? cartRepository.findById(cartOwnerId).orElse(null): null;
     }
 
     public Cart getCart(String guestUserId) {

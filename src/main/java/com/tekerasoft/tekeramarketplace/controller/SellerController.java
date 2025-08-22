@@ -25,18 +25,16 @@ public class SellerController {
     private final VariationService variationService;
     private final DigitalFashionService digitalFashionService;
     private final SellerOrderService sellerOrderService;
-    private final OrderService orderService;
 
     public SellerController(ProductService productService, SellerService sellerService, FileService fileService,
                             VariationService variationService, DigitalFashionService digitalFashionService,
-                            SellerOrderService sellerOrderService, OrderService orderService) {
+                            SellerOrderService sellerOrderService) {
         this.productService = productService;
         this.sellerService = sellerService;
         this.fileService = fileService;
         this.variationService = variationService;
         this.digitalFashionService = digitalFashionService;
         this.sellerOrderService = sellerOrderService;
-        this.orderService = orderService;
     }
 
     @PostMapping(value = "/createProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -124,9 +122,14 @@ public class SellerController {
         return ResponseEntity.ok(sellerOrderService.findSellerOrdersByUserId(pageable));
     }
 
-//    @GetMapping("/getSellerReport")
-//    public ResponseEntity<SellerReportAggregation> getSellerReportBySellerUserId() {
-//        return ResponseEntity.ok(sellerService.getSellerReportBySellerUserId());
-//    }
+    @GetMapping("/getSellerReport")
+    public ResponseEntity<SellerReportDto> getSellerReportBySellerUserId() {
+        return ResponseEntity.ok(sellerService.getSellerReportBySellerUserId());
+    }
+
+    @GetMapping("/getSellerInterruptions")
+    public ResponseEntity<List<SellerInterruptionDto>> getSellerInterruptions() {
+        return ResponseEntity.ok(sellerService.getSellerInterruptionBySellerUserId());
+    }
 
 }

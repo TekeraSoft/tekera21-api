@@ -1,14 +1,12 @@
 package com.tekerasoft.tekeramarketplace.dto
 
-import java.math.BigDecimal
+import org.springframework.data.domain.Page
 
 data class SellerReportDto(
     val sellerReportAggregation: SellerReportAggregation,
-    val interruptions: List<Interruption>
-)
-
-data class Interruption (
-    val shippingPrice: BigDecimal,
-    val platformUsageFee: BigDecimal,
-
+    val followers: List<SellerFollowerDto>,
+    val totalOrders: Long,
+    val totalProducts: Long,
+    val recentOrders: Page<SellerRecentOrderDto>,
+    val topProducts: Page<ProductUiDto>
 )

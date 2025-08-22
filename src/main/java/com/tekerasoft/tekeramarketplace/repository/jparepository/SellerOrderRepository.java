@@ -32,13 +32,7 @@ public interface SellerOrderRepository extends JpaRepository<SellerOrder, UUID> 
     FROM SellerOrder o
     WHERE o.user.id = :userId
     """)
-        Page<SellerOrder> findOrderByUserId(@Param("userId") UUID userId, Pageable pageable);
-
-    @Query("SELECT so FROM SellerOrder so JOIN so.basketItems bi " +
-            "WHERE bi.seller.id = :sellerId " +
-            "AND so.paymentStatus = :status")
-    Optional<SellerOrder> findPendingOrderBySeller(@Param("sellerId") UUID sellerId,
-                                                   @Param("status") PaymentStatus status);
+        Page<SellerOrder> findUserOrdersByUserId(@Param("userId") UUID userId, Pageable pageable);
 
     @Query("""
     SELECT DISTINCT so
@@ -48,8 +42,20 @@ public interface SellerOrderRepository extends JpaRepository<SellerOrder, UUID> 
     JOIN s.users u
     WHERE u.id = :userId
     AND so.paymentStatus = com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus.PAID
+    ORDER BY so.createdAt DESC
 """)
     Page<SellerOrder> findSellerOrdersByUserId(@Param("userId") UUID userId, Pageable pageable);
+
+
+    @Query("SELECT so FROM SellerOrder so JOIN so.basketItems bi " +
+            "WHERE bi.seller.id = :sellerId " +
+            "AND so.paymentStatus = :status")
+    Optional<SellerOrder> findPendingOrderBySeller(@Param("sellerId") UUID sellerId,
+                                                   @Param("status") PaymentStatus status);
+
+
+    Page<SellerOrder> findBySeller(Seller seller, Pageable pageable);
+
 }
 
 

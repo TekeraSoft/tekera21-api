@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.repository.jparepository;
 
 import com.tekerasoft.tekeramarketplace.model.entity.Product;
+import com.tekerasoft.tekeramarketplace.model.entity.Seller;
 import com.tekerasoft.tekeramarketplace.model.entity.Variation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +23,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
        ORDER BY p.createdAt DESC, p.id DESC
        """)
     Page<Product> findActiveProducts(Pageable pageable);
-
 
     @Query("SELECT p FROM Product p WHERE p.seller.id = :companyId")
     Page<Product> findActiveProductsByCompanyId(@Param("companyId") UUID companyId, Pageable pageable);
@@ -82,5 +82,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
     WHERE sc.name = :name OR c.name = :name
     """)
     Page<Product> findProductByCategoryOrSubCategory(@Param("name") String name, Pageable pageable);
+
+    Page<Product> findBySeller(Seller seller, Pageable pageable);
 
 }

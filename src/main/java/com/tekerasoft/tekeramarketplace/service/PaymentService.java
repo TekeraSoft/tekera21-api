@@ -12,7 +12,6 @@ import com.tekerasoft.tekeramarketplace.model.entity.*;
 import com.tekerasoft.tekeramarketplace.model.enums.PaymentResult;
 import com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus;
 import com.tekerasoft.tekeramarketplace.model.enums.PaymentType;
-import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,6 @@ import java.util.*;
 public class PaymentService {
 
     private final SellerOrderService sellerOrderService;
-    private final AuthenticationFacade authenticationFacade;
 
     @Value("${spring.iyzico.callback_url}")
     private String paymentCallbackUrl;
@@ -31,18 +29,15 @@ public class PaymentService {
     private final Options options;
     private final OrderService orderService;
     private final AttributeService attributeService;
-    private final PaymentRequestBuilder  paymentRequestBuilder;
+    private final PaymentRequestBuilder paymentRequestBuilder;
 
     public PaymentService(Options options, OrderService orderService, AttributeService attributeService,
-                           SellerOrderService sellerOrderService,
-                          PaymentRequestBuilder paymentRequestBuilder,
-                          AuthenticationFacade authenticationFacade) {
+                           SellerOrderService sellerOrderService, PaymentRequestBuilder paymentRequestBuilder) {
         this.options = options;
         this.orderService = orderService;
         this.attributeService = attributeService;
         this.sellerOrderService = sellerOrderService;
         this.paymentRequestBuilder = paymentRequestBuilder;
-        this.authenticationFacade = authenticationFacade;
     }
 
     public ThreedsInitialize payment(CreatePayRequest req) {

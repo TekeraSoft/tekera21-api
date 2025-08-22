@@ -8,6 +8,8 @@ import com.tekerasoft.tekeramarketplace.exception.CompanyException;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.exception.SellerVerificationException;
 import com.tekerasoft.tekeramarketplace.model.entity.*;
+import com.tekerasoft.tekeramarketplace.model.enums.InterruptionDescription;
+import com.tekerasoft.tekeramarketplace.model.enums.PaymentStatus;
 import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
@@ -17,12 +19,16 @@ import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,12 +43,13 @@ public class SellerService {
     private final AuthenticationFacade authenticationFacade;
     private final SellerVerificationService sellerVerificationService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final SettingService settingService;
 
     public SellerService(SellerRepository sellerRepository, CategoryRepository categoryRepository,
                          FileService fileService, SearchItemService searchItemService,
                          ShippingCompanyService shippingCompanyService, UserService userService,
                          AuthenticationFacade authenticationFacade, SellerVerificationService sellerVerificationService,
-                         KafkaTemplate<String, Object> kafkaTemplate) {
+                         KafkaTemplate<String, Object> kafkaTemplate, SettingService settingService) {
         this.sellerRepository = sellerRepository;
         this.categoryRepository = categoryRepository;
         this.fileService = fileService;
@@ -52,6 +59,7 @@ public class SellerService {
         this.authenticationFacade = authenticationFacade;
         this.sellerVerificationService = sellerVerificationService;
         this.kafkaTemplate = kafkaTemplate;
+        this.settingService = settingService;
     }
 
     @Transactional
@@ -359,18 +367,113 @@ public class SellerService {
         return sellerRepository.findAll(pageable).map(SellerAdminDto::toDto);
     }
 
-    public void addSellerOrder(SellerOrder sellerOrder, String sellerId) {
-        Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
-                .orElseThrow(() -> new NotFoundException("Seller not found: " + sellerId));
-        sellerOrder.setSeller(seller);
-        seller.getSellerOrders().add(sellerOrder);
+    public SellerReportDto getSellerReportBySellerUserId() {
+        String userId = authenticationFacade.getCurrentUserId();
+        Seller seller = getSellerByUserId(userId);
+
+        SellerReportAggregation sellerReportAggregation = sellerRepository.getSellerAggregatedProfit(
+                UUID.fromString(seller.getId().toString()));
+
+        List<SellerFollowerDto> followers = seller.getFollowUsers().stream().map(SellerFollowerDto::toDto).toList();
+
+        long totalOrdersCount = seller.getSellerOrders().size();
+
+        long totalProductsCount = seller.getProducts().size();
+
+        Page<SellerRecentOrderDto> recentOrders = sellerRepository.findRecentOrdersBySeller(seller,PageRequest.of(0,10))
+                .map(SellerRecentOrderDto::toDto);
+
+        Page<ProductUiDto> topProducts = sellerRepository.findTopProductsBySeller(seller, PageRequest.of(0,10))
+                .map(ProductUiDto::toProductUiDto);
+
+        return new SellerReportDto(
+                sellerReportAggregation,
+                followers,
+                totalOrdersCount,
+                totalProductsCount,
+                recentOrders,
+                topProducts
+        );
+
     }
 
-//    public SellerReportDto getSellerReportBySellerUserId() {
-//        String seller = sellerRepository.findSellerByUserId(UUID.fromString(authenticationFacade.getCurrentUserId()))
-//                .getId().toString();
-//        SellerReportAggregation sellerReportAggregation = sellerRepository.getSellerAggregatedProfit(UUID.fromString(seller));
-//
-//    }
+    public List<SellerInterruptionDto> getSellerInterruptionBySellerUserId() {
+        String userId = authenticationFacade.getCurrentUserId();
+        List<SellerOrder> sellerOrders = getSellerByUserId(userId).getSellerOrders();
+
+        // sadece ödenmiş siparişler
+        List<SellerOrder> paidOrders = sellerOrders.stream()
+                .filter(o -> o.getPaymentStatus() == PaymentStatus.PAID)
+                .toList();
+
+        List<SellerInterruptionDto> dtos = new ArrayList<>();
+
+        // Gruplama: aynı ay ve yıl
+        Map<CalculateDate, List<SellerOrder>> grouped = paidOrders.stream()
+                .collect(Collectors.groupingBy(o -> {
+                    LocalDateTime created = o.getCreatedAt();
+                    String month = String.format("%02d", created.getMonthValue());
+                    String year = String.valueOf(created.getYear());
+                    return new CalculateDate(month, year);
+                }));
+
+        for (Map.Entry<CalculateDate, List<SellerOrder>> entry : grouped.entrySet()) {
+            CalculateDate date = entry.getKey();
+
+            List<InterruptionContent> interruptionContents = new ArrayList<>();
+            BigDecimal totalSellerFee = BigDecimal.ZERO;
+            BigDecimal totalInterruptionAmount = BigDecimal.ZERO;
+
+            for (SellerOrder order : entry.getValue()) {
+                BasketItem firstItem = order.getBasketItems().isEmpty() ? null : order.getBasketItems().get(0);
+
+                // platform hizmet bedeli (basket item sayısı * fee)
+                BigDecimal platformUsageFeeValue = BigDecimal.valueOf(order.getBasketItems().size())
+                        .multiply(settingService.getSettings().getPlatformUsageFee());
+
+                // komisyon (toplam fiyat * %9)
+                BigDecimal platformCommissionValue = order.getTotalPrice()
+                        .multiply(settingService.getSettings().getPlatformCommissionFee()).setScale(2, RoundingMode.HALF_UP);
+
+                Interruption platformUsageFee = new Interruption(
+                        InterruptionDescription.PLATFORM_USAGE_FEE.getValue(),
+                        platformUsageFeeValue
+                );
+
+                Interruption platformCommission = new Interruption(
+                        InterruptionDescription.COMMISSION_FEE.getValue(),
+                        platformCommissionValue
+                );
+
+                // kesintiler toplamı
+                BigDecimal interruptionAmount = platformUsageFeeValue.add(platformCommissionValue);
+
+                // satıcıya aktarılacak net tutar (sipariş bazında)
+                BigDecimal sellerProfit = order.getTotalPrice().subtract(interruptionAmount);
+
+                totalInterruptionAmount = totalInterruptionAmount.add(interruptionAmount);
+                totalSellerFee = totalSellerFee.add(sellerProfit);
+
+                interruptionContents.add(new InterruptionContent(
+                        order.getOrder().getOrderNo(),
+                        firstItem != null ? firstItem.getName() : "",
+                        firstItem != null ? firstItem.getModelCode() : "",
+                        firstItem != null ? firstItem.getImage() : "",
+                        platformUsageFee,
+                        platformCommission,
+                        sellerProfit
+                ));
+            }
+
+            dtos.add(new SellerInterruptionDto(
+                    date,
+                    interruptionContents,
+                    totalSellerFee,        // ay bazında toplam net kazanç
+                    totalInterruptionAmount // ay bazında toplam kesinti
+            ));
+        }
+
+        return dtos;
+    }
 
 }

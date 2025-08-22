@@ -8,7 +8,9 @@ import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
 import com.tekerasoft.tekeramarketplace.model.entity.Seller;
 import com.tekerasoft.tekeramarketplace.model.entity.User;
 import com.tekerasoft.tekeramarketplace.model.enums.Role;
+import com.tekerasoft.tekeramarketplace.repository.jparepository.SellerRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.UserRepository;
+import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +32,17 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final Random random = new Random();
     private final RoleService roleService;
+    private final AuthenticationFacade authenticationFacade;
+    private final SellerRepository sellerRepository;
 
     public UserService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder,
-                       RoleService roleService) {
+                       RoleService roleService, AuthenticationFacade authenticationFacade, SellerRepository sellerRepository) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
+        this.authenticationFacade = authenticationFacade;
+        this.sellerRepository = sellerRepository;
     }
 
     @Override
@@ -147,7 +153,6 @@ public class UserService implements UserDetailsService {
         return new ApiResponse<>("Beklenmedik bir hata oluştu lütfen tekrar deneyin !",HttpStatus.NOT_FOUND.value());
     }
 
-
     public ApiResponse<?> changePassword(String email,String oldPassword,String password, String token) {
         try {
             Optional<User> useroptional = userRepository.findByEmail(email);
@@ -188,6 +193,24 @@ public class UserService implements UserDetailsService {
         }
     }
 
-      // TODO: user active deactivate
+    @Transactional
+    public ApiResponse<?> followSeller(String sellerId) {
+        Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
+                .orElseThrow(()-> new NotFoundException("Satıcı bulunamadı"));
+        // 2. Current user'ı session içinde al
+        User user = userRepository.findById(UUID.fromString(authenticationFacade.getCurrentUserId()))
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        // 3. User'ın takip ettiği seller'lar koleksiyonuna ekle
+        user.getFollowSellers().add(seller);
+
+        // 4. Seller'ın takip edenler koleksiyonuna user'ı ekle (opsiyonel, iki taraflı ilişkiyi korumak için)
+        seller.getFollowUsers().add(user);
+
+        // 5. Kaydet (user managed entity olduğu için sellerRepository.save gerekmez)
+        userRepository.save(user);
+
+        return new ApiResponse<>("Seller followed successfully", HttpStatus.OK.value());
+    }
 
 }

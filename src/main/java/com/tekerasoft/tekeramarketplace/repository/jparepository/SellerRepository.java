@@ -4,6 +4,7 @@ import com.tekerasoft.tekeramarketplace.dto.SellerReportAggregation;
 import com.tekerasoft.tekeramarketplace.model.entity.Seller;
 import com.tekerasoft.tekeramarketplace.model.entity.Product;
 import com.tekerasoft.tekeramarketplace.model.entity.SellerDocument;
+import com.tekerasoft.tekeramarketplace.model.entity.SellerOrder;
 import com.tekerasoft.tekeramarketplace.model.enums.SellerDocumentType;
 import com.tekerasoft.tekeramarketplace.model.enums.VerificationStatus;
 import org.springframework.data.domain.Page;
@@ -70,4 +71,22 @@ public interface SellerRepository extends JpaRepository<Seller, UUID> {
             "AND FUNCTION('DATE', so.createdAt) = :specificDate")
     BigDecimal getProfitBySpecificDate(@Param("sellerId") Long sellerId,
                                        @Param("specificDate") java.time.LocalDate specificDate);
+
+    @Query("""
+        SELECT so
+        FROM Seller s
+        JOIN s.sellerOrders so
+        WHERE s = :seller
+        ORDER BY so.createdAt DESC
+    """)
+    Page<SellerOrder> findRecentOrdersBySeller(@Param("seller") Seller seller, Pageable pageable);
+
+    @Query("""
+        SELECT p
+        FROM Seller s
+        JOIN s.products p
+        WHERE s = :seller
+        ORDER BY p.createdAt DESC
+    """)
+    Page<Product> findTopProductsBySeller(@Param("seller") Seller seller, Pageable pageable);
 }

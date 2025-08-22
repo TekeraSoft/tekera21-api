@@ -70,6 +70,8 @@ public class DataLoader implements CommandLineRunner {
 //        orderRepository.deleteAll();
 //        sellerOrderRepository.deleteAll();
 
+        searchItemRepository.deleteAll();
+
         // Başlangıç rolleri
         List<String> defaultRoles = List.of(
                 "SUPER_ADMIN",

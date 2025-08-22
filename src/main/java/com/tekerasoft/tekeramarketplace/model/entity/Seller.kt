@@ -87,4 +87,9 @@ open class Seller(
         shippingCompanies = mutableSetOf(), sellerOrders = mutableListOf(), rate = 0.0,
         isVerified = false, isActive = false, verificationStatus = VerificationStatus.PENDING
     )
+
+    fun addFollower(user: User) {
+        this.followUsers.add(user)
+        user.followSellers.add(this)
+    }
 }

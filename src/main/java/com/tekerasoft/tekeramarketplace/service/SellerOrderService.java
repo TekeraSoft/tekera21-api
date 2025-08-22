@@ -201,6 +201,7 @@ public class SellerOrderService {
 
     }
 
+
     public List<SellerOrderDto> findOrdersByPhoneNumberOrUsername(String searchParam) {
         return sellerOrderRepository.findOrdersByPhoneNumberOrUsername(searchParam)
                 .stream()
@@ -210,7 +211,7 @@ public class SellerOrderService {
 
     public Page<SellerOrderDto> findOrderByUserId(Pageable pageable) {
         String userId = authenticationFacade.getCurrentUserId();
-        return sellerOrderRepository.findOrderByUserId(UUID.fromString(userId), pageable)
+        return sellerOrderRepository.findUserOrdersByUserId(UUID.fromString(userId), pageable)
                 .map(SellerOrderDto::toDto);
     }
 
@@ -219,4 +220,5 @@ public class SellerOrderService {
         return sellerOrderRepository.findSellerOrdersByUserId(UUID.fromString(userId), pageable)
                 .map(SellerOrderDto::toDto);
     }
+
 }

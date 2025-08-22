@@ -558,10 +558,4 @@ public class ProductService {
 
         return cart;
     }
-
-    public Page<ProductUiDto> getProductsByCategory(String categoryName, Pageable pageable) {
-        return productRepository.findProductByCategoryOrSubCategory(categoryName, pageable)
-                .map(ProductUiDto::toProductUiDto);
-    }
-
 }

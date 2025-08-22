@@ -3,15 +3,15 @@ package com.tekerasoft.tekeramarketplace.controller;
 import com.tekerasoft.tekeramarketplace.dto.OrderDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerOrderDto;
+import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.service.OrderService;
 import com.tekerasoft.tekeramarketplace.service.SellerOrderService;
 import com.tekerasoft.tekeramarketplace.service.SellerService;
+import com.tekerasoft.tekeramarketplace.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/api/user")
@@ -19,10 +19,12 @@ public class UserController {
 
     private final SellerOrderService orderService;
     private final SellerService sellerService;
+    private final UserService userService;
 
-    public UserController(SellerOrderService orderService, SellerService sellerService) {
+    public UserController(SellerOrderService orderService, SellerService sellerService, UserService userService) {
         this.orderService = orderService;
         this.sellerService = sellerService;
+        this.userService = userService;
     }
 
     @GetMapping("/getOrdersByUserId")
@@ -33,5 +35,10 @@ public class UserController {
     @GetMapping("/getSellerInformation")
     public ResponseEntity<SellerAdminDto> getSellerByUserId() {
         return ResponseEntity.ok(sellerService.getSellerInformation());
+    }
+
+    @PutMapping("/followSeller")
+    public ResponseEntity<ApiResponse<?>> followSeller(@RequestParam String sellerId) {
+        return ResponseEntity.ok(userService.followSeller(sellerId));
     }
 }
