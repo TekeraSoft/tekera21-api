@@ -8,7 +8,7 @@ data class FashionCollectionDto(
     val collectionName: String,
     val slug: String?,
     val image: String?,
-    val products: List<ProductUiDto>,
+    val products: List<ProductDto>,
     val description: String?,
 ) {
     companion object {
@@ -19,7 +19,7 @@ data class FashionCollectionDto(
                 from.collectionName,
                 from.slug,
                 from.image,
-                from.products.map { ProductUiDto.toProductUiDto(it) },
+                from.products.map { ProductDto.toDto(it) },
                 from.description,
             )
         }

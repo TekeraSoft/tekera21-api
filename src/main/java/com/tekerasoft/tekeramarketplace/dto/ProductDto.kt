@@ -23,6 +23,7 @@ data class ProductDto(
     val productType: ProductType,
     val attributeDetails: List<AttributeDetail>,
     val rate: Double,
+    val likeCount: Int?,
     val comments: List<CommentDto>,
     val isActive: Boolean?
 ) {
@@ -65,6 +66,7 @@ data class ProductDto(
                 from.productType,
                 from.attributes.map { AttributeDetail(it.key, it.value) },
                 from.rate,
+                from.likeCount,
                 from.comments.map { CommentDto(it.id,it.userName,it.rate,it.message) },
                 from.isActive
             )

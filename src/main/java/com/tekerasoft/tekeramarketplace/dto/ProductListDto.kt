@@ -22,6 +22,7 @@ data class ProductListDto(
     val productType: ProductType,
     val attributeDetails: List<AttributeDetail>,
     val rate: Double,
+    val likeCount: Int?,
 ){
     companion object {
         @JvmStatic
@@ -60,6 +61,7 @@ data class ProductListDto(
                 from.productType,
                 from.attributes.map { AttributeDetail(it.key, it.value) },
                 from.rate,
+                from.likeCount,
             )
         }
     }

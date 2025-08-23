@@ -39,6 +39,7 @@ public class ProductService {
     private final SellerService sellerService;
     private final AuthenticationFacade  authenticationFacade;
     private final SettingService settingService;
+    private final UserRepository userRepository;
 
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
@@ -46,7 +47,9 @@ public class ProductService {
                           SubCategoryRepository subCategoryRepository,
                           SearchItemService searchItemService,
                           SellerService sellerService,
-                          AuthenticationFacade authenticationFacade, SettingService settingService) {
+                          AuthenticationFacade authenticationFacade,
+                          SettingService settingService,
+                          UserRepository userRepository) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
@@ -55,6 +58,7 @@ public class ProductService {
         this.sellerService = sellerService;
         this.authenticationFacade = authenticationFacade;
         this.settingService = settingService;
+        this.userRepository = userRepository;
     }
 
     public Product getById(UUID id) {
@@ -421,12 +425,24 @@ public class ProductService {
     }
 
     public Page<ProductUiDto> findCompanyPopularOrNewSeasonProducts(String  companyId, String tag, Pageable pageable) {
+        User user;
+        if(authenticationFacade.getCurrentUserId() != null) {
+            user = userRepository.findById(UUID.fromString(authenticationFacade.getCurrentUserId())).orElseThrow();
+        } else {
+            user = null;
+        }
         return productRepository.findPopularOrNewSeasonProducts(UUID.fromString(companyId), tag, pageable)
-                .map(ProductUiDto::toProductUiDto);
+                .map(p -> ProductUiDto.toProductUiDto(p,user));
     }
 
     public Page<ProductUiDto> getAllLProduct(Pageable pageable) {
-        return productRepository.findActiveProducts(pageable).map(ProductUiDto::toProductUiDto);
+        User user;
+        if(authenticationFacade.getCurrentUserId() != null) {
+            user = userRepository.findById(UUID.fromString(authenticationFacade.getCurrentUserId())).orElseThrow();
+        } else {
+            user = null;
+        }
+        return productRepository.findActiveProducts(pageable).map(p -> ProductUiDto.toProductUiDto(p, user));
     }
 
     public Page<ProductDto> findAllAdminProduct(Pageable pageable) {
@@ -439,6 +455,13 @@ public class ProductService {
                                               String searchParam,
                                               Pageable pageable) {
 
+        User user;
+        if(authenticationFacade.getCurrentUserId() != null) {
+            user = userRepository.findById(UUID.fromString(authenticationFacade.getCurrentUserId())).orElseThrow();
+        } else {
+            user = null;
+        }
+
         color = (color == null || color.isEmpty() ? null : color);
         clothSize = (clothSize == null || clothSize.isEmpty() ? null : clothSize);
         tags = (tags == null || tags.isEmpty() ? null : tags);
@@ -448,7 +471,7 @@ public class ProductService {
         searchParam = (searchParam == null || searchParam.isEmpty() ? null : searchParam);
 
         return productRepository.findByQueryField(color, clothSize, tags, style,subCategoryName,categoryName,searchParam,pageable)
-                .map(ProductUiDto::toProductUiDto);
+                .map(p -> ProductUiDto.toProductUiDto(p, user));
     }
 
     public Page<ProductDto> filterAdminProduct(String color,String clothSize, List<String> tags,String style,

@@ -15,6 +15,7 @@ import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItem;
 import com.tekerasoft.tekeramarketplace.model.esdocument.SearchItemType;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.CategoryRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.SellerRepository;
+import com.tekerasoft.tekeramarketplace.repository.jparepository.UserRepository;
 import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import com.tekerasoft.tekeramarketplace.utils.SlugGenerator;
 import jakarta.transaction.Transactional;
@@ -44,12 +45,13 @@ public class SellerService {
     private final SellerVerificationService sellerVerificationService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final SettingService settingService;
+    private final UserRepository userRepository;
 
     public SellerService(SellerRepository sellerRepository, CategoryRepository categoryRepository,
                          FileService fileService, SearchItemService searchItemService,
                          ShippingCompanyService shippingCompanyService, UserService userService,
                          AuthenticationFacade authenticationFacade, SellerVerificationService sellerVerificationService,
-                         KafkaTemplate<String, Object> kafkaTemplate, SettingService settingService) {
+                         KafkaTemplate<String, Object> kafkaTemplate, SettingService settingService, UserRepository userRepository) {
         this.sellerRepository = sellerRepository;
         this.categoryRepository = categoryRepository;
         this.fileService = fileService;
@@ -60,6 +62,7 @@ public class SellerService {
         this.sellerVerificationService = sellerVerificationService;
         this.kafkaTemplate = kafkaTemplate;
         this.settingService = settingService;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -368,8 +371,9 @@ public class SellerService {
     }
 
     public SellerReportDto getSellerReportBySellerUserId() {
-        String userId = authenticationFacade.getCurrentUserId();
-        Seller seller = getSellerByUserId(userId);
+        User user = userRepository.findById(UUID.fromString(authenticationFacade.getCurrentUserId()))
+                .orElseThrow(() -> new NotFoundException("User not found"));
+        Seller seller = getSellerByUserId(user.getId().toString());
 
         SellerReportAggregation sellerReportAggregation = sellerRepository.getSellerAggregatedProfit(
                 UUID.fromString(seller.getId().toString()));
@@ -384,7 +388,7 @@ public class SellerService {
                 .map(SellerRecentOrderDto::toDto);
 
         Page<ProductUiDto> topProducts = sellerRepository.findTopProductsBySeller(seller, PageRequest.of(0,10))
-                .map(ProductUiDto::toProductUiDto);
+                .map(p -> ProductUiDto.toProductUiDto(p, user));
 
         return new SellerReportDto(
                 sellerReportAggregation,

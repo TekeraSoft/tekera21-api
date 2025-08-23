@@ -1,7 +1,9 @@
 package com.tekerasoft.tekeramarketplace.dto
 
 import com.tekerasoft.tekeramarketplace.model.entity.Product
+import com.tekerasoft.tekeramarketplace.model.entity.User
 import com.tekerasoft.tekeramarketplace.model.enums.CurrencyType
+import com.tekerasoft.tekeramarketplace.model.enums.LikeState
 import java.math.BigDecimal
 import java.util.UUID
 
@@ -11,6 +13,7 @@ data class ProductUiDto(
     val slug: String,
     val brandName: String?,
     val category: String?,
+    val seller: ProductCompanyDto?,
     val subCategories: List<SubCategoryDto>?,
     val variations: List<VariationUiDto>,
     val currencyType: CurrencyType,
@@ -19,17 +22,22 @@ data class ProductUiDto(
     val price: BigDecimal?,
     val discountPrice: BigDecimal?,
     val rate: Double,
-    val description: String?
+    val likeCount: Int?,
+    val description: String?,
+    val hasFollowed: Boolean?,
+    val hasFavorite: Boolean?,
+    val hasLiked: LikeState?,
 ) {
     companion object {
         @JvmStatic
-        fun toProductUiDto(product: Product): ProductUiDto {
+        fun toProductUiDto(product: Product,user: User?): ProductUiDto {
             return ProductUiDto(
                 product.id,
                 product.name,
                 product.slug,
                 product.brandName,
                 product.category?.name,
+                product.seller.let { ProductCompanyDto(it.id, it.name, it.logo, it.rate) },
                 product.subCategories?.map { it -> SubCategoryDto.toDto(it) },
                 product.variations.map { it ->
                     VariationUiDto(
@@ -45,7 +53,13 @@ data class ProductUiDto(
                 product.variations.firstOrNull()?.attributes?.firstOrNull()?.price,
                 product.variations.firstOrNull()?.attributes?.firstOrNull()?.discountPrice,
                 product.rate,
-                product.description
+                product.likeCount,
+                product.description,
+                product.seller.followUsers.contains(user),
+                user?.favProducts?.contains(product),
+                hasLiked = user?.likedProducts
+                    ?.firstOrNull { it.product.id == product.id }
+                    ?.state ?: LikeState.EMPTY
             )
         }
     }

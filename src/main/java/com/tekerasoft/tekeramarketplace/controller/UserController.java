@@ -1,6 +1,7 @@
 package com.tekerasoft.tekeramarketplace.controller;
 
 import com.tekerasoft.tekeramarketplace.dto.OrderDto;
+import com.tekerasoft.tekeramarketplace.dto.ProductUiDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerOrderDto;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
@@ -39,6 +40,27 @@ public class UserController {
 
     @PutMapping("/followSeller")
     public ResponseEntity<ApiResponse<?>> followSeller(@RequestParam String sellerId) {
-        return ResponseEntity.ok(userService.followSeller(sellerId));
+        return ResponseEntity.ok(userService.followUnfollowSeller(sellerId));
     }
+
+    @PutMapping("/addFavorite")
+    public ResponseEntity<ApiResponse<?>> addFavorite(@RequestParam String productId) {
+        return ResponseEntity.ok(userService.addToFavoriteProduct(productId));
+    }
+
+    @GetMapping("/getFavoriteProducts")
+    public ResponseEntity<Page<ProductUiDto>> getFavoriteProducts(Pageable pageable) {
+        return ResponseEntity.ok(userService.getFavoriteProducts(pageable));
+    }
+
+    @PutMapping("/likeProduct")
+    public ResponseEntity<ApiResponse<?>> likeProduct(@RequestParam String productId) {
+        return ResponseEntity.ok(userService.likeProduct(productId));
+    }
+
+    @GetMapping("/getLikedProducts")
+    public ResponseEntity<Page<ProductUiDto>> getLikedProducts(Pageable pageable) {
+        return ResponseEntity.ok(userService.getLikedProducts(pageable));
+    }
+
 }

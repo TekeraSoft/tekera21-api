@@ -1,18 +1,25 @@
 package com.tekerasoft.tekeramarketplace.service;
 
+import com.tekerasoft.tekeramarketplace.dto.ProductUiDto;
 import com.tekerasoft.tekeramarketplace.dto.UserAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.request.CreateUserRequest;
 import com.tekerasoft.tekeramarketplace.dto.request.SellerVerificationRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.exception.NotFoundException;
+import com.tekerasoft.tekeramarketplace.exception.UnauthorizedException;
+import com.tekerasoft.tekeramarketplace.model.entity.Product;
 import com.tekerasoft.tekeramarketplace.model.entity.Seller;
 import com.tekerasoft.tekeramarketplace.model.entity.User;
+import com.tekerasoft.tekeramarketplace.model.entity.UserLikeReaction;
+import com.tekerasoft.tekeramarketplace.model.enums.LikeState;
 import com.tekerasoft.tekeramarketplace.model.enums.Role;
+import com.tekerasoft.tekeramarketplace.repository.jparepository.ProductRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.SellerRepository;
 import com.tekerasoft.tekeramarketplace.repository.jparepository.UserRepository;
 import com.tekerasoft.tekeramarketplace.utils.AuthenticationFacade;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -34,15 +42,18 @@ public class UserService implements UserDetailsService {
     private final RoleService roleService;
     private final AuthenticationFacade authenticationFacade;
     private final SellerRepository sellerRepository;
+    private final ProductRepository productRepository;
 
     public UserService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder,
-                       RoleService roleService, AuthenticationFacade authenticationFacade, SellerRepository sellerRepository) {
+                       RoleService roleService, AuthenticationFacade authenticationFacade,
+                       SellerRepository sellerRepository, ProductRepository productRepository) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
         this.authenticationFacade = authenticationFacade;
         this.sellerRepository = sellerRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -194,23 +205,113 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public ApiResponse<?> followSeller(String sellerId) {
+    public ApiResponse<?> followUnfollowSeller(String sellerId) {
         Seller seller = sellerRepository.findById(UUID.fromString(sellerId))
-                .orElseThrow(()-> new NotFoundException("Satıcı bulunamadı"));
-        // 2. Current user'ı session içinde al
+                .orElseThrow(() -> new NotFoundException("Satıcı bulunamadı"));
+
+        if(authenticationFacade.getCurrentUserId() == null) {
+            throw new UnauthorizedException("Takip etmek için lütfen üye olunuz.");
+        }
         User user = userRepository.findById(UUID.fromString(authenticationFacade.getCurrentUserId()))
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new UnauthorizedException("Takip etmek için lütfen üye olunuz."));
 
-        // 3. User'ın takip ettiği seller'lar koleksiyonuna ekle
-        user.getFollowSellers().add(seller);
+        if (user.getFollowSellers().contains(seller)) {
+            // zaten takip ediyorsa çıkar → UNFOLLOW
+            user.getFollowSellers().remove(seller);
+            seller.getFollowUsers().remove(user); // iki taraflı ilişkiyi güncellemek için
+            userRepository.save(user);
+            return new ApiResponse<>("Satıcı takipten çıkarıldı", HttpStatus.OK.value());
+        } else {
+            // takip etmiyorsa ekle → FOLLOW
+            user.getFollowSellers().add(seller);
+            seller.getFollowUsers().add(user); // iki taraflı ilişkiyi güncellemek için
+            userRepository.save(user);
+            return new ApiResponse<>("Satıcı takibe başlandı", HttpStatus.OK.value());
+        }
+    }
 
-        // 4. Seller'ın takip edenler koleksiyonuna user'ı ekle (opsiyonel, iki taraflı ilişkiyi korumak için)
-        seller.getFollowUsers().add(user);
+    public ApiResponse<?> addToFavoriteProduct(String productId) {
+        Product product = productRepository.findById(UUID.fromString(productId))
+                .orElseThrow(() -> new NotFoundException("Ürün Bulunamadı!"));
 
-        // 5. Kaydet (user managed entity olduğu için sellerRepository.save gerekmez)
-        userRepository.save(user);
+        if(authenticationFacade.getCurrentUserId() == null) {
+            throw new UnauthorizedException("Farilere eklemek için üye olunuz.");
+        }
 
-        return new ApiResponse<>("Seller followed successfully", HttpStatus.OK.value());
+        User user = userRepository.findById(UUID.fromString(authenticationFacade.getCurrentUserId()))
+                .orElseThrow(() -> new NotFoundException("Kullanıcı Bulunamadı"));
+
+        if(user.getFavProducts().contains(product)) {
+           user.getFavProducts().remove(product);
+            userRepository.save(user);
+            return new ApiResponse<>("Ürün favorilerden çıkarıldı", HttpStatus.OK.value());
+        }else {
+            user.getFavProducts().add(product);
+            userRepository.save(user);
+            return new ApiResponse<>("Ürün favorilere eklendi", HttpStatus.OK.value());
+        }
+
+    }
+
+    @Transactional
+    public ApiResponse<?> likeProduct(String productId) {
+
+        String currentUserId = authenticationFacade.getCurrentUserId();
+        if (currentUserId == null) {
+            throw new UnauthorizedException("Favorilere eklemek için üye olunuz.");
+        }
+
+        Product product = productRepository.findById(UUID.fromString(productId))
+                .orElseThrow(() -> new NotFoundException("Ürün bulunamadı"));
+
+        User user = userRepository.findById(UUID.fromString(currentUserId))
+                .orElseThrow(() -> new NotFoundException("Kullanıcı bulunamadı"));
+
+        UserLikeReaction reaction = user.getLikedProducts().stream()
+                .filter(r -> r.getProduct().equals(product))
+                .findFirst()
+                .orElse(new UserLikeReaction(user, product, LikeState.EMPTY));
+
+        if (reaction.getState() == LikeState.LIKED) {
+            reaction.setState(LikeState.EMPTY); // Like varsa kaldır
+            userRepository.save(user);
+            return new ApiResponse<>("Ürün beğenilerden çıkarıldı", HttpStatus.OK.value());
+        } else {
+            reaction.setState(LikeState.LIKED); // Like veya dislike varsa like yap
+            user.getLikedProducts().add(reaction); // Eğer yeni reaction ise set'e ekle
+            userRepository.save(user);
+            return new ApiResponse<>("Ürün beğenildi", HttpStatus.OK.value());
+        }
+    }
+
+    public Page<ProductUiDto> getLikedProducts(Pageable pageable) {
+        User user = userRepository.findById(UUID.fromString(authenticationFacade.getCurrentUserId()))
+                .orElseThrow(() -> new NotFoundException("Kullanıcı bulunamadı"));
+
+        return new PageImpl<>(
+                user.getLikedProducts()
+                        .stream()
+                        .map(p -> ProductUiDto.toProductUiDto(p.getProduct(), user))
+                        .collect(Collectors.toList()),
+                pageable, // Pageable parametresini servisten alman lazım
+                user.getLikedProducts().size()
+        );
+
+    }
+
+    public Page<ProductUiDto> getFavoriteProducts(Pageable pageable) {
+        User user = userRepository.findById(UUID.fromString(authenticationFacade.getCurrentUserId()))
+                .orElseThrow(() -> new NotFoundException("Kullanıcı bulunamadı"));
+
+        return new PageImpl<>(
+                user.getFavProducts()
+                        .stream()
+                        .map(p -> ProductUiDto.toProductUiDto(p, user))
+                        .collect(Collectors.toList()),
+                pageable, // Pageable parametresini servisten alman lazım
+                user.getFavProducts().size()
+        );
+
     }
 
 }

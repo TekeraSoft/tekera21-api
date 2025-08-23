@@ -54,9 +54,21 @@ open class User (
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     open var address: MutableList<Address>? = mutableListOf(),
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "user_fav_products", joinColumns = [JoinColumn(name = "user_id")])
-    open var favProducts: List<String>? = null,
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "user_fav_products",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "product_id")]
+    )
+    open var favProducts: MutableSet<Product>? = mutableSetOf(),
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "user_liked_products",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "product_id")]
+    )
+    open var likedProducts: MutableSet<UserLikeReaction>? = null,
 
     open var birthDate: LocalDate? = null,
     open var lastLogin: LocalDateTime,
@@ -64,7 +76,7 @@ open class User (
     open var assignCount: Int? = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id") // <<-- BU SATIRI EKLEDİM
+    @JoinColumn(name = "seller_id")
     open var seller: Seller? = null,
 
     ): BaseEntity() , UserDetails {
@@ -96,7 +108,8 @@ open class User (
         mutableSetOf(),
         mutableSetOf(),
         mutableListOf(),
-        listOf(),
+        mutableSetOf(),
+        mutableSetOf(),
         null,
         LocalDateTime.now(),
         0)

@@ -67,6 +67,8 @@ open class Product(
 
     open var rate: Double = 0.0,
 
+    open var likeCount: Int? = 0,
+
     open var videoUrl: String? = null,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
