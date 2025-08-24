@@ -62,7 +62,7 @@ open class User (
     )
     open var favProducts: MutableSet<Product>? = mutableSetOf(),
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinTable(
         name = "user_liked_products",
         joinColumns = [JoinColumn(name = "user_id")],

@@ -254,34 +254,51 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public ApiResponse<?> likeProduct(String productId) {
-
-        String currentUserId = authenticationFacade.getCurrentUserId();
-        if (currentUserId == null) {
-            throw new UnauthorizedException("Favorilere eklemek için üye olunuz.");
-        }
+    public ApiResponse<?> likeProduct(String productId, LikeState likeState) {
+        User user = userRepository.findById(UUID.fromString(authenticationFacade.getCurrentUserId()))
+                .orElseThrow(() -> new NotFoundException("Kullanıcı bulunamadı"));
 
         Product product = productRepository.findById(UUID.fromString(productId))
                 .orElseThrow(() -> new NotFoundException("Ürün bulunamadı"));
 
-        User user = userRepository.findById(UUID.fromString(currentUserId))
-                .orElseThrow(() -> new NotFoundException("Kullanıcı bulunamadı"));
-
-        UserLikeReaction reaction = user.getLikedProducts().stream()
-                .filter(r -> r.getProduct().equals(product))
-                .findFirst()
-                .orElse(new UserLikeReaction(user, product, LikeState.EMPTY));
-
-        if (reaction.getState() == LikeState.LIKED) {
-            reaction.setState(LikeState.EMPTY); // Like varsa kaldır
-            userRepository.save(user);
-            return new ApiResponse<>("Ürün beğenilerden çıkarıldı", HttpStatus.OK.value());
-        } else {
-            reaction.setState(LikeState.LIKED); // Like veya dislike varsa like yap
-            user.getLikedProducts().add(reaction); // Eğer yeni reaction ise set'e ekle
-            userRepository.save(user);
-            return new ApiResponse<>("Ürün beğenildi", HttpStatus.OK.value());
+        Set<UserLikeReaction> reactions = user.getLikedProducts();
+        if (reactions == null) {
+            reactions = new HashSet<>();
         }
+
+        UserLikeReaction existingReaction = reactions.stream()
+                .filter(r -> r.getProduct().getId().equals(product.getId()))
+                .findFirst()
+                .orElse(null);
+
+        if (existingReaction != null) {
+            if (likeState == LikeState.EMPTY) {
+                if (existingReaction.getState() == LikeState.LIKED) {
+                    product.setLikeCount(product.getLikeCount() - 1);
+                }
+                reactions.remove(existingReaction);
+            } else {
+                if (existingReaction.getState() == LikeState.LIKED && likeState != LikeState.LIKED) {
+                    product.setLikeCount(product.getLikeCount() - 1);
+                } else if (existingReaction.getState() != LikeState.LIKED && likeState == LikeState.LIKED) {
+                    product.setLikeCount(product.getLikeCount() + 1);
+                }
+                existingReaction.setState(likeState);
+            }
+        } else if (likeState != LikeState.EMPTY) {
+            UserLikeReaction newReaction = new UserLikeReaction(user, product, likeState);
+            reactions.add(newReaction);
+
+            if (likeState == LikeState.LIKED) {
+                product.setLikeCount(product.getLikeCount() + 1);
+            }
+        }
+
+        user.setLikedProducts(reactions);
+
+        userRepository.save(user);      // reactions cascade ile kaydedilecek
+        productRepository.save(product); // likeCount güncellenecek
+        return new ApiResponse<>("Başarılı", HttpStatus.OK.value());
     }
 
     public Page<ProductUiDto> getLikedProducts(Pageable pageable) {

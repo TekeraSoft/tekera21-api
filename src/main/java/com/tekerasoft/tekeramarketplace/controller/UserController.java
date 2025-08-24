@@ -5,6 +5,7 @@ import com.tekerasoft.tekeramarketplace.dto.ProductUiDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerOrderDto;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
+import com.tekerasoft.tekeramarketplace.model.enums.LikeState;
 import com.tekerasoft.tekeramarketplace.service.OrderService;
 import com.tekerasoft.tekeramarketplace.service.SellerOrderService;
 import com.tekerasoft.tekeramarketplace.service.SellerService;
@@ -54,8 +55,8 @@ public class UserController {
     }
 
     @PutMapping("/likeProduct")
-    public ResponseEntity<ApiResponse<?>> likeProduct(@RequestParam String productId) {
-        return ResponseEntity.ok(userService.likeProduct(productId));
+    public ResponseEntity<ApiResponse<?>> likeProduct(@RequestParam String productId, @RequestParam LikeState likeState) {
+        return ResponseEntity.ok(userService.likeProduct(productId,likeState));
     }
 
     @GetMapping("/getLikedProducts")

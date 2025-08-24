@@ -77,6 +77,7 @@ public class ProductService {
             product.setCurrencyType(req.getCurrencyType());
             product.setProductType(req.getProductType());
             product.setTags(req.getTags());
+            product.setLikeCount(0);
             product.setAttributes(req.getAttributeDetails());
             product.setActive(true);
 
@@ -548,7 +549,8 @@ public class ProductService {
             cartItem.setMaxPurchaseStock(attribute.getMaxPurchaseStock());
             cartItem.setName(product.getName());
             cartItem.setQuantity(cart.getQuantity());
-            cartItem.setPrice(attribute.getDiscountPrice().compareTo(BigDecimal.ZERO) > 0 ? attribute.getDiscountPrice() : attribute.getPrice());
+            cartItem.setPrice(attribute.getDiscountPrice().compareTo(BigDecimal.ZERO) > 0 ? attribute.getDiscountPrice()
+                    : attribute.getPrice());
             cartItem.setBrandName(product.getBrandName());
             cartItem.setImage(!variation.getImages().isEmpty() ? variation.getImages().get(0) : null);
 

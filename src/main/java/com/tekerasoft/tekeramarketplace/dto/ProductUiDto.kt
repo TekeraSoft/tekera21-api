@@ -57,9 +57,7 @@ data class ProductUiDto(
                 product.description,
                 product.seller.followUsers.contains(user),
                 user?.favProducts?.contains(product),
-                hasLiked = user?.likedProducts
-                    ?.firstOrNull { it.product.id == product.id }
-                    ?.state ?: LikeState.EMPTY
+                user?.likedProducts?.find { p -> p.product == product }?.state
             )
         }
     }
