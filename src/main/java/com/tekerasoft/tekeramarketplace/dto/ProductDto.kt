@@ -24,7 +24,6 @@ data class ProductDto(
     val attributeDetails: List<AttributeDetail>,
     val rate: Double,
     val likeCount: Int?,
-    val comments: List<CommentDto>,
     val isActive: Boolean?
 ) {
     companion object {
@@ -67,7 +66,6 @@ data class ProductDto(
                 from.attributes.map { AttributeDetail(it.key, it.value) },
                 from.rate,
                 from.likeCount,
-                from.comments.map { CommentDto(it.id,it.userName,it.rate,it.message) },
                 from.isActive
             )
         }

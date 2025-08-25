@@ -274,4 +274,40 @@ public class FileService {
     }
 
 
+//    public String renameProductImage(String oldUrl, String companyName, String oldSlug, String newSlug) {
+//        try {
+//            String extension = oldUrl.substring(oldUrl.lastIndexOf("."));
+//            String colorPart = oldUrl.contains("-clr_")
+//                    ? oldUrl.substring(oldUrl.indexOf("-clr_"))
+//                    : "";
+//
+//            String newFileName = newSlug + colorPart + extension;
+//            String oldPath = oldUrl;
+//            String newPath = "/products/" + companyName + "/" + newFileName;
+//
+//            // MinIO kopyala
+//            minioClient.copyObject(
+//                    CopyObjectArgs.builder()
+//                            .bucket(bucketName)
+//                            .object(newPath)
+//                            .source(CopySource.builder()
+//                                    .bucket(bucketName)
+//                                    .object(oldPath)
+//                                    .build())
+//                            .build()
+//            );
+//
+//            // Eskiyi sil
+//            minioClient.removeObject(RemoveObjectArgs.builder()
+//                    .bucket(bucketName)
+//                    .object(oldPath)
+//                    .build());
+//
+//            return newPath;
+//
+//        } catch (Exception e) {
+//            throw new RuntimeException("Error renaming product image: " + e.getMessage(), e);
+//        }
+//    }
+
 }

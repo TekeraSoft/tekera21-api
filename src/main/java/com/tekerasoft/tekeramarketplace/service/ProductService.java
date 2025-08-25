@@ -1,5 +1,6 @@
 package com.tekerasoft.tekeramarketplace.service;
 
+import com.tekerasoft.tekeramarketplace.dto.CommentUiDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductListDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductUiDto;
@@ -40,6 +41,7 @@ public class ProductService {
     private final AuthenticationFacade  authenticationFacade;
     private final SettingService settingService;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     public ProductService(ProductRepository productRepository,
                           FileService fileService,
@@ -49,7 +51,7 @@ public class ProductService {
                           SellerService sellerService,
                           AuthenticationFacade authenticationFacade,
                           SettingService settingService,
-                          UserRepository userRepository) {
+                          UserRepository userRepository, CommentRepository commentRepository) {
         this.productRepository = productRepository;
         this.fileService = fileService;
         this.categoryRepository = categoryRepository;
@@ -59,6 +61,7 @@ public class ProductService {
         this.authenticationFacade = authenticationFacade;
         this.settingService = settingService;
         this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
     }
 
     public Product getById(UUID id) {
@@ -315,6 +318,22 @@ public class ProductService {
                     }
                 }
             }
+
+//            String oldSlug = SlugGenerator.generateSlug(product.getName());
+//            String newSlug = SlugGenerator.generateSlug(req.getName());
+//
+//            if (!oldSlug.equals(newSlug)) {
+//                for (Variation var : product.getVariations()) {
+//                    if (var.getImages() != null) {
+//                        List<String> updatedImages = new ArrayList<>();
+//                        for (String oldUrl : var.getImages()) {
+//                            String newUrl = fileService.renameProductImage(oldUrl, product.getSeller().getSlug(), oldSlug, newSlug);
+//                            updatedImages.add(newUrl);
+//                        }
+//                        var.setImages(updatedImages);
+//                    }
+//                }
+//            }
 
             // Silinecek görseller
             if (req.getDeleteImages() != null) {
@@ -582,5 +601,34 @@ public class ProductService {
         cart.setItemCount(cartItemList.stream().mapToInt(CartItem::getQuantity).sum());
 
         return cart;
+    }
+
+    public ApiResponse<?> createProductComment(ProductCommentRequest req) {
+        if(authenticationFacade.getCurrentUserId() == null) {
+            throw new UnauthorizedException("Yorum yapmak için hesabınızı giriş yapınız.");
+        }
+        User user = userRepository.findById(UUID.fromString(authenticationFacade.getCurrentUserId()))
+                .orElseThrow(() -> new NotFoundException("Kullanıcı bulunamadı"));
+
+        Product product = productRepository.findById(UUID.fromString(req.getProductId()))
+                .orElseThrow(() -> new NotFoundException("Ürün bulunamadı " + req.getProductId()));
+
+        Comment comment = new Comment();
+        comment.setUser(user);
+        comment.setProduct(product);
+        comment.setMessage(req.getMessage());
+        comment.setRate(0.0);
+        comment.setLikeCount(0);
+        if(!req.getImages().isEmpty()) {
+            for(MultipartFile file: req.getImages()) {
+                String fileUrl =  fileService.folderFileUpload(file, "products/"+product.getSeller().getSlug()+"/"+"comment-images");
+                comment.getProductImages().add(fileUrl);
+            }
+        }
+        Comment newComment = commentRepository.save(comment);
+
+        product.getComments().add(newComment);
+        productRepository.save(product);
+        return new ApiResponse<>("Yorumunuz incelendikten sonra yayınlanacaktır", HttpStatus.OK.value(), CommentUiDto.toDto(newComment));
     }
 }

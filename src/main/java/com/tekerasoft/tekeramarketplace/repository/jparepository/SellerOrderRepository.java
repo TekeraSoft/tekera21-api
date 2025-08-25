@@ -31,6 +31,7 @@ public interface SellerOrderRepository extends JpaRepository<SellerOrder, UUID> 
     SELECT o
     FROM SellerOrder o
     WHERE o.user.id = :userId
+        ORDER BY o.createdAt DESC
     """)
         Page<SellerOrder> findUserOrdersByUserId(@Param("userId") UUID userId, Pageable pageable);
 

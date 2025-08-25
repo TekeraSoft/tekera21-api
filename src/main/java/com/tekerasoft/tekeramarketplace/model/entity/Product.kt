@@ -71,7 +71,7 @@ open class Product(
 
     open var videoUrl: String? = null,
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     open var comments: MutableList<Comment> = mutableListOf(),
 
     @Column(nullable = false)

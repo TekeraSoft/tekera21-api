@@ -42,8 +42,6 @@ public class PaymentController {
         String conversationId = request.getParameter("conversationId");
         String cartId = request.getParameter("_cid");
 
-        System.out.println("cartId: " + cartId);
-
         PaymentResult result = paymentService.handlePayment(paymentId, conversationId);
         cartService.clearCart(cartId);
 

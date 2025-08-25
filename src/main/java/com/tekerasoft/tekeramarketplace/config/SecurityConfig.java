@@ -43,13 +43,13 @@ public class SecurityConfig {
                                 "/v1/api/product/**",
                                 "/v1/api/payment/**",
                                 "/v1/api/category/**",
+                                "/v1/api/comment/**",
                                 "/v1/api/search/**",
                                 "/v1/api/digital-fashion/**",
                                 "/v1/api/fashion-collection/**",
                                 "/v1/api/ws/**",
                                 "/ws/**",
                                 "/v1/api/auth/**",
-                                "/v1/api/user/**",
                                 "/v1/api/cart/**"
                         ).permitAll()
                         .requestMatchers("/v1/api/seller/**").hasAnyAuthority(Role.SELLER.name(),Role.SUPER_ADMIN.name())

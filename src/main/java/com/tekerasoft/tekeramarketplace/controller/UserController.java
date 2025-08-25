@@ -4,14 +4,13 @@ import com.tekerasoft.tekeramarketplace.dto.OrderDto;
 import com.tekerasoft.tekeramarketplace.dto.ProductUiDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerAdminDto;
 import com.tekerasoft.tekeramarketplace.dto.SellerOrderDto;
+import com.tekerasoft.tekeramarketplace.dto.request.ProductCommentRequest;
 import com.tekerasoft.tekeramarketplace.dto.response.ApiResponse;
 import com.tekerasoft.tekeramarketplace.model.enums.LikeState;
-import com.tekerasoft.tekeramarketplace.service.OrderService;
-import com.tekerasoft.tekeramarketplace.service.SellerOrderService;
-import com.tekerasoft.tekeramarketplace.service.SellerService;
-import com.tekerasoft.tekeramarketplace.service.UserService;
+import com.tekerasoft.tekeramarketplace.service.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +21,15 @@ public class UserController {
     private final SellerOrderService orderService;
     private final SellerService sellerService;
     private final UserService userService;
+    private final ProductService productService;
+    private final CommentService commentService;
 
-    public UserController(SellerOrderService orderService, SellerService sellerService, UserService userService) {
+    public UserController(SellerOrderService orderService, SellerService sellerService, UserService userService, ProductService productService, CommentService commentService) {
         this.orderService = orderService;
         this.sellerService = sellerService;
         this.userService = userService;
+        this.productService = productService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/getOrdersByUserId")
@@ -64,4 +67,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getLikedProducts(pageable));
     }
 
+    @PostMapping(value = "/createProductComment",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<?>> createProductComment(@ModelAttribute ProductCommentRequest req) {
+        return ResponseEntity.ok(productService.createProductComment(req));
+    }
+
+    @DeleteMapping("/deleteUserComment")
+    public ResponseEntity<ApiResponse<?>> deleteUserComment(@RequestParam String commentId) {
+        return ResponseEntity.ok(commentService.deleteComment(commentId));
+    }
 }
